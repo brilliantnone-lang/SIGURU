@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Cover - Jurnal Mengajar Guru</title>
+    <title>Data Guru - Jurnal Mengajar Guru</title>
 
     <style>
         * {
@@ -749,7 +749,7 @@
         .main {
             min-width: 0;
         }
-        /* FOOTER: satu bar penuh di akhir halaman, tidak menempel saat scroll */
+        
         .sidebar-footer {
             display: none;
         }
@@ -995,12 +995,12 @@
 
             <div class="section-label">PENGATURAN</div>
             <nav class="nav">
-                <a class="nav-item" href="#">Data Cover</a>
+                <a class="nav-item" href="/datacover">Data Cover</a>
                 <a class="nav-item active" href="#">Data Guru</a>
-                <a class="nav-item" href="#">Data Kelas</a>
-                <a class="nav-item" href="#">Data Pengajaran</a>
-                <a class="nav-item" href="#">Event Sekolah</a>
-                <a class="nav-item" href="#">Panduan Penggunaan</a>
+                <a class="nav-item" href="/datakelas">Data Kelas</a>
+                <a class="nav-item" href="/datapengajaran">Data Pengajaran</a>
+                <a class="nav-item" href="/eventsekolah">Event Sekolah</a>
+                <a class="nav-item" href="/panduanpenggunaan">Panduan Penggunaan</a>
             </nav>
 
             <div class="sidebar-footer">

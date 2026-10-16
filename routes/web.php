@@ -22,6 +22,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 Route::view('/datacover', 'admin.datacover');
 Route::view('/dataguru', 'admin.dataguru');
+Route::view('/datakelas', 'admin.datakelas');
+Route::view('/datapengajaran', 'admin.datapengajaran');
+Route::view('/eventsekolah', 'admin.eventsekolah');
+Route::view('/panduanpenggunaan', 'admin.panduanpenggunaan');
 
 // Guru
 Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(function () {
