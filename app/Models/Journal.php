@@ -21,7 +21,15 @@ class Journal extends Model
         'alasan_belum_selesai',
         'keterangan',
         'status_validasi',
+        'validator_id',
+        'validated_at',
+        'catatan_validasi',
         'foto_kegiatan',
+    ];
+
+    protected $casts = [
+        'tanggal' => 'date',
+        'validated_at' => 'datetime',
     ];
 
     public function guru()
@@ -44,12 +52,16 @@ class Journal extends Model
         return $this->belongsTo(Jadwal::class);
     }
 
+    public function validator()
+    {
+        return $this->belongsTo(User::class, 'validator_id');
+    }
+
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
     }
 
-    // Helper: jumlah jam
     public function getJumlahJamAttribute(): int
     {
         return $this->jam_selesai_ke - $this->jam_mulai_ke + 1;

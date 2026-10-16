@@ -22,6 +22,9 @@ return new class extends Migration
             $table->text('alasan_belum_selesai')->nullable();
             $table->text('keterangan')->nullable();
             $table->enum('status_validasi', ['valid', 'belum_valid', 'menunggu_revisi', 'sudah_revisi'])->default('belum_valid');
+            $table->foreignId('validator_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->timestamp('validated_at')->nullable();
+            $table->text('catatan_validasi')->nullable();
             $table->string('foto_kegiatan')->nullable();
             $table->timestamps();
         });
