@@ -44,12 +44,12 @@
     <div class="sidebar-section">Pengaturan</div>
     <ul class="sidebar-menu" style="padding-bottom: 24px;">
         <li>
-            <a href="#" class="{{ request()->routeIs('admin.data-cover') ? 'active' : '' }}">
+            <a href="{{ route('admin.datacover') }}" class="{{ request()->routeIs('admin.data-cover') ? 'active' : '' }}">
                 <i class="bi bi-bookmark-star"></i> Data Cover
             </a>
         </li>
         <li>
-            <a href="#" class="{{ request()->routeIs('admin.guru.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.dataguru') }}" class="{{ request()->routeIs('admin.guru.*') ? 'active' : '' }}">
                 <i class="bi bi-people"></i> Data Guru
             </a>
         </li>
