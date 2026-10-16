@@ -22,3 +22,32 @@
             Bahan Ajar Guru
         </a>
     </nav>
+
+    <div class="section-label">PENGATURAN</div>
+    <nav class="nav">
+        <a class="nav-item {{ request()->routeIs('admin.data-cover') ? 'active' : '' }}"
+           href="{{ route('admin.data-cover') }}">
+            Data Cover
+        </a>
+        <a class="nav-item {{ request()->routeIs('admin.guru.*') ? 'active' : '' }}"
+           href="{{ route('admin.guru.index') }}">
+            Data Guru
+        </a>
+        <a class="nav-item {{ request()->routeIs('admin.kelas.*') ? 'active' : '' }}"
+           href="{{ route('admin.kelas.index') }}">
+            Data Kelas
+        </a>
+        <a class="nav-item {{ request()->routeIs('admin.pengajaran') ? 'active' : '' }}"
+           href="{{ route('admin.pengajaran') }}">
+            Data Pengajaran
+        </a>
+        <a class="nav-item {{ request()->routeIs('admin.event') ? 'active' : '' }}"
+           href="{{ route('admin.event') }}">
+            Event Sekolah
+        </a>
+        <a class="nav-item {{ request()->routeIs('admin.panduan') ? 'active' : '' }}"
+           href="{{ route('admin.panduan') }}">
+            Panduan Penggunaan
+        </a>
+    </nav>
+</aside>

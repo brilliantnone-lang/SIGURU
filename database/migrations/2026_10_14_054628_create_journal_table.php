@@ -15,7 +15,6 @@ return new class extends Migration
             $table->foreignId('kelas_id')->constrained('kelas')->cascadeOnDelete();
             $table->integer('jam_mulai_ke');
             $table->integer('jam_selesai_ke');
-            $table->foreignId('jadwal_id')->nullable()->constrained('jadwal')->nullOnDelete();
             $table->date('tanggal');
             $table->text('pokok_bahasan');
             $table->enum('status_penyelesaian', ['selesai', 'belum_selesai']);
