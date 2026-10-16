@@ -20,6 +20,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     })->name('dashboard');
 });
 
+Route::view('/datacover', 'admin.datacover');
+Route::view('/dataguru', 'admin.dataguru');
+
 // Guru
 Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(function () {
     Route::get('/dashboard', function () {
