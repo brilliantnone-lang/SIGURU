@@ -82,9 +82,40 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     })->name('dashboard');
 });
 
-// ===== KEPSEK =====
-Route::middleware(['auth', 'role:kepsek'])->prefix('kepsek')->name('kepsek.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('kepsek.dashboard');
-    })->name('dashboard');
-});
+
+ // ===== KEPSEK =====
+Route::middleware(['auth', 'role:kepsek'])
+    ->prefix('kepsek')
+    ->name('kepsek.')
+    ->group(function () {
+
+        // Dashboard
+        Route::get('/dashboard', function () {
+            return view('kepsek.dashboard');
+        })->name('dashboard');
+
+        // Rekapitulasi Absensi Siswa
+        Route::get('/rekapitulasi-absensi', function () {
+            return view('kepsek.rekapitulasi-absensi');
+        })->name('rekapitulasi-absensi');
+
+        // Validasi Jurnal
+        Route::get('/validasi-jurnal', function () {
+            return view('kepsek.validasi-jurnal');
+        })->name('validasi-jurnal');
+
+        // Bahan Ajar
+        Route::get('/bahan-ajar', function () {
+            return view('kepsek.bahan-ajar');
+        })->name('bahan-ajar');
+
+        // Kalender Akademik
+        Route::get('/kalender', function () {
+            return view('kepsek.kalender');
+        })->name('kalender');
+
+        // Panduan Penggunaan
+        Route::get('/panduan', function () {
+            return view('kepsek.panduan');
+        })->name('panduan');
+    });
