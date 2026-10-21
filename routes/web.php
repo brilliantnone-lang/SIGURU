@@ -22,27 +22,33 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // Data Cover
     Route::get('/data-cover', function () {
-        return view('admin.datacover');
+        return view('admin.data-cover');
     })->name('data-cover');
 
     // Data Guru
     Route::get('/data-guru', function () {
-        return view('admin.dataguru');
+        return view('admin.data-guru');
     })->name('guru.index');
+
+
+    Route::get('/data-guru/tambah', function () {
+        return view('admin.tambah-guru');
+    })->name('tambah-guru');
+
 
     // Data Kelas
     Route::get('/data-kelas', function () {
-        return view('admin.datakelas');
+        return view('admin.data-kelas');
     })->name('kelas.index');
 
     // Data Pengajaran
     Route::get('/data-pengajaran', function () {
-        return view('admin.datapengajaran');
+        return view('admin.data-pengajaran');
     })->name('pengajaran');
 
     // Event Sekolah
     Route::get('/event-sekolah', function () {
-        return view('admin.eventsekolah');
+        return view('admin.event-sekolah');
     })->name('event');
 
     // Panduan Penggunaan
@@ -52,19 +58,19 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // ===== Menu yang belum ada file-nya (sementara redirect ke dashboard) =====
     Route::get('/rekap-absensi', function () {
-        return view('admin.dashboard'); // ganti nanti
+        return view('admin.absensi'); // ganti nanti
     })->name('rekap-absensi');
 
     Route::get('/kalender', function () {
-        return view('admin.dashboard'); // ganti nanti
+        return view('admin.kalender'); // ganti nanti
     })->name('kalender');
 
     Route::get('/jurnal', function () {
-        return view('admin.dashboard'); // ganti nanti
+        return view('admin.jurnal'); // ganti nanti
     })->name('jurnal');
 
     Route::get('/bahan-ajar', function () {
-        return view('admin.dashboard'); // ganti nanti
+        return view('admin.bahan-ajar'); // ganti nanti
     })->name('bahan-ajar');
 
 });
