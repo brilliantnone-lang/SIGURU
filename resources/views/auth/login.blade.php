@@ -6,350 +6,335 @@
     <title>Login - SIGURU</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --school-green: #0a4c2e;
-            --school-green-button: #084b2d;
-            --school-text: #173d2b;
+            --primary-dark: #2b2622; 
+            --text-dark: #1a1a1a;
+            --text-muted: #666;
+            --bg-cream: #f8f6f3;
+            --border-color: #e5e5e5;
         }
 
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        html, body { min-height: 100%; }
-
-        body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: Arial, Helvetica, sans-serif;
-            color: var(--school-text);
-            background: #fff;
-            border-top: 3px solid #292929;
-            border-bottom: 3px solid #292929;
-            overflow-x: hidden;
+        /* Lock layar agar tidak ada scroll di desktop */
+        html, body {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+            background-color: #ffffff;
+            color: var(--text-dark);
         }
 
-        .school-header {
-            height: 64px;
-            padding: 0 2.6%;
+        .split-layout {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            background: #fff;
-            position: relative;
-            z-index: 5;
+            height: 100vh;
+            width: 100%;
         }
 
-        .school-brand {
-            display: flex;
-            align-items: center;
-            gap: 17px;
-            min-width: 0;
-        }
-
-        .school-brand img {
-            width: 40px;
-            height: 44px;
-            object-fit: contain;
-            flex: 0 0 auto;
-        }
-
-        .school-brand-name {
-            margin: 0;
-            font-size: 14px;
-            line-height: 1.2;
-            font-weight: 700;
-            color: #123d2a;
-            white-space: nowrap;
-        }
-
-        .login-scene {
-            /* Rasio area dibuat mendekati screenshot referensi pada layar desktop. */
-            height: min(56.5vw, 518px);
-            min-height: 470px;
-            max-height: 620px;
+        /* --- KIRI (Gambar Full + Galeri Overlay) --- */
+        .left-panel {
+            flex: 1;
             position: relative;
             background-image: url('/images/sekolah.jpg');
-            /* Foto tetap proporsional; titik fokus dinaikkan agar papan tidak terlalu dominan. */
             background-size: cover;
-            background-position: center 43%;
+            background-position: center;
             background-repeat: no-repeat;
+            display: flex;
+            align-items: flex-end; /* Galeri menempel ke bawah */
+            padding: 30px;
         }
 
-        .login-scene::after {
+        /* Overlay gelap tipis di bagian bawah agar galeri lebih menonjol */
+        .left-panel::before {
             content: "";
             position: absolute;
             inset: 0;
-            background: linear-gradient(90deg, rgba(0,0,0,.04), rgba(0,0,0,.03));
-            pointer-events: none;
+            background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 40%);
+            z-index: 1;
         }
 
-        .login-card {
-            position: absolute;
+        /* Galeri Foto Menimpa Gambar */
+        .gallery-overlay {
+            position: relative;
             z-index: 2;
-            top: 10.2%;
-            right: 1.3%;
-            width: clamp(242px, 14.8vw, 270px);
-            min-height: 428px;
-            padding: 25px 30px 27px;
-            border: 1px solid rgba(255,255,255,.75);
-            border-radius: 7px;
-            background: rgba(255,255,255,.91);
-            box-shadow: 0 3px 14px rgba(0,0,0,.10);
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
         }
 
-        .login-logo {
+        .gallery-item {
+            flex: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 85px;
+            object-fit: cover;
             display: block;
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-            margin: 0 auto 10px;
+            transition: transform 0.3s;
         }
 
-        .login-school-name {
-            margin: 0;
-            text-align: center;
-            color: #123d2a;
-            font-size: 13px;
-            line-height: 1.35;
-            font-weight: 700;
+        .gallery-item:hover img {
+            transform: scale(1.1);
         }
 
-        .login-school-city {
-            margin: 3px 0 0;
-            text-align: center;
-            font-size: 8px;
-            color: #294b3b;
-            letter-spacing: .2px;
-        }
-
-        .login-divider {
-            width: 45px;
-            height: 1px;
-            margin: 9px auto 22px;
-            background: #c8d5cd;
-        }
-
-        .login-heading {
-            margin: 0 0 3px;
-            color: #123d2a;
-            text-align: center;
-            font-size: 10px;
-            line-height: 1.3;
-            font-weight: 700;
-        }
-
-        .login-description {
-            margin: 0 auto 25px;
-            max-width: 175px;
-            color: #294b3b;
-            text-align: center;
-            font-size: 8px;
-            line-height: 1.35;
-        }
-
-        .login-field {
-            height: 33px;
-            margin-bottom: 7px;
+        /* --- KANAN (Form Login) --- */
+        .right-panel {
+            flex: 1;
+            background-color: var(--bg-cream);
             display: flex;
             align-items: center;
-            gap: 9px;
-            padding: 0 11px;
-            border: 1px solid #dce4df;
-            border-radius: 7px;
+            justify-content: center;
+            padding: 2vh 5%;
+            position: relative;
+            overflow-y: hidden;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2vh;
+        }
+
+        .login-header img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            margin-bottom: 1vh;
+        }
+
+        .login-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .login-header p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #d1d5db;
+            width: 100%;
+            margin: 2vh 0;
+        }
+
+        .welcome-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .welcome-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 2vh;
+        }
+
+        /* Form Input */
+        .form-label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .input-group-custom {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0 15px;
+            height: 48px;
+            margin-bottom: 2vh;
             background: #fff;
         }
 
-        .login-field > i {
-            flex: 0 0 auto;
-            color: #8b9690;
-            font-size: 12px;
+        .input-group-custom:focus-within {
+            border-color: #a0a0a0;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
         }
 
-        .login-field input {
+        .input-group-custom i {
+            color: #999;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .input-group-custom input {
+            border: none;
+            outline: none;
             width: 100%;
-            min-width: 0;
-            height: 100%;
-            padding: 0;
-            border: 0;
-            outline: 0;
+            font-size: 14px;
+            color: #333;
             background: transparent;
-            color: #244535;
-            font-size: 9px;
-            box-shadow: none;
         }
-
-        .login-field input::placeholder { color: #8295a7; opacity: 1; }
 
         .password-toggle {
-            border: 0;
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 16px;
+            cursor: pointer;
             padding: 0;
-            background: transparent;
-            color: #8b9690;
+        }
+
+        .btn-submit {
+            width: 100%;
+            height: 48px;
+            background-color: var(--primary-dark);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
             display: flex;
             align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 1vh;
             cursor: pointer;
-            font-size: 12px;
         }
 
-        .login-submit {
-            width: 100%;
-            height: 35px;
-            margin-top: 15px;
-            border: 1px solid var(--school-green-button);
-            border-radius: 6px;
-            background: var(--school-green-button);
-            color: #fff;
-            font-size: 10px;
-            font-weight: 600;
-        }
+        .btn-submit:hover { background-color: #1a1614; }
 
-        .login-submit:hover,
-        .login-submit:focus {
-            background: #063d25;
-            border-color: #063d25;
-            color: #fff;
-        }
-
-        .school-gallery {
-            position: absolute;
-            z-index: 3;
-            left: 2%;
-            bottom: -53px;
+        /* Info Box */
+        .info-box {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 12px 15px;
             display: flex;
-            gap: clamp(12px, 2.1vw, 20px);
+            gap: 10px;
             align-items: flex-start;
+            margin-top: 2.5vh;
+            border: 1px solid #eaeaea;
         }
 
-        .school-gallery img {
-            display: block;
-            width: clamp(150px, 20.8vw, 190px);
-            height: 108px;
-            object-fit: cover;
-            border: 1px solid rgba(255,255,255,.8);
-            border-radius: 7px;
-            box-shadow: 0 2px 5px rgba(0,0,0,.08);
-        }
+        .info-box i { font-size: 18px; color: #555; margin-top: 2px; }
+        .info-box p { font-size: 11px; color: #555; line-height: 1.4; margin: 0; }
 
-        .school-footer {
-            height: 70px;
-            background: #fff;
-        }
-
-        @media (max-width: 700px) {
-            .school-header {
-                height: auto;
-                min-height: 64px;
-                padding: 10px 16px;
-                align-items: flex-start;
-                flex-direction: column;
-                gap: 7px;
+        /* --- RESPONSIVE MOBILE --- */
+        @media (max-width: 992px) {
+            html, body { overflow-y: auto; height: auto; }
+            .split-layout { flex-direction: column; height: auto; }
+            
+            .left-panel { 
+                min-height: 350px; 
+                align-items: center; /* Galeri ke tengah di HP */
+                padding: 20px;
+            }
+            
+            .gallery-overlay {
+                max-width: 100%;
             }
 
-            .school-brand { gap: 10px; }
-            .school-brand img { width: 34px; height: 38px; }
-            .school-brand-name { font-size: 12px; white-space: normal; }
-            .school-motto { gap: 7px; font-size: 7px; flex-wrap: wrap; }
-            .school-motto span + span { padding-left: 7px; }
-
-            .login-scene {
-                height: auto;
-                min-height: 770px;
-                background-position: center 43%;
-                background-size: auto 430px;
-                background-color: #fff;
+            .gallery-item img {
+                height: 70px;
             }
-
-            .login-card {
-                top: 30px;
-                right: 50%;
-                transform: translateX(50%);
-                width: min(290px, calc(100% - 32px));
-                min-height: 428px;
+            
+            .right-panel { 
+                padding: 40px 20px; 
             }
-
-            .school-gallery {
-                left: 12px;
-                right: 12px;
-                bottom: 15px;
-                gap: 8px;
-                justify-content: center;
-            }
-
-            .school-gallery img {
-                width: calc((100% - 16px) / 3);
-                height: 75px;
-                border-radius: 5px;
-            }
-
-            .school-footer { height: 10px; }
-        }
-
-        @media (max-width: 360px) {
-            .school-motto { white-space: normal; }
-            .school-gallery img { height: 62px; }
         }
     </style>
 </head>
 <body>
-    <header class="school-header">
-        <div class="school-brand">
-            <img src="{{ asset('images/logo.jpg') }}" alt="Logo SMP Negeri 15 Banjarmasin">
-            <h1 class="school-brand-name">SMP NEGERI 15 BANJARMASIN</h1>
-        </div>
 
-    </header>
-
-    <main class="login-scene">
-        <section class="login-card" aria-label="Form login SIGURU">
-            <img class="login-logo" src="{{ asset('images/logo.jpg') }}" alt="Logo sekolah">
-
-            <h2 class="login-school-name">SMP NEGERI 15</h2>
-            <p class="login-school-city">BANJARMASIN</p>
-            <div class="login-divider"></div>
-
-            <h3 class="login-heading">JURNAL MENGAJAR</h3>
-            <p class="login-description">Sistem Informasi Jurnal Mengajar Guru<br>&amp; Presensi Siswa</p>
-
-            @if ($errors->any())
-                <div class="alert alert-danger py-2 px-2 mb-2" role="alert" style="font-size: 10px;">
-                    {{ $errors->first() }}
+    <div class="split-layout">
+        <!-- KIRI: Gambar Full + Galeri Overlay -->
+        <div class="left-panel">
+            <!-- Galeri 3 Gambar Menimpa Background -->
+            <div class="gallery-overlay">
+                <div class="gallery-item">
+                    <img src="{{ asset('images/adwiyata.jpg') }}" alt="Program Adiwiyata">
                 </div>
-            @endif
-
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
-
-                <label class="login-field">
-                    <i class="bi bi-person" aria-hidden="true"></i>
-                    <input type="text" name="username" placeholder="Username"
-                           value="{{ old('username') }}" autocomplete="username" required autofocus>
-                </label>
-
-                <label class="login-field">
-                    <i class="bi bi-lock" aria-hidden="true"></i>
-                    <input id="login-password" type="password" name="password" placeholder="Password"
-                           autocomplete="current-password" required>
-                    <button class="password-toggle" type="button" id="toggle-password"
-                            aria-label="Tampilkan password" title="Tampilkan/sembunyikan password">
-                        <i class="bi bi-eye-slash" aria-hidden="true"></i>
-                    </button>
-                </label>
-
-                <button type="submit" class="btn login-submit">Masuk</button>
-            </form>
-        </section>
-
-        <div class="school-gallery" aria-label="Foto kegiatan dan sekolah">
-            <img src="{{ asset('images/adwiyata.jpg') }}" alt="Kegiatan Adiwiyata">
-            <img src="{{ asset('images/kepsek&wakasek.jpg') }}" alt="Kepala sekolah dan wakil kepala sekolah">
-            <img src="{{ asset('images/fotbar.jpg') }}" alt="Foto bersama warga sekolah">
+                <div class="gallery-item">
+                    <img src="{{ asset('images/kepsek&wakasek.jpg') }}" alt="Kepala Sekolah & Wakil Kepala Sekolah">
+                </div>
+                <div class="gallery-item">
+                    <img src="{{ asset('images/fotbar.jpg') }}" alt="Kebersamaan Warga Sekolah">
+                </div>
+            </div>
         </div>
-    </main>
 
-    <footer class="school-footer"></footer>
+        <!-- KANAN: Form Login -->
+        <div class="right-panel">
+            <div class="login-container">
+                <div class="login-header">
+                    <img src="{{ asset('images/logo.jpg') }}" alt="Logo SIGURU">
+                    <h2>SIGURU</h2>
+                    <p>Sistem Informasi Jurnal Mengajar<br>Harian Guru</p>
+                </div>
 
+                <div class="divider"></div>
+
+                <h3 class="welcome-title">Selamat Datang</h3>
+                <p class="welcome-subtitle">Silakan masuk menggunakan akun yang telah terdaftar.</p>
+
+                @if ($errors->any())
+                    <div class="alert alert-danger py-2 px-3 mb-3" role="alert" style="font-size: 12px; border-radius: 8px;">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+
+                    <label class="form-label">Username</label>
+                    <div class="input-group-custom">
+                        <i class="bi bi-person" aria-hidden="true"></i>
+                        <input type="text" name="username" placeholder="Masukkan username"
+                               value="{{ old('username') }}" autocomplete="username" required autofocus>
+                    </div>
+
+                    <label class="form-label">Password</label>
+                    <div class="input-group-custom">
+                        <i class="bi bi-lock" aria-hidden="true"></i>
+                        <input id="login-password" type="password" name="password" placeholder="Masukkan password"
+                               autocomplete="current-password" required>
+                        <button class="password-toggle" type="button" id="toggle-password"
+                                aria-label="Tampilkan password" title="Tampilkan/sembunyikan password">
+                            <i class="bi bi-eye-slash" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="bi bi-box-arrow-in-right"></i> Masuk ke SIGURU
+                    </button>
+                </form>
+
+                <div class="info-box">
+                    <i class="bi bi-shield-check"></i>
+                    <p>Gunakan akun yang diberikan oleh administrator.<br>Jaga kerahasiaan username dan password Anda.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT TETAP UTUH -->
     <script>
         const passwordInput = document.getElementById('login-password');
         const togglePassword = document.getElementById('toggle-password');
