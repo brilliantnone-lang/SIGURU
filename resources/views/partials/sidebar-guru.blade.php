@@ -5,20 +5,24 @@
            href="{{ route('guru.dashboard') }}">
             Dashboard
         </a>
+
         <a class="nav-item {{ request()->routeIs('guru.jurnal.*') ? 'active' : '' }}"
-           href="#">
+           href="{{ route('guru.jurnal-harian') }}">
             Jurnal Mengajar
         </a>
+
         <a class="nav-item {{ request()->routeIs('guru.presensi.*') ? 'active' : '' }}"
-           href="#">
+           href="{{ route('guru.presensi-siswa') }}">
             Presensi Siswa
         </a>
+
         <a class="nav-item {{ request()->routeIs('guru.bahan-ajar.*') ? 'active' : '' }}"
-           href="#">
+           href="{{ route('guru.bahan-ajar') }}">
             Bahan Ajar
         </a>
+
         <a class="nav-item {{ request()->routeIs('guru.kalender') ? 'active' : '' }}"
-           href="#">
+           href="{{ route('guru.kalender') }}">
             Kalender Akademik
         </a>
     </nav>
@@ -26,11 +30,12 @@
     <div class="section-label">PENGATURAN</div>
     <nav class="nav">
         <a class="nav-item {{ request()->routeIs('guru.profil') ? 'active' : '' }}"
-           href="#">
+           href="{{ route('guru.profil-saya') }}">
             Profil Saya
         </a>
+
         <a class="nav-item {{ request()->routeIs('guru.panduan') ? 'active' : '' }}"
-           href="#">
+           href="{{ route('guru.panduan') }}">
             Panduan Penggunaan
         </a>
     </nav>

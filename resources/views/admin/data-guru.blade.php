@@ -36,22 +36,18 @@
                             <td>{{ $g->mataPelajaran->nama_mata_pelajaran ?? '-' }}</td>
                             <td>{{ $g->nomor_telepon ?? '-' }}</td>
                             <td>
+
                                 <div class="guru-actions">
-                                    <button class="table-action edit" type="button" aria-label="Edit guru">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                    <button class="table-action edit" type="button" aria-label="Edit guru" title="Edit guru">
+                                        <i class="bi bi-pencil-fill"></i>
                                     </button>
 
+                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
+                                        title="Hapus guru">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
                                 </div>
+
                             </td>
                         </tr>
                     @empty
@@ -62,20 +58,18 @@
                             <td>Bahasa Indonesia</td>
                             <td>0812-5443-2180</td>
                             <td>
-                                <div class="guru-actions"><button class="table-action edit" type="button">✎</button>
+
+                                <div class="guru-actions">
+                                    <button class="table-action edit" type="button" aria-label="Edit guru" title="Edit guru">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
 
                                     <button class="table-action delete" type="button" aria-label="Hapus guru"
                                         title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                        <i class="bi bi-trash3"></i>
                                     </button>
+                                </div>
+
 
                             </td>
                         </tr>
@@ -85,19 +79,17 @@
                             <td>Matematika</td>
                             <td>0812-5560-9912</td>
                             <td>
-                                <div class="guru-actions"><button class="table-action edit" type="button">✎</button>
+
+                                <div class="guru-actions">
+                                    <button class="table-action edit" type="button" aria-label="Edit guru" title="Edit guru">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
                                     <button class="table-action delete" type="button" aria-label="Hapus guru"
                                         title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                        <i class="bi bi-trash3"></i>
                                     </button>
+                                </div>
 
                             </td>
                         </tr>
@@ -107,19 +99,18 @@
                             <td>IPA</td>
                             <td>0813-4876-1124</td>
                             <td>
-                                <div class="guru-actions"><button class="table-action edit" type="button">✎</button>
+
+                                <div class="guru-actions">
+                                    <button class="table-action edit" type="button" aria-label="Edit guru" title="Edit guru">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
                                     <button class="table-action delete" type="button" aria-label="Hapus guru"
                                         title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                        <i class="bi bi-trash3"></i>
                                     </button>
+                                </div>
+
 
                             </td>
                         </tr>
@@ -129,19 +120,18 @@
                             <td>Bahasa Inggris</td>
                             <td>0812-4873-2201</td>
                             <td>
-                                <div class="guru-actions"><button class="table-action edit" type="button">✎</button>
+
+                                <div class="guru-actions">
+                                    <button class="table-action edit" type="button" aria-label="Edit guru" title="Edit guru">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
                                     <button class="table-action delete" type="button" aria-label="Hapus guru"
                                         title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                        <i class="bi bi-trash3"></i>
                                     </button>
+                                </div>
+
 
                             </td>
                         </tr>
@@ -151,19 +141,18 @@
                             <td>IPS</td>
                             <td>0852-4957-1148</td>
                             <td>
-                                <div class="guru-actions"><button class="table-action edit" type="button">✎</button>
+
+                                <div class="guru-actions">
+                                    <button class="table-action edit" type="button" aria-label="Edit guru" title="Edit guru">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
                                     <button class="table-action delete" type="button" aria-label="Hapus guru"
                                         title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                        <i class="bi bi-trash3"></i>
                                     </button>
+                                </div>
+
 
                             </td>
                         </tr>
@@ -173,19 +162,18 @@
                             <td>PJOK</td>
                             <td>0813-5123-8921</td>
                             <td>
-                                <div class="guru-actions"><button class="table-action edit" type="button">✎</button>
+
+                                <div class="guru-actions">
+                                    <button class="table-action edit" type="button" aria-label="Edit guru" title="Edit guru">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
                                     <button class="table-action delete" type="button" aria-label="Hapus guru"
                                         title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                        <i class="bi bi-trash3"></i>
                                     </button>
+                                </div>
+
 
                             </td>
                         </tr>
@@ -195,19 +183,18 @@
                             <td>Seni Budaya</td>
                             <td>0821-6634-9087</td>
                             <td>
-                                <div class="guru-actions"><button class="table-action edit" type="button">✎</button>
+
+                                <div class="guru-actions">
+                                    <button class="table-action edit" type="button" aria-label="Edit guru" title="Edit guru">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
                                     <button class="table-action delete" type="button" aria-label="Hapus guru"
                                         title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                        <i class="bi bi-trash3"></i>
                                     </button>
+                                </div>
+
 
                             </td>
                         </tr>
@@ -217,19 +204,17 @@
                             <td>PKn</td>
                             <td>0812-7781-4482</td>
                             <td>
-                                <div class="guru-actions"><button class="table-action edit" type="button">✎</button>
+
+                                <div class="guru-actions">
+                                    <button class="table-action edit" type="button" aria-label="Edit guru" title="Edit guru">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
                                     <button class="table-action delete" type="button" aria-label="Hapus guru"
                                         title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                        <i class="bi bi-trash3"></i>
                                     </button>
+                                </div>
 
                             </td>
                         </tr>
@@ -239,19 +224,18 @@
                             <td>Prakarya</td>
                             <td>0851-9204-3376</td>
                             <td>
-                                <div class="guru-actions"><button class="table-action edit" type="button">✎</button>
+
+                                <div class="guru-actions">
+                                    <button class="table-action edit" type="button" aria-label="Edit guru" title="Edit guru">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
                                     <button class="table-action delete" type="button" aria-label="Hapus guru"
                                         title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                        <i class="bi bi-trash3"></i>
                                     </button>
+                                </div>
+
 
                             </td>
                         </tr>
@@ -261,19 +245,18 @@
                             <td>TIK</td>
                             <td>0813-6452-7810</td>
                             <td>
-                                <div class="guru-actions"><button class="table-action edit" type="button">✎</button>
+
+                                <div class="guru-actions">
+                                    <button class="table-action edit" type="button" aria-label="Edit guru" title="Edit guru">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
                                     <button class="table-action delete" type="button" aria-label="Hapus guru"
                                         title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                        <i class="bi bi-trash3"></i>
                                     </button>
+                                </div>
+
 
                             </td>
                         </tr>
@@ -394,25 +377,37 @@
             gap: 14px;
         }
 
+
         .table-action {
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            width: 31px;
+            height: 31px;
             padding: 0;
-            border: 0;
-            background: transparent;
-            font-size: 16px;
+            border: 1px solid;
+            border-radius: 7px;
+            background: #fff;
+            font-size: 17px;
             line-height: 1;
             cursor: pointer;
+            transition: background .15s ease;
         }
 
         .table-action.edit {
-            color: #16834F;
+            border-color: #aebfb5;
+            color: #39765f;
         }
 
         .table-action.delete {
-            color: #D83A43;
+            border-color: #ff7777;
+            color: #ff3333;
         }
+
+        .table-action:hover {
+            background: #f4f8f5;
+        }
+
 
         .guru-table-footer {
             display: flex;

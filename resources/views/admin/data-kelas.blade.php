@@ -31,22 +31,22 @@
                             <td>{{ $k->nama_kelas }}</td>
                             <td>
                                 <div class="kelas-actions">
-                                    <button class="table-action add-siswa" type="button" aria-label="Tambah siswa">♟+</button>
-                                    <button class="table-action edit" type="button" aria-label="Edit kelas">✎</button>
-
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                    {{-- Tambah Siswa --}}
+                                    <button class="table-action add-siswa" type="button" aria-label="Tambah siswa"
+                                        title="Tambah siswa">
+                                        <i class="bi bi-person-plus-fill"></i>
                                     </button>
 
+                                    {{-- Edit Kelas --}}
+                                    <button class="table-action edit" type="button" aria-label="Edit kelas" title="Edit kelas">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
+                                    {{-- Hapus Kelas --}}
+                                    <button class="table-action delete" type="button" aria-label="Hapus kelas"
+                                        title="Hapus kelas">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -56,19 +56,22 @@
                             <td>1</td>
                             <td>VII-A</td>
                             <td>
-                                <div class="kelas-actions"><button class="table-action add-siswa"
-                                        type="button">♟+</button><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                <div class="kelas-actions">
+                                    {{-- Tambah Siswa --}}
+                                    <button class="table-action add-siswa" type="button" aria-label="Tambah siswa"
+                                        title="Tambah siswa">
+                                        <i class="bi bi-person-plus-fill"></i>
+                                    </button>
+
+                                    {{-- Edit Kelas --}}
+                                    <button class="table-action edit" type="button" aria-label="Edit kelas" title="Edit kelas">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
+                                    {{-- Hapus Kelas --}}
+                                    <button class="table-action delete" type="button" aria-label="Hapus kelas"
+                                        title="Hapus kelas">
+                                        <i class="bi bi-trash3"></i>
                                     </button>
                                 </div>
                             </td>
@@ -77,19 +80,22 @@
                             <td>2</td>
                             <td>VII-B</td>
                             <td>
-                                <div class="kelas-actions"><button class="table-action add-siswa"
-                                        type="button">♟+</button><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                <div class="kelas-actions">
+                                    {{-- Tambah Siswa --}}
+                                    <button class="table-action add-siswa" type="button" aria-label="Tambah siswa"
+                                        title="Tambah siswa">
+                                        <i class="bi bi-person-plus-fill"></i>
+                                    </button>
+
+                                    {{-- Edit Kelas --}}
+                                    <button class="table-action edit" type="button" aria-label="Edit kelas" title="Edit kelas">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
+                                    {{-- Hapus Kelas --}}
+                                    <button class="table-action delete" type="button" aria-label="Hapus kelas"
+                                        title="Hapus kelas">
+                                        <i class="bi bi-trash3"></i>
                                     </button>
                                 </div>
                             </td>
@@ -98,19 +104,22 @@
                             <td>3</td>
                             <td>VII-C</td>
                             <td>
-                                <div class="kelas-actions"><button class="table-action add-siswa"
-                                        type="button">♟+</button><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                <div class="kelas-actions">
+                                    {{-- Tambah Siswa --}}
+                                    <button class="table-action add-siswa" type="button" aria-label="Tambah siswa"
+                                        title="Tambah siswa">
+                                        <i class="bi bi-person-plus-fill"></i>
+                                    </button>
+
+                                    {{-- Edit Kelas --}}
+                                    <button class="table-action edit" type="button" aria-label="Edit kelas" title="Edit kelas">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
+                                    {{-- Hapus Kelas --}}
+                                    <button class="table-action delete" type="button" aria-label="Hapus kelas"
+                                        title="Hapus kelas">
+                                        <i class="bi bi-trash3"></i>
                                     </button>
                                 </div>
                             </td>
@@ -119,19 +128,22 @@
                             <td>4</td>
                             <td>VIII-A</td>
                             <td>
-                                <div class="kelas-actions"><button class="table-action add-siswa"
-                                        type="button">♟+</button><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                <div class="kelas-actions">
+                                    {{-- Tambah Siswa --}}
+                                    <button class="table-action add-siswa" type="button" aria-label="Tambah siswa"
+                                        title="Tambah siswa">
+                                        <i class="bi bi-person-plus-fill"></i>
+                                    </button>
+
+                                    {{-- Edit Kelas --}}
+                                    <button class="table-action edit" type="button" aria-label="Edit kelas" title="Edit kelas">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
+                                    {{-- Hapus Kelas --}}
+                                    <button class="table-action delete" type="button" aria-label="Hapus kelas"
+                                        title="Hapus kelas">
+                                        <i class="bi bi-trash3"></i>
                                     </button>
                                 </div>
                             </td>
@@ -140,19 +152,22 @@
                             <td>5</td>
                             <td>VIII-B</td>
                             <td>
-                                <div class="kelas-actions"><button class="table-action add-siswa"
-                                        type="button">♟+</button><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                <div class="kelas-actions">
+                                    {{-- Tambah Siswa --}}
+                                    <button class="table-action add-siswa" type="button" aria-label="Tambah siswa"
+                                        title="Tambah siswa">
+                                        <i class="bi bi-person-plus-fill"></i>
+                                    </button>
+
+                                    {{-- Edit Kelas --}}
+                                    <button class="table-action edit" type="button" aria-label="Edit kelas" title="Edit kelas">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
+                                    {{-- Hapus Kelas --}}
+                                    <button class="table-action delete" type="button" aria-label="Hapus kelas"
+                                        title="Hapus kelas">
+                                        <i class="bi bi-trash3"></i>
                                     </button>
                                 </div>
                             </td>
@@ -161,19 +176,22 @@
                             <td>6</td>
                             <td>VIII-C</td>
                             <td>
-                                <div class="kelas-actions"><button class="table-action add-siswa"
-                                        type="button">♟+</button><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                <div class="kelas-actions">
+                                    {{-- Tambah Siswa --}}
+                                    <button class="table-action add-siswa" type="button" aria-label="Tambah siswa"
+                                        title="Tambah siswa">
+                                        <i class="bi bi-person-plus-fill"></i>
+                                    </button>
+
+                                    {{-- Edit Kelas --}}
+                                    <button class="table-action edit" type="button" aria-label="Edit kelas" title="Edit kelas">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
+                                    {{-- Hapus Kelas --}}
+                                    <button class="table-action delete" type="button" aria-label="Hapus kelas"
+                                        title="Hapus kelas">
+                                        <i class="bi bi-trash3"></i>
                                     </button>
                                 </div>
                             </td>
@@ -182,19 +200,22 @@
                             <td>7</td>
                             <td>IX-A</td>
                             <td>
-                                <div class="kelas-actions"><button class="table-action add-siswa"
-                                        type="button">♟+</button><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                <div class="kelas-actions">
+                                    {{-- Tambah Siswa --}}
+                                    <button class="table-action add-siswa" type="button" aria-label="Tambah siswa"
+                                        title="Tambah siswa">
+                                        <i class="bi bi-person-plus-fill"></i>
+                                    </button>
+
+                                    {{-- Edit Kelas --}}
+                                    <button class="table-action edit" type="button" aria-label="Edit kelas" title="Edit kelas">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
+                                    {{-- Hapus Kelas --}}
+                                    <button class="table-action delete" type="button" aria-label="Hapus kelas"
+                                        title="Hapus kelas">
+                                        <i class="bi bi-trash3"></i>
                                     </button>
                                 </div>
                             </td>
@@ -203,19 +224,22 @@
                             <td>8</td>
                             <td>IX-B</td>
                             <td>
-                                <div class="kelas-actions"><button class="table-action add-siswa"
-                                        type="button">♟+</button><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                <div class="kelas-actions">
+                                    {{-- Tambah Siswa --}}
+                                    <button class="table-action add-siswa" type="button" aria-label="Tambah siswa"
+                                        title="Tambah siswa">
+                                        <i class="bi bi-person-plus-fill"></i>
+                                    </button>
+
+                                    {{-- Edit Kelas --}}
+                                    <button class="table-action edit" type="button" aria-label="Edit kelas" title="Edit kelas">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
+                                    {{-- Hapus Kelas --}}
+                                    <button class="table-action delete" type="button" aria-label="Hapus kelas"
+                                        title="Hapus kelas">
+                                        <i class="bi bi-trash3"></i>
                                     </button>
                                 </div>
                             </td>
@@ -224,19 +248,22 @@
                             <td>9</td>
                             <td>IX-C</td>
                             <td>
-                                <div class="kelas-actions"><button class="table-action add-siswa"
-                                        type="button">♟+</button><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                <div class="kelas-actions">
+                                    {{-- Tambah Siswa --}}
+                                    <button class="table-action add-siswa" type="button" aria-label="Tambah siswa"
+                                        title="Tambah siswa">
+                                        <i class="bi bi-person-plus-fill"></i>
+                                    </button>
+
+                                    {{-- Edit Kelas --}}
+                                    <button class="table-action edit" type="button" aria-label="Edit kelas" title="Edit kelas">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
+                                    {{-- Hapus Kelas --}}
+                                    <button class="table-action delete" type="button" aria-label="Hapus kelas"
+                                        title="Hapus kelas">
+                                        <i class="bi bi-trash3"></i>
                                     </button>
                                 </div>
                             </td>
@@ -245,19 +272,22 @@
                             <td>10</td>
                             <td>VII-A</td>
                             <td>
-                                <div class="kelas-actions"><button class="table-action add-siswa"
-                                        type="button">♟+</button><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                <div class="kelas-actions">
+                                    {{-- Tambah Siswa --}}
+                                    <button class="table-action add-siswa" type="button" aria-label="Tambah siswa"
+                                        title="Tambah siswa">
+                                        <i class="bi bi-person-plus-fill"></i>
+                                    </button>
+
+                                    {{-- Edit Kelas --}}
+                                    <button class="table-action edit" type="button" aria-label="Edit kelas" title="Edit kelas">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
+                                    {{-- Hapus Kelas --}}
+                                    <button class="table-action delete" type="button" aria-label="Hapus kelas"
+                                        title="Hapus kelas">
+                                        <i class="bi bi-trash3"></i>
                                     </button>
                                 </div>
                             </td>
@@ -382,29 +412,42 @@
             gap: 14px;
         }
 
+
         .table-action {
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            width: 31px;
+            height: 31px;
             padding: 0;
-            border: 0;
-            background: transparent;
-            font-size: 16px;
+            border: 1px solid;
+            border-radius: 7px;
+            background: #fff;
+            font-size: 17px;
             line-height: 1;
             cursor: pointer;
+            transition: background .15s ease;
         }
 
         .table-action.add-siswa {
             color: #C5C900;
+            font-size: 16px;
         }
 
         .table-action.edit {
-            color: #16834F;
+            border-color: #aebfb5;
+            color: #39765f;
         }
 
         .table-action.delete {
-            color: #D83A43;
+            border-color: #ff7777;
+            color: #ff3333;
         }
+
+        .table-action:hover {
+            background: #f4f8f5;
+        }
+
 
         .kelas-table-footer {
             display: flex;

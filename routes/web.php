@@ -80,10 +80,41 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     Route::get('/dashboard', function () {
         return view('guru.dashboard');
     })->name('dashboard');
+
+    // Jurnal Harian
+    Route::get('/jurnal-harian', function () {
+        return view('guru.jurnal-harian');
+    })->name('jurnal-harian');
+
+    // Presensi Siswa
+    Route::get('/presensi-siswa', function () {
+        return view('guru.presensi-siswa');
+    })->name('presensi-siswa');
+
+    // Bahan Ajar
+    Route::get('/bahan-ajar', function () {
+        return view('guru.bahan-ajar');
+    })->name('bahan-ajar');
+
+    // Kalender Akademik
+    Route::get('/kalender', function () {
+        return view('guru.kalender');
+    })->name('kalender');
+
+    // Profil Saya
+    Route::get('/profil-saya', function () {
+        return view('guru.profil-saya');
+    })->name('profil-saya');
+
+    // Panduan Penggunaan
+    Route::get('/panduan', function () {
+        return view('guru.panduan');
+    })->name('panduan');
+
 });
 
 
- // ===== KEPSEK =====
+// ===== KEPSEK =====
 Route::middleware(['auth', 'role:kepsek'])
     ->prefix('kepsek')
     ->name('kepsek.')

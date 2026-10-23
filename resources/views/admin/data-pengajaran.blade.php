@@ -273,20 +273,17 @@
                             <td>Jumat</td>
                             <td>Jam ke-2</td>
                             <td>
-                                <div class="pengajaran-actions"><button class="table-action edit" type="button">✎</button>
+                                <div class="pengajaran-actions">
+                                    <button class="table-action edit" type="button" aria-label="Edit guru" title="Edit guru">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+
                                     <button class="table-action delete" type="button" aria-label="Hapus guru"
                                         title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
+                                        <i class="bi bi-trash3"></i>
                                     </button>
                                 </div>
+
                             </td>
                         </tr>
                     @endforelse
@@ -441,20 +438,30 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            width: 31px;
+            height: 31px;
             padding: 0;
-            border: 0;
-            background: transparent;
-            font-size: 13px;
+            border: 1px solid;
+            border-radius: 7px;
+            background: #fff;
+            font-size: 17px;
             line-height: 1;
             cursor: pointer;
+            transition: background .15s ease;
         }
 
         .table-action.edit {
-            color: #16834F;
+            border-color: #aebfb5;
+            color: #39765f;
         }
 
         .table-action.delete {
-            color: #D83A43;
+            border-color: #ff7777;
+            color: #ff3333;
+        }
+
+        .table-action:hover {
+            background: #f4f8f5;
         }
 
         .pengajaran-table-footer {
