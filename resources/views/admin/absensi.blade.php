@@ -40,7 +40,7 @@
                     <option>Hadir</option>
                     <option>Izin</option>
                     <option>Sakit</option>
-                    <option>Alpha</option>
+                    <option>Alpa</option>
                 </select>
             </div>
 
@@ -67,7 +67,7 @@
                             <th>Hadir</th>
                             <th>Izin</th>
                             <th>Sakit</th>
-                            <th>Alpha</th>
+                            <th>Alpa</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -95,7 +95,7 @@
                                 <td><span class="rekap-badge badge-hadir">{{ $kelas[2] }}</span></td>
                                 <td><span class="rekap-badge badge-izin">{{ $kelas[3] }}</span></td>
                                 <td><span class="rekap-badge badge-sakit">{{ $kelas[4] }}</span></td>
-                                <td><span class="rekap-badge badge-alpha">{{ $kelas[5] }}</span></td>
+                                <td><span class="rekap-badge badge-alpa">{{ $kelas[5] }}</span></td>
                                 <td>
                                     <button type="button" class="detail-button" data-detail-kelas="{{ $kelas[0] }}">
                                         Lihat Detail
@@ -333,7 +333,7 @@
             background: #ffe0e1;
         }
 
-        .badge-alpha {
+        .badge-alpa {
             color: #475b52;
             background: #edf1ef;
         }
@@ -458,14 +458,14 @@
                     const jumlahHadir = Number(cells[3].textContent.trim());
                     const jumlahIzin = Number(cells[4].textContent.trim());
                     const jumlahSakit = Number(cells[5].textContent.trim());
-                    const jumlahAlpha = Number(cells[6].textContent.trim());
+                    const jumlahAlpa = Number(cells[6].textContent.trim());
 
                     let cocokStatus = true;
 
                     if (statusTerpilih === 'Hadir') cocokStatus = jumlahHadir > 0;
                     if (statusTerpilih === 'Izin') cocokStatus = jumlahIzin > 0;
                     if (statusTerpilih === 'Sakit') cocokStatus = jumlahSakit > 0;
-                    if (statusTerpilih === 'Alpha') cocokStatus = jumlahAlpha > 0;
+                    if (statusTerpilih === 'Alpa') cocokStatus = jumlahAlpa > 0;
 
                     const tampil = cocokKelas && cocokStatus;
                     row.hidden = !tampil;

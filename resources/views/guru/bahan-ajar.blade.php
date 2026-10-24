@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('title', 'Bahan Ajar Guru')
@@ -130,14 +129,14 @@
 
     .bahan-ajar-header h2 {
         margin: 0 0 7px;
-        font-size: 23px;
+        font-size: 26px;
         font-weight: 650;
         color: #111;
     }
 
     .bahan-ajar-header p {
         margin: 0;
-        font-size: 11px;
+        font-size: 12px;
         color: #888;
     }
 
@@ -222,14 +221,14 @@
 
     .bahan-card-heading h3 {
         margin: 0 0 3px;
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 650;
         color: #111;
     }
 
     .bahan-card-heading p {
         margin: 0;
-        font-size: 9px;
+        font-size: 12px;
         color: #999;
     }
 
@@ -267,7 +266,7 @@
     .bahan-table td {
         padding: 8px 5px;
         border-bottom: 1px solid #e5e5e5;
-        font-size: 10px;
+        font-size: 11px;
         vertical-align: middle;
     }
 
@@ -278,20 +277,20 @@
     .bahan-table td strong {
         display: block;
         margin-bottom: 3px;
-        font-size: 9px;
+        font-size: 11px;
         font-weight: 650;
         color: #222;
     }
 
     .bahan-table td small {
         display: block;
-        font-size: 8px;
+        font-size: 10px;
         color: #999;
     }
 
     .bahan-table td.upload-date {
         color: #888;
-        font-size: 9px;
+        font-size: 11px;
         white-space: nowrap;
     }
 
@@ -343,7 +342,7 @@
         }
 
         .bahan-ajar-header h2 {
-            font-size: 21px;
+            font-size: 22px;
         }
 
         .bahan-summary {

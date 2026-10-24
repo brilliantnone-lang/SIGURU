@@ -149,14 +149,14 @@
 
     .profil-header h2 {
         margin: 0 0 7px;
-        font-size: 23px;
+        font-size: 26px;
         font-weight: 650;
         color: #111;
     }
 
     .profil-header p {
         margin: 0;
-        font-size: 10px;
+        font-size: 12px;
         color: #555;
     }
 
@@ -190,14 +190,14 @@
     .identity-info h3 {
         margin: 0 0 5px;
         color: #245541;
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 500;
     }
 
     .identity-info p {
         margin: 0 0 6px;
         color: #89938d;
-        font-size: 9px;
+        font-size: 10px;
     }
 
     .guru-active {
@@ -208,7 +208,7 @@
         border-radius: 12px;
         background: #fff;
         color: #39765f;
-        font-size: 8px;
+        font-size: 10px;
         font-weight: 600;
     }
 
@@ -247,7 +247,7 @@
 
     .card-heading-text h3 {
         margin: 1px 0 3px;
-        font-size: 12px;
+        font-size: 16px;
         font-weight: 700;
         color: #244c39;
         white-space: nowrap;
@@ -255,7 +255,7 @@
 
     .card-heading-text p {
         margin: 0;
-        font-size: 8px;
+        font-size: 10px;
         color: #929b95;
     }
 
@@ -267,7 +267,7 @@
         border: none;
         background: transparent;
         color: #244c39;
-        font-size: 8px;
+        font-size: 9px;
         font-weight: 650;
         white-space: nowrap;
         cursor: pointer;
@@ -293,14 +293,14 @@
         display: block;
         margin-bottom: 5px;
         color: #89938d;
-        font-size: 8px;
+        font-size: 10px;
     }
 
     .personal-info-item strong {
         display: block;
         overflow-wrap: anywhere;
         color: #244c39;
-        font-size: 8px;
+        font-size: 12px;
         font-weight: 650;
     }
 
@@ -316,7 +316,7 @@
     .subject-description {
         margin: 0 0 14px;
         color: #89938d;
-        font-size: 8px;
+        font-size: 10px;
     }
 
     .subject-info {
@@ -339,14 +339,14 @@
         display: block;
         margin-bottom: 4px;
         color: #245541;
-        font-size: 8px;
+        font-size: 12px;
         font-weight: 650;
     }
 
     .subject-info p {
         margin: 0;
         color: #89938d;
-        font-size: 7px;
+        font-size: 10px;
         line-height: 1.5;
     }
 
@@ -468,7 +468,7 @@
 
     @media (max-width: 420px) {
         .profil-header h2 {
-            font-size: 20px;
+            font-size: 22px;
         }
 
         .personal-info-grid {

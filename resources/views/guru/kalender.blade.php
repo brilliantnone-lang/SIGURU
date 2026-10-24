@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('title', 'Kalender Akademik')
@@ -85,16 +84,17 @@
     }
 
     .kalender-header h2 {
-        margin: 0 0 4px;
-        font-size: 16px;
-        font-weight: 650;
-        color: #111;
+        margin: 0 0 5px;
+        font-size: 26px;
+        line-height: 1.25;
+        font-weight: 700;
+        color: #173D2B;
     }
 
     .kalender-header p {
         margin: 0;
-        font-size: 10px;
-        color: #385447;
+        font-size: 12px;
+        color: #40574F;
     }
 
     .kalender-document {
@@ -122,7 +122,7 @@
         align-items: center;
         gap: 6px;
         min-width: 0;
-        font-size: 7px;
+        font-size: 10px;
     }
 
     .pdf-menu i {
@@ -139,7 +139,7 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        font-size: 8px;
+        font-size: 10px;
         white-space: nowrap;
     }
 
@@ -198,7 +198,7 @@
         gap: 5px;
         background: #fff;
         color: #39765f;
-        font-size: 9px;
+        font-size: 10px;
     }
 
     .thumbnail-page i {
@@ -245,10 +245,18 @@
 
     .pdf-placeholder small {
         color: #999;
-        font-size: 9px;
+        font-size: 10px;
     }
 
     @media (max-width: 600px) {
+        .kalender-header h2 {
+            font-size: 22px;
+        }
+
+        .kalender-header p {
+            font-size: 12px;
+        }
+
         .kalender-document {
             height: 350px;
         }

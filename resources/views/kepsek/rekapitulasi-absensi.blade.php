@@ -202,7 +202,7 @@
         background: #ffe4e5;
     }
 
-    .count-alpha {
+    .count-alpa {
         color: #56646c;
         background: #edf1f3;
     }
@@ -351,7 +351,7 @@
                 <option value="hadir">Hadir</option>
                 <option value="izin">Izin</option>
                 <option value="sakit">Sakit</option>
-                <option value="alpha">Alpha</option>
+                <option value="alpa">Alpa</option>
             </select>
         </div>
 
@@ -395,7 +395,7 @@
                         <th class="rekap-center">Hadir</th>
                         <th class="rekap-center">Izin</th>
                         <th class="rekap-center">Sakit</th>
-                        <th class="rekap-center">Alpha</th>
+                        <th class="rekap-center">Alpa</th>
                         <th class="rekap-center">Aksi</th>
                     </tr>
                 </thead>
@@ -407,7 +407,7 @@
                             data-hadir="{{ $data[2] }}"
                             data-izin="{{ $data[3] }}"
                             data-sakit="{{ $data[4] }}"
-                            data-alpha="{{ $data[5] }}"
+                            data-alpa="{{ $data[5] }}"
                         >
                             <td class="rekap-center">{{ $index + 1 }}</td>
                             <td>{{ $data[0] }}</td>
@@ -422,7 +422,7 @@
                                 <span class="rekap-count count-sakit">{{ $data[4] }}</span>
                             </td>
                             <td class="rekap-center">
-                                <span class="rekap-count count-alpha">{{ $data[5] }}</span>
+                                <span class="rekap-count count-alpa">{{ $data[5] }}</span>
                             </td>
                             <td class="rekap-center">
                                 <button

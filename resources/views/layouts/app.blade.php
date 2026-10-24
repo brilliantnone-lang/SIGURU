@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         :root {
             --green-dark: #0A4C2E;
@@ -24,7 +27,8 @@
             --white: #FFFFFF;
         }
 
-        html, body {
+        html,
+        body {
             margin: 0;
             padding: 0;
             height: 100%;
@@ -50,7 +54,8 @@
             min-height: 68px;
             display: flex;
             align-items: center;
-            justify-content: space-between;   /* KIRI & KANAN */
+            justify-content: space-between;
+            /* KIRI & KANAN */
             gap: 12px;
             padding: 0 16px;
             background: linear-gradient(90deg, #39745E 0%, #7AD9B3 100%);
@@ -67,6 +72,7 @@
             line-height: 1.5;
             font-weight: 600;
         }
+
         .topbar-brand .brand-icon {
             font-size: 28px;
             color: #FFFFFF;
@@ -130,7 +136,10 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .logout:hover { background: rgba(255,0,0,0.1); }
+
+        .logout:hover {
+            background: rgba(255, 0, 0, 0.1);
+        }
 
         .logout-icon {
             font-size: 17px;
@@ -146,8 +155,8 @@
 
         /* ===== SIDEBAR ===== */
         .sidebar {
-            width: 250px;
-            flex: 0 0 250px;
+            width: 210px;
+            flex: 0 0 210px;
             display: flex;
             flex-direction: column;
             color: var(--white);
@@ -155,9 +164,19 @@
             overflow-y: auto;
             height: 100%;
         }
-        .sidebar::-webkit-scrollbar { width: 5px; }
-        .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
-        .sidebar::-webkit-scrollbar-track { background: transparent; }
+
+        .sidebar::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
 
         .section-label {
             padding: 14px 12px 6px;
@@ -183,18 +202,23 @@
             white-space: normal;
             transition: all 0.2s;
         }
+
         .nav-item:hover {
             color: var(--white);
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             text-decoration: none;
         }
+
         .nav-item.active {
             background: rgba(225, 236, 230, 0.32);
             box-shadow: inset 0 0 0 1px rgba(225, 236, 230, 0.25);
             color: #000000;
             font-weight: 700;
         }
-        .nav-item.active:hover { color: #000000; }
+
+        .nav-item.active:hover {
+            color: #000000;
+        }
 
         /* ===== CONTENT ===== */
         .content {
@@ -224,89 +248,125 @@
             border-radius: 12px;
             padding: 20px;
             border: 1px solid var(--border);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
         }
 
         /* ===== RESPONSIF ===== */
         @media (max-width: 900px) {
-            .sidebar { width: 220px; flex-basis: 220px; }
-            .content { padding: 26px 18px; }
+            .sidebar {
+                width: 220px;
+                flex-basis: 220px;
+            }
+
+            .content {
+                padding: 26px 18px;
+            }
         }
+
         @media (max-width: 600px) {
-            .sidebar { width: 155px; flex-basis: 155px; }
-            .nav-item { padding: 8px; font-size: 12px; }
-            .topbar { padding: 0 8px; gap: 6px; }
-            .topbar-brand { font-size: 11px; }
-            .topbar-brand .brand-icon { font-size: 20px; }
-            .profile { width: auto; padding: 3px; }
-            .profile-name { font-size: 10px; }
-            .content { padding: 22px 12px; }
+            .sidebar {
+                width: 155px;
+                flex-basis: 155px;
+            }
+
+            .nav-item {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .topbar {
+                padding: 0 8px;
+                gap: 6px;
+            }
+
+            .topbar-brand {
+                font-size: 11px;
+            }
+
+            .topbar-brand .brand-icon {
+                font-size: 20px;
+            }
+
+            .profile {
+                width: auto;
+                padding: 3px;
+            }
+
+            .profile-name {
+                font-size: 10px;
+            }
+
+            .content {
+                padding: 22px 12px;
+            }
         }
     </style>
 
     @stack('styles')
 </head>
+
 <body>
 
-<div class="app">
+    <div class="app">
 
-    {{-- HEADER (2 sisi: brand kiri, profil+logout kanan) --}}
-    <header class="topbar">
+        {{-- HEADER (2 sisi: brand kiri, profil+logout kanan) --}}
+        <header class="topbar">
 
-        {{-- KIRI: Brand --}}
-        <div class="topbar-brand">
-            <div class="brand-icon">
-                <i class="bi bi-journal-check"></i>
+            {{-- KIRI: Brand --}}
+            <div class="topbar-brand">
+                <div class="brand-icon">
+                    <i class="bi bi-journal-check"></i>
+                </div>
+                <div>JURNAL MENGAJAR<br>HARIAN GURU</div>
             </div>
-            <div>JURNAL MENGAJAR<br>HARIAN GURU</div>
+
+            {{-- KANAN: Profil + Logout --}}
+            <div class="topbar-right">
+                <div class="profile">
+                    <div class="avatar">
+                        {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
+                    </div>
+                    <div class="profile-name">
+                        {{ Auth::user()->name ?? 'Admin Kurikulum' }}<br>
+                        @if(Auth::user()->role === 'admin') Admin
+                        @elseif(Auth::user()->role === 'kepsek') Kepala Sekolah
+                        @else Guru
+                        @endif
+                    </div>
+                </div>
+                <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                    @csrf
+                    <button type="submit" class="logout">
+                        <span class="logout-icon">⇥</span>
+                        Keluar
+                    </button>
+                </form>
+            </div>
+
+        </header>
+
+        {{-- APP BODY (sidebar + content) --}}
+        <div class="app-body">
+
+            {{-- SIDEBAR --}}
+            @include('partials.sidebar-' . Auth::user()->role)
+
+            {{-- CONTENT --}}
+            <section class="content">
+                @yield('content')
+            </section>
+
         </div>
 
-        {{-- KANAN: Profil + Logout --}}
-        <div class="topbar-right">
-            <div class="profile">
-                <div class="avatar">
-                    {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
-                </div>
-                <div class="profile-name">
-                    {{ Auth::user()->name ?? 'Admin Kurikulum' }}<br>
-                    @if(Auth::user()->role === 'admin') Admin
-                    @elseif(Auth::user()->role === 'kepsek') Kepala Sekolah
-                    @else Guru
-                    @endif
-                </div>
-            </div>
-            <form method="POST" action="{{ route('logout') }}" style="margin:0;">
-                @csrf
-                <button type="submit" class="logout">
-                    <span class="logout-icon">⇥</span>
-                    Keluar
-                </button>
-            </form>
-        </div>
-
-    </header>
-
-    {{-- APP BODY (sidebar + content) --}}
-    <div class="app-body">
-
-        {{-- SIDEBAR --}}
-        @include('partials.sidebar-' . Auth::user()->role)
-
-        {{-- CONTENT --}}
-        <section class="content">
-            @yield('content')
-        </section>
+        {{-- FOOTER --}}
+        <footer class="main-footer">
+            <span>© {{ date('Y') }} Jurnal Mengajar Guru</span>
+            <span>V.01.00</span>
+        </footer>
 
     </div>
 
-    {{-- FOOTER --}}
-    <footer class="main-footer">
-        <span>© {{ date('Y') }} Jurnal Mengajar Guru</span>
-        <span>V.01.00</span>
-    </footer>
-
-</div>
-
-@stack('scripts')
+    @stack('scripts')
 </body>
+
 </html>

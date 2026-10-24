@@ -272,11 +272,11 @@
         color: #bd7b0b;
     }
 
-    .bar-alpha {
+    .bar-alpa {
         background: #e33c43;
     }
 
-    .bar-alpha span {
+    .bar-alpa span {
         color: #e33c43;
     }
 
@@ -547,7 +547,7 @@
                                 </div>
                                 <div class="kepsek-bar bar-sakit" style="height: 12%;"></div>
                                 <div class="kepsek-bar bar-izin" style="height: 8%;"></div>
-                                <div class="kepsek-bar bar-alpha" style="height: 25%;">
+                                <div class="kepsek-bar bar-alpa" style="height: 25%;">
                                     <span>25</span>
                                 </div>
                             </div>
@@ -562,7 +562,7 @@
                                 </div>
                                 <div class="kepsek-bar bar-sakit" style="height: 10%;"></div>
                                 <div class="kepsek-bar bar-izin" style="height: 15%;"></div>
-                                <div class="kepsek-bar bar-alpha" style="height: 28%;">
+                                <div class="kepsek-bar bar-alpa" style="height: 28%;">
                                     <span>28</span>
                                 </div>
                             </div>
@@ -577,7 +577,7 @@
                                 </div>
                                 <div class="kepsek-bar bar-sakit" style="height: 9%;"></div>
                                 <div class="kepsek-bar bar-izin" style="height: 14%;"></div>
-                                <div class="kepsek-bar bar-alpha" style="height: 20%;"></div>
+                                <div class="kepsek-bar bar-alpa" style="height: 20%;"></div>
                             </div>
                             <span class="kepsek-week-label">Minggu 3</span>
                         </div>
@@ -590,7 +590,7 @@
                                 </div>
                                 <div class="kepsek-bar bar-sakit" style="height: 12%;"></div>
                                 <div class="kepsek-bar bar-izin" style="height: 18%;"></div>
-                                <div class="kepsek-bar bar-alpha" style="height: 22%;"></div>
+                                <div class="kepsek-bar bar-alpa" style="height: 22%;"></div>
                             </div>
                             <span class="kepsek-week-label">Minggu 4</span>
                         </div>
@@ -614,8 +614,8 @@
                     Izin
                 </span>
                 <span class="kepsek-legend-item">
-                    <span class="kepsek-legend-dot bar-alpha"></span>
-                    Alpha
+                    <span class="kepsek-legend-dot bar-alpa"></span>
+                    Alpa
                 </span>
             </div>
 

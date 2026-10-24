@@ -312,7 +312,7 @@
                     <strong>20</strong>
                 </div>
 
-                {{-- Alpha --}}
+                {{-- Alpa --}}
                 <div class="admin-attendance-card attendance-absent">
                     <span class="attendance-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -321,7 +321,7 @@
                             <path d="m9 9 6 6M15 9l-6 6" />
                         </svg>
                     </span>
-                    <span class="attendance-label">Alpha</span>
+                    <span class="attendance-label">Alpa</span>
                     <strong>80</strong>
                 </div>
 
@@ -695,7 +695,7 @@
             background: #1688e8;
         }
 
-        /* Alpha */
+        /* Alpa */
 
         .attendance-absent {
             background: #ffe8e8;

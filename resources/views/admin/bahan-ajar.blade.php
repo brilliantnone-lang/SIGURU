@@ -34,9 +34,20 @@
                     <option>IPS</option>
                     <option>Bahasa Inggris</option>
                 </select>
+
             </div>
 
-            <button type="submit" class="bahan-filter-button">
+            <div class="bahan-filter-field">
+                <label for="filterTahunAjaranBahan">Tahun Ajaran</label>
+                <select id="filterTahunAjaranBahan">
+                    <option value="">Semua Tahun Ajaran</option>
+                    <option>2024/2025</option>
+                    <option>2025/2026</option>
+                    <option>2026/2027</option>
+                </select>
+            </div>
+
+            <button type="button" id="btnFilterBahan" class="bahan-filter-button">
                 <i class="bi bi-search"></i>
                 Tampilkan
             </button>
@@ -69,8 +80,8 @@
                                     'Matematika',
                                     [
                                         'Persamaan Linear Satu Variabel.pdf',
-                                        'Latihan Soal PLSV.docx',
-                                        'LKPD PLSV.pptx'
+                                        'Latihan Soal PLSV.pdf',
+                                        'LKPD PLSV.pdf'
                                     ],
                                     '29 Sep 2026',
                                     '2025/2026'
@@ -90,7 +101,7 @@
                                     'Bahasa Indonesia',
                                     [
                                         'Teks Eksposisi.pdf',
-                                        'LKPD Teks Eksposisi.docx'
+                                        'LKPD Teks Eksposisi.pdf'
                                     ],
                                     '28 Sep 2026',
                                     '2025/2026'
@@ -100,7 +111,7 @@
                                     'IPS',
                                     [
                                         'Kondisi Geografis Indonesia.pdf',
-                                        'Modul IPS Bab 1.docx'
+                                        'Modul IPS Bab 1.pdf'
                                     ],
                                     '28 Sep 2026',
                                     '2025/2026'
@@ -110,7 +121,7 @@
                                     'Bahasa Inggris',
                                     [
                                         'Describing People.pdf',
-                                        'Daily Activity.pptx'
+                                        'Daily Activity.pdf'
                                     ],
                                     '27 Sep 2026',
                                     '2025/2026'
@@ -119,7 +130,7 @@
                         @endphp
 
                         @foreach ($bahanAjar as $index => $item)
-                            <tr data-guru="{{ $item[0] }}" data-mapel="{{ $item[1] }}">
+                            <tr data-guru="{{ $item[0] }}" data-mapel="{{ $item[1] }}" data-tahun="{{ $item[4] }}">
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $item[0] }}</td>
                                 <td>{{ $item[1] }}</td>
@@ -206,7 +217,7 @@
 
         .bahan-ajar-filter {
             display: grid;
-            grid-template-columns: 1fr 1fr auto;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) auto;
             align-items: end;
             gap: 16px;
             margin-bottom: 10px;
@@ -232,7 +243,8 @@
 
         .bahan-filter-field select {
             width: 100%;
-            max-width: 230px;
+            max-width: none;
+            min-width: 0;
             height: 34px;
             padding: 0 9px;
             color: #46574f;
@@ -378,21 +390,6 @@
             font-weight: 700;
         }
 
-        .file-docx,
-        .file-doc {
-            background: #4282c4;
-        }
-
-        .file-pptx,
-        .file-ppt {
-            background: #e78a45;
-        }
-
-        .file-xlsx,
-        .file-xls {
-            background: #33956a;
-        }
-
         .bahan-file-name {
             overflow-wrap: anywhere;
             line-height: 1.4;
@@ -458,6 +455,10 @@
             }
 
             .bahan-filter-button {
+                grid-column: 1 / -1;
+            }
+
+            .bahan-filter-button {
                 width: 100%;
             }
 
@@ -495,6 +496,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             const guruFilter = document.getElementById('filterGuruBahan');
             const mapelFilter = document.getElementById('filterMapelBahan');
+            const tahunAjaranFilter = document.getElementById('filterTahunAjaranBahan');
             const tombolFilter = document.getElementById('btnFilterBahan');
             const tableBody = document.getElementById('bahanAjarTableBody');
             const info = document.getElementById('bahanAjarInfo');
@@ -502,6 +504,7 @@
             tombolFilter.addEventListener('click', function () {
                 const guru = guruFilter.value;
                 const mapel = mapelFilter.value;
+                const tahunAjaran = tahunAjaranFilter.value;
                 const rows = Array.from(tableBody.querySelectorAll('tr'));
 
                 let jumlahTampil = 0;
@@ -509,7 +512,8 @@
                 rows.forEach(function (row) {
                     const cocokGuru = !guru || row.dataset.guru === guru;
                     const cocokMapel = !mapel || row.dataset.mapel === mapel;
-                    const tampil = cocokGuru && cocokMapel;
+                    const cocokTahun = !tahunAjaran || row.dataset.tahun === tahunAjaran;
+                    const tampil = cocokGuru && cocokMapel && cocokTahun;
 
                     row.hidden = !tampil;
 

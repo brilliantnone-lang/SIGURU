@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('title', 'Panduan Penggunaan')
@@ -100,55 +99,56 @@
 
     .panduan-header h2 {
         margin: 0 0 5px;
-        color: #244c39;
-        font-size: 17px;
+        color: #173D2B;
+        font-size: 26px;
+        line-height: 1.25;
         font-weight: 700;
     }
 
     .panduan-header p {
         margin: 0;
-        color: #444;
-        font-size: 8px;
+        color: #40574F;
+        font-size: 12px;
     }
 
     .panduan-welcome {
         display: flex;
         align-items: center;
-        gap: 10px;
-        min-height: 48px;
-        padding: 10px 12px;
-        margin-bottom: 30px;
-        border: 1px solid #b5ddca;
-        border-radius: 6px;
-        background: #c5e1d5;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, .15);
+        gap: 14px;
+        margin-bottom: 22px;
+        padding: 16px 18px;
+        border: 1px solid #C9E5D7;
+        border-radius: 10px;
+        background: linear-gradient(90deg, #D7EDE3 0%, #C2E0D3 100%);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
     }
 
     .panduan-welcome > i {
         flex: 0 0 auto;
-        color: #39765f;
-        font-size: 22px;
-        font-weight: 400;
+        color: #4A9B72;
+        font-size: 32px;
+        line-height: 1;
     }
 
     .panduan-welcome h3 {
-        margin: 0 0 5px;
-        color: #111;
-        font-size: 12px;
+        margin: 0 0 7px;
+        color: #101A15;
+        font-size: 16px;
+        line-height: 1.3;
         font-weight: 700;
     }
 
     .panduan-welcome p {
         margin: 0;
-        color: #263a30;
-        font-size: 7px;
+        color: #263B32;
+        font-size: 10px;
         line-height: 1.6;
     }
 
     .panduan-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 9px;
+        gap: 18px;
         padding: 0 2px;
     }
 
@@ -156,45 +156,43 @@
         position: relative;
         display: flex;
         flex-direction: column;
-        min-height: 157px;
-        padding: 34px 24px 16px;
-        border: 1px solid #ededed;
-        border-radius: 7px;
-        background: #fff;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, .18);
+        min-height: 190px;
+        padding: 24px 26px 20px;
+        border: 1px solid #E5E5E5;
+        border-radius: 10px;
+        background: #FFFFFF;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
     }
 
     .panduan-number {
         position: absolute;
-        top: 15px;
-        right: 17px;
-        color: #244c39;
-        font-size: 17px;
+        top: 14px;
+        right: 18px;
+        color: #173D2B;
+        font-size: 24px;
         font-weight: 700;
     }
 
     .panduan-card h3 {
-        margin: 0 0 7px;
-        padding-right: 0;
-        color: #244c39;
-        font-size: 9px;
+        margin: 12px 34px 12px 0;
+        color: #173D2B;
+        font-size: 11px;
+        line-height: 1.4;
         font-weight: 700;
     }
 
     .panduan-card p {
-        margin: 0 0 12px;
-        color: #444;
-        font-size: 7px;
+        margin: 0 0 18px;
+        color: #303A35;
+        font-size: 10px;
         line-height: 1.65;
     }
 
     .panduan-link {
-        display: inline-block;
-        align-self: flex-start;
         margin-top: auto;
-        color: #39765f;
-        font-size: 7px;
-        font-weight: 650;
+        color: #0A4C2E;
+        font-size: 9px;
+        font-weight: 700;
         text-decoration: none;
     }
 
@@ -203,31 +201,45 @@
         text-decoration: underline;
     }
 
-    @media (max-width: 760px) {
+    @media (max-width: 900px) {
+        .panduan-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .panduan-card {
+            padding: 22px 20px 18px;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .panduan-header {
+            margin-bottom: 22px;
+        }
+
+        .panduan-header h2 {
+            font-size: 22px;
+        }
+
+        .panduan-header p {
+            font-size: 12px;
+        }
+
+        .panduan-welcome {
+            align-items: flex-start;
+            padding: 14px;
+        }
+
+        .panduan-welcome h3 {
+            font-size: 14px;
+        }
+
         .panduan-grid {
             grid-template-columns: 1fr;
             gap: 14px;
         }
 
         .panduan-card {
-            min-height: 145px;
-            padding: 35px 20px 18px;
-        }
-
-        .panduan-card h3 {
-            font-size: 12px;
-        }
-
-        .panduan-card p {
-            font-size: 10px;
-        }
-
-        .panduan-link {
-            font-size: 9px;
-        }
-
-        .panduan-welcome p {
-            font-size: 9px;
+            min-height: 160px;
         }
     }
 </style>

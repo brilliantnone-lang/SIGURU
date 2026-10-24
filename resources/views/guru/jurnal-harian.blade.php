@@ -261,14 +261,14 @@
 
     .jurnal-page-header h2 {
         margin: 0 0 5px;
-        font-size: 23px;
+        font-size: 26px;
         font-weight: 650;
         color: #111;
     }
 
     .jurnal-page-header p {
         margin: 0;
-        font-size: 10px;
+        font-size: 12px;
         color: #555;
     }
 
@@ -309,14 +309,14 @@
 
     .section-heading h3 {
         margin: 0 0 2px;
-        font-size: 14px;
+        font-size: 18px;
         font-weight: 650;
         color: #111;
     }
 
     .section-heading p {
         margin: 0;
-        font-size: 9px;
+        font-size: 12px;
         color: #999;
     }
 
@@ -339,7 +339,7 @@
         text-align: left;
         text-transform: uppercase;
         color: #7d8581;
-        font-size: 9px;
+        font-size: 11px;
         font-weight: 650;
         white-space: nowrap;
     }
@@ -347,7 +347,7 @@
     .jurnal-table td {
         padding: 6px 12px;
         border-bottom: 1px solid #e3e3e3;
-        font-size: 9px;
+        font-size: 11px;
         vertical-align: middle;
     }
 
@@ -365,7 +365,7 @@
     }
 
     .validation-status {
-        font-size: 9px;
+        font-size: 11px;
         font-weight: 500;
         white-space: nowrap;
     }
@@ -395,7 +395,7 @@
         border: 1px solid;
         border-radius: 5px;
         text-decoration: none;
-        font-size: 8px;
+        font-size: 9px;
         white-space: nowrap;
     }
 
@@ -423,19 +423,19 @@
 
     .history-heading h3 {
         margin: 0 0 2px;
-        font-size: 14px;
+        font-size: 18px;
         font-weight: 650;
         color: #222;
     }
 
     .history-heading p {
         margin: 0;
-        font-size: 9px;
+        font-size: 12px;
         color: #999;
     }
 
     .history-table th {
-        font-size: 8px;
+        font-size: 11px;
         padding-top: 5px;
         padding-bottom: 5px;
     }
@@ -456,14 +456,14 @@
 
     .history-table td:nth-child(2) strong {
         display: block;
-        font-size: 9px;
+        font-size: 11px;
         font-weight: 650;
     }
 
     .history-table td:nth-child(2) small {
         display: block;
         margin-top: 3px;
-        font-size: 7px;
+        font-size: 10px;
         color: #999;
         white-space: nowrap;
     }
@@ -474,7 +474,7 @@
         text-align: center;
         color: #888;
         line-height: 1.5;
-        font-size: 8px;
+        font-size: 11px;
     }
 
     .history-table th:nth-child(4),
@@ -491,7 +491,7 @@
         border-radius: 6px;
         background: #96ebc8;
         color: #267454;
-        font-size: 9px;
+        font-size: 11px;
     }
 
     .history-actions {
@@ -541,7 +541,7 @@
         justify-content: space-between;
         gap: 12px;
         padding: 12px 10px 9px;
-        font-size: 8px;
+        font-size: 11px;
         color: #52675d;
     }
 
@@ -552,14 +552,14 @@
     }
 
     .pagination-list button {
-        min-width: 14px;
-        height: 14px;
+        min-width: 20px;
+        height: 20px;
         padding: 0 3px;
         border: 1px solid #d5d5d5;
         border-radius: 3px;
         background: #fff;
         color: #555;
-        font-size: 8px;
+        font-size: 10px;
         cursor: pointer;
     }
 
@@ -580,7 +580,7 @@
 
     @media (max-width: 700px) {
         .jurnal-page-header h2 {
-            font-size: 20px;
+            font-size: 22px;
         }
 
         .jurnal-page-header p {
