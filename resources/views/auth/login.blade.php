@@ -6,18 +6,22 @@
     <title>Login - SIGURU</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --primary-dark: #2b2622; 
-            --text-dark: #1a1a1a;
-            --text-muted: #666;
-            --bg-cream: #f8f6f3;
-            --border-color: #e5e5e5;
+            --green-dark: #0A4C2E;
+            --green-main: #17B26C;
+            --green-sidebar: #39745E;
+            --green-button: #107449;
+            --text-main: #173D2B;
+            --text-muted: #40574F;
+            --border: #E1ECE6;
+            --footer: #4B5552;
+            --white: #FFFFFF;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,7 +33,7 @@
             overflow: hidden;
             font-family: 'Plus Jakarta Sans', Arial, sans-serif;
             background-color: #ffffff;
-            color: var(--text-dark);
+            color: var(--text-main);
         }
 
         .split-layout {
@@ -40,7 +44,8 @@
 
         /* --- KIRI (Gambar Full + Galeri Overlay) --- */
         .left-panel {
-            flex: 1;
+            flex: 1.85;
+            min-width: 0;
             position: relative;
             background-image: url('/images/sekolah.jpg');
             background-size: cover;
@@ -56,7 +61,7 @@
             content: "";
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 40%);
+            background: linear-gradient(to top, rgba(15, 35, 28, 0.72) 0%, rgba(15, 35, 28, 0.18) 32%, rgba(15, 35, 28, 0.04) 65%);
             z-index: 1;
         }
 
@@ -65,17 +70,18 @@
             position: relative;
             z-index: 2;
             display: flex;
+            justify-content: center;
             gap: 15px;
-            width: 100%;
-            max-width: 500px;
+            width: min(100%, 720px);
+            margin-inline: auto;
         }
 
         .gallery-item {
             flex: 1;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 5px 18px rgba(12, 28, 22, 0.28);
+            border: 2px solid rgba(255,255,255,0.68);
         }
 
         .gallery-item img {
@@ -93,18 +99,19 @@
         /* --- KANAN (Form Login) --- */
         .right-panel {
             flex: 1;
-            background-color: var(--bg-cream);
+            min-width: 0;
+            background-color: var(--white);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2vh 5%;
+            padding: 3vh 5%;
             position: relative;
             overflow-y: hidden;
         }
 
         .login-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 460px;
         }
 
         .login-header {
@@ -123,7 +130,7 @@
             font-size: 24px;
             font-weight: 800;
             letter-spacing: 1px;
-            color: var(--text-dark);
+            color: var(--text-main);
             margin-bottom: 5px;
         }
 
@@ -136,7 +143,7 @@
 
         .divider {
             height: 1px;
-            background-color: #d1d5db;
+            background-color: var(--border);
             width: 100%;
             margin: 2vh 0;
         }
@@ -165,7 +172,7 @@
         .input-group-custom {
             display: flex;
             align-items: center;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border);
             border-radius: 8px;
             padding: 0 15px;
             height: 48px;
@@ -174,12 +181,12 @@
         }
 
         .input-group-custom:focus-within {
-            border-color: #a0a0a0;
-            box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+            border-color: var(--green-sidebar);
+            box-shadow: 0 0 0 3px rgba(23, 178, 108, 0.12);
         }
 
         .input-group-custom i {
-            color: #999;
+            color: var(--green-sidebar);
             font-size: 16px;
             margin-right: 10px;
         }
@@ -196,7 +203,7 @@
         .password-toggle {
             background: none;
             border: none;
-            color: #999;
+            color: var(--green-sidebar);
             font-size: 16px;
             cursor: pointer;
             padding: 0;
@@ -205,7 +212,7 @@
         .btn-submit {
             width: 100%;
             height: 48px;
-            background-color: var(--primary-dark);
+            background-color: var(--green-button);
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -219,34 +226,34 @@
             cursor: pointer;
         }
 
-        .btn-submit:hover { background-color: #1a1614; }
+        .btn-submit:hover { background-color: var(--green-dark); }
 
         /* Info Box */
         .info-box {
-            background-color: #ffffff;
+            background-color: #f5f8f5;
             border-radius: 8px;
             padding: 12px 15px;
             display: flex;
             gap: 10px;
             align-items: flex-start;
             margin-top: 2.5vh;
-            border: 1px solid #eaeaea;
+            border: 1px solid var(--border);
         }
 
-        .info-box i { font-size: 18px; color: #555; margin-top: 2px; }
-        .info-box p { font-size: 11px; color: #555; line-height: 1.4; margin: 0; }
+        .info-box i { font-size: 18px; color: var(--green-sidebar); margin-top: 2px; }
+        .info-box p { font-size: 11px; color: var(--text-muted); line-height: 1.5; margin: 0; }
 
         /* --- RESPONSIVE MOBILE --- */
         @media (max-width: 992px) {
             html, body { overflow-y: auto; height: auto; }
-            .split-layout { flex-direction: column; height: auto; }
-            
-            .left-panel { 
-                min-height: 350px; 
+            .split-layout { flex-direction: column; height: auto; min-height: 100vh; }
+
+            .left-panel {
+                min-height: 300px;
                 align-items: center; /* Galeri ke tengah di HP */
                 padding: 20px;
             }
-            
+
             .gallery-overlay {
                 max-width: 100%;
             }
@@ -254,9 +261,9 @@
             .gallery-item img {
                 height: 70px;
             }
-            
-            .right-panel { 
-                padding: 40px 20px; 
+
+            .right-panel {
+                padding: 40px 20px;
             }
         }
     </style>
@@ -269,10 +276,10 @@
             <!-- Galeri 3 Gambar Menimpa Background -->
             <div class="gallery-overlay">
                 <div class="gallery-item">
-                    <img src="{{ asset('images/adwiyata.jpg') }}" alt="Program Adiwiyata">
+                    <img src="{{ asset('images/kepsek&wakasek.jpg') }}" alt="Kepala Sekolah & Wakil Kepala Sekolah">
                 </div>
                 <div class="gallery-item">
-                    <img src="{{ asset('images/kepsek&wakasek.jpg') }}" alt="Kepala Sekolah & Wakil Kepala Sekolah">
+                    <img src="{{ asset('images/adwiyata.jpg') }}" alt="Program Adiwiyata ">
                 </div>
                 <div class="gallery-item">
                     <img src="{{ asset('images/fotbar.jpg') }}" alt="Kebersamaan Warga Sekolah">

@@ -16,7 +16,6 @@
 
         {{-- Kartu Statistik --}}
 
-
         <div class="admin-statistics">
 
             {{-- Jurnal --}}
@@ -109,9 +108,7 @@
 
         </div>
 
-
     </div>
-
 
     {{-- Konten Dashboard --}}
     <div class="admin-dashboard-grid">
@@ -254,6 +251,8 @@
 
         </div>
 
+        {{-- Kolom kanan dashboard --}}
+        <div class="admin-dashboard-right">
 
         {{-- Rekapitulasi Absensi --}}
         <section class="admin-panel admin-attendance-panel">
@@ -327,6 +326,71 @@
 
             </div>
         </section>
+
+        {{-- Pengingat Jurnal Hari Ini --}}
+        <section class="admin-panel admin-journal-reminder-panel">
+            <div class="admin-panel-heading">
+                <span class="panel-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="5" width="18" height="16" rx="2" />
+                        <path d="M16 3v4M8 3v4M3 10h18" />
+                    </svg>
+                </span>
+                <h2>Pengingat Jurnal Hari Ini</h2>
+            </div>
+
+            <div class="journal-reminder-date">
+                <span class="journal-reminder-calendar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="5" width="18" height="16" rx="2" />
+                        <path d="M16 3v4M8 3v4M3 10h18" />
+                    </svg>
+                </span>
+                <div class="journal-reminder-date-text">
+                    <strong>{{ now()->translatedFormat('l, d F Y') }}</strong>
+                    <span>Jadwal pengisian jurnal hari ini</span>
+                </div>
+                <span class="journal-reminder-count">Belum mengisi: 3 guru</span>
+            </div>
+
+            <div class="admin-table-wrapper">
+                <table class="admin-table journal-reminder-table">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Nama Guru</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Andi Pratama, S.Pd.</td>
+                            <td><span class="journal-reminder-status">Belum mengisi</span></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Rina Marlina, S.Pd.</td>
+                            <td><span class="journal-reminder-status">Belum mengisi</span></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Dewi Lestari, S.Pd.</td>
+                            <td><span class="journal-reminder-status">Belum mengisi</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="journal-reminder-note">
+                <span aria-hidden="true">ⓘ</span>
+                Daftar diperbarui mengikuti pengisian jurnal hari ini.
+            </p>
+        </section>
+
+        </div>
 
     </div>
 
@@ -481,6 +545,104 @@
             flex-direction: column;
             gap: 10px;
             min-width: 0;
+        }
+
+        .admin-dashboard-right {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .admin-journal-reminder-panel {
+            margin-top: 0;
+        }
+
+        .journal-reminder-date {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 9px;
+            margin-bottom: 8px;
+            border-radius: 7px;
+            background: #eaf5ef;
+            min-width: 0;
+        }
+
+        .journal-reminder-calendar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 34px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            color: #299b6b;
+            background: #d8eee2;
+        }
+
+        .journal-reminder-calendar svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .journal-reminder-date-text {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .journal-reminder-date-text strong {
+            color: #263b35;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .journal-reminder-date-text span {
+            color: #74817d;
+            font-size: 9px;
+        }
+
+        .journal-reminder-count {
+            padding: 6px 8px;
+            border-radius: 20px;
+            background: #f9dddd;
+            color: #a52d35;
+            font-size: 9px;
+            font-weight: 700;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .journal-reminder-table th,
+        .journal-reminder-table td {
+            padding: 7px 6px;
+        }
+
+        .journal-reminder-status {
+            display: inline-block;
+            padding: 4px 7px;
+            border-radius: 20px;
+            background: #f9dddd;
+            color: #a52d35;
+            font-size: 9px;
+            white-space: nowrap;
+        }
+
+        .journal-reminder-note {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 9px 0 0;
+            color: #74817d;
+            font-size: 9px;
+        }
+
+        .journal-reminder-note span {
+            color: #299b6b;
+            font-size: 13px;
         }
 
         .admin-panel {
@@ -725,6 +887,11 @@
             .admin-attendance-list {
                 display: grid;
                 grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .admin-dashboard-right {
+                display: flex;
+                flex-direction: column;
             }
         }
 
