@@ -8,8 +8,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('pengaturan_sistem', function (Blueprint $table) {
+        Schema::create('cover_jurnal', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('admin_id')->constrained('admin')->cascadeOnDelete();
             $table->string('nama_sekolah');
             $table->string('npsn')->nullable();
             $table->text('alamat')->nullable();
@@ -24,6 +25,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('pengaturan_sistem');
+        Schema::dropIfExists('cover_jurnal');
     }
 };

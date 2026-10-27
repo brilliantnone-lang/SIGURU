@@ -3,218 +3,111 @@
 @section('title', 'Data Cover - Jurnal Mengajar Guru')
 
 @section('content')
-
-    <h1>Data Cover</h1>
-    <p class="subtitle">
-        Atur identitas dan format halaman depan jurnal mengajar guru.
-    </p>
-
-    <div class="settings-card">
-        <div class="settings-inner">
-            <h2 class="settings-title">Pengaturan identitas</h2>
-            <p class="settings-description">
-                Perubahan langsung ditampilkan pada pratinjau cover
-            </p>
-
-            <div class="field-row">
-                <div class="field">
-                    <label class="field-label">Pemerintah Kota / Kabupaten</label>
-                    <input class="input" value="PEMERINTAH KOTA BANJARMASIN" readonly>
-                </div>
-
-                <div class="field">
-                    <label class="field-label">Dinas</label>
-                    <input class="input" value="DINAS PENDIDIKAN" readonly>
-                </div>
-            </div>
-
-            <div class="school-field">
-                <label class="field-label">Nama Sekolah</label>
-                <input class="input" value="SMP NEGERI 15 BANJARMASIN" readonly>
-            </div>
-
-            <label class="field-label upload-label">
-                Logo sekolah / Tut Wuri Handayani
-            </label>
-
-            <div class="upload-box">
-                <div class="upload-inner">
-                    <svg class="cloud-icon" viewBox="0 0 32 28" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path d="M8 21H6.5C3.5 21 1.5 18.8 1.5 16
-                             C1.5 13.2 3.7 11 6.5 11
-                             C7.4 6.6 11 4 15.5 4
-                             C20.1 4 23.4 7 24 11
-                             C27.6 10.9 30 13.1 30 16.2
-                             C30 19 27.8 21 25 21H23" stroke="currentColor" stroke-width="2.5"
-                            stroke-linecap="round" stroke-linejoin="round" />
-                        <path d="M16 26V13M11.5 17.5L16 13L20.5 17.5" stroke="currentColor"
-                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-
-                    <div class="upload-title">Upload Logo</div>
-                    <div class="upload-text">
-                        Klik untuk memilih file atau seret file ke sini
-                    </div>
-                    <div class="upload-text">
-                        Format PNG, JPG - Maksimal 5 MB
-                    </div>
-                </div>
-            </div>
-
-            <p class="help-text">
-                Unggah logo resmi berformat PNG atau JPG untuk ditampilkan pada cover.
-            </p>
-
-            <div class="button-row">
-                <button class="save-button" type="button">
-                    Simpan Pengaturan
-                </button>
-            </div>
-        </div>
+<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:15px; margin-bottom:18px;">
+    <div>
+        <h1 style="margin:0 0 5px; font-size:26px; font-weight:650; color:#111;">Data Cover Jurnal</h1>
+        <p style="margin:0; font-size:12px; color:#555;">Kelola cover jurnal per tahun ajaran dan semester</p>
     </div>
+    <a href="{{ route('admin.data-cover.create') }}" style="display:inline-flex; align-items:center; gap:7px; padding:8px 12px; border-radius:5px; background:#39765f; color:#fff; text-decoration:none; font-size:12px; font-weight:500;">
+        <i class="bi bi-plus-lg"></i> Tambah Cover
+    </a>
+</div>
 
+@if(session('success'))
+<div style="background:#dcfce7;color:#166534;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #bbf7d0;">
+    {{ session('success') }}
+</div>
+@endif
+
+{{-- TAMBAHKAN INI UNTUK MENANGKAP ERROR --}}
+@if(session('error'))
+<div style="background:#fee2e2;color:#991b1b;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #fecaca;">
+    {{ session('error') }}
+</div>
+@endif
+
+<div class="cover-table-card">
+    <table class="cover-table">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Tahun Ajaran</th>
+                <th>Semester</th>
+                <th>Nama Sekolah</th>
+                <th>Kepala Sekolah</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($covers as $i => $cover)
+            <tr>
+                <td>{{ $i + 1 }}</td>
+                <td>{{ $cover->tahun_ajaran }}</td>
+                <td>{{ $cover->semester }}</td>
+                <td>{{ $cover->nama_sekolah }}</td>
+                <td>{{ $cover->nama_kepsek }}</td>
+                <td>
+                    <div style="display:flex; gap:8px; justify-content:center;">
+                        <a href="{{ route('admin.data-cover.edit', ['data_cover' => $cover->id]) }}" style="color:#16834F; font-size:16px;" title="Edit">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <form action="{{ route('admin.data-cover.destroy', $cover->id) }}" method="POST" onsubmit="return confirm('Hapus cover ini?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" style="color:#D83A43; font-size:16px; background:none; border:none; padding:0; cursor:pointer;" title="Hapus">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="6" style="text-align:center; padding:40px; color:#888;">Belum ada cover jurnal. Silakan tambah baru.</td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
 @endsection
 
 @push('styles')
 <style>
-    /* ====== CSS khusus halaman Data Cover ====== */
-    .settings-card {
-        min-height: 325px;
+    .cover-table-card {
+        background: #fff;
+        border-radius: 10px;
         padding: 20px;
         border: 1px solid #E1ECE6;
-        border-radius: 12px;
-        background: #FFFFFF;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
     }
 
-    .settings-inner {
-        padding: 10px 12px 14px;
-        border-radius: 6px;
-        background: rgba(228, 236, 231, 0.12);
-    }
-
-    .settings-title {
-        margin: 0 0 5px;
-        color: #173D2B;
-        font-size: 18px;
-        font-weight: 600;
-    }
-
-    .settings-description {
-        margin: 0 0 22px;
-        color: #5D756B;
-        font-size: 12px;
-    }
-
-    .field-label {
-        display: block;
-        margin-bottom: 7px;
-        color: #173D2B;
-        font-size: 13px;
-        font-weight: 600;
-    }
-
-    .field-row {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        gap: 22px;
-        margin-bottom: 16px;
-    }
-
-    .field { min-width: 0; }
-
-    .input {
-        display: block;
+    .cover-table {
         width: 100%;
-        height: 42px;
-        padding: 9px 12px;
-        border: 1px solid #E1ECE6;
-        border-radius: 5px;
-        outline: none;
-        background: #FFFFFF;
-        color: #40574F;
-        font: inherit;
+        border-collapse: collapse;
+    }
+
+    .cover-table thead {
+        background: #F0F6F2;
+    }
+
+    .cover-table th {
+        padding: 12px 10px;
+        text-align: left;
+        font-size: 11px;
+        font-weight: 700;
+        color: #173D2B;
+        text-transform: uppercase;
+    }
+
+    .cover-table td {
+        padding: 12px 10px;
         font-size: 13px;
+        color: #40574F;
+        border-bottom: 1px solid #E8EFEB;
     }
 
-    .school-field { margin-bottom: 16px; }
-
-    .upload-label { margin-bottom: 9px; }
-
-    .upload-box {
-        height: 180px;
-        margin: 0 3px 18px;
-        padding: 12px;
-        border: 1px solid #E1ECE6;
-        border-radius: 10px;
-        background: #FFFFFF;
-    }
-
-    .upload-inner {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+    .cover-table td:last-child {
         text-align: center;
-        border: 1px dashed #E1ECE6;
-        border-radius: 8px;
-        color: #173D2B;
-    }
-
-    .cloud-icon {
-        width: 42px;
-        height: 36px;
-        margin-bottom: 7px;
-    }
-
-    .upload-title {
-        margin-bottom: 5px;
-        color: #173D2B;
-        font-size: 14px;
-        font-weight: 600;
-    }
-
-    .upload-text {
-        color: #40574F;
-        font-size: 13px;
-        line-height: 1.6;
-    }
-
-    .help-text {
-        margin: 0 0 24px;
-        color: #5D756B;
-        font-size: 12px;
-    }
-
-    .button-row {
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    .save-button {
-        width: 42%;
-        min-height: 44px;
-        border: none;
-        border-radius: 6px;
-        background: #0A4C2E;
-        color: #FFFFFF;
-        font-family: inherit;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-    }
-
-    @media (max-width: 900px) {
-        .field-row {
-            grid-template-columns: 1fr;
-            gap: 14px;
-        }
-    }
-
-    @media (max-width: 600px) {
-        .settings-card { padding: 10px; }
-        .save-button { width: 100%; }
     }
 </style>
 @endpush

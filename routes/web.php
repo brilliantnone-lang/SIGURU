@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\CoverJurnalController;
 
 // ===== AUTH =====
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -20,10 +21,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         return view('admin.dashboard');
     })->name('dashboard');
 
-    // Data Cover
-    Route::get('/data-cover', function () {
-        return view('admin.data-cover');
-    })->name('data-cover');
+    // Data Cover (CRUD Lengkap)
+    Route::resource('data-cover', CoverJurnalController::class);
 
     // Data Guru
     Route::get('/data-guru', function () {

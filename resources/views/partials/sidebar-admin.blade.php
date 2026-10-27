@@ -2,51 +2,51 @@
     <div class="section-label">MENU UTAMA</div>
     <nav class="nav">
         <a class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
-           href="{{ route('admin.dashboard') }}">
+            href="{{ route('admin.dashboard') }}">
             Dashboard
         </a>
         <a class="nav-item {{ request()->routeIs('admin.rekap-absensi') ? 'active' : '' }}"
-           href="{{ route('admin.rekap-absensi') }}">
+            href="{{ route('admin.rekap-absensi') }}">
             Rekapitulasi Absensi Siswa
         </a>
         <a class="nav-item {{ request()->routeIs('admin.kalender') ? 'active' : '' }}"
-           href="{{ route('admin.kalender') }}">
+            href="{{ route('admin.kalender') }}">
             Kalender Akademik
         </a>
         <a class="nav-item {{ request()->routeIs('admin.jurnal') ? 'active' : '' }}"
-           href="{{ route('admin.jurnal') }}">
+            href="{{ route('admin.jurnal') }}">
             Jurnal Harian Guru
         </a>
         <a class="nav-item {{ request()->routeIs('admin.bahan-ajar') ? 'active' : '' }}"
-           href="{{ route('admin.bahan-ajar') }}">
+            href="{{ route('admin.bahan-ajar') }}">
             Bahan Ajar Guru
         </a>
     </nav>
 
     <div class="section-label">PENGATURAN</div>
     <nav class="nav">
-        <a class="nav-item {{ request()->routeIs('admin.data-cover') ? 'active' : '' }}"
-           href="{{ route('admin.data-cover') }}">
+        <a class="nav-item {{ request()->routeIs('admin.data-cover.*') ? 'active' : '' }}"
+            href="{{ route('admin.data-cover.index') }}">
             Data Cover
         </a>
         <a class="nav-item {{ request()->routeIs('admin.guru.*') ? 'active' : '' }}"
-           href="{{ route('admin.guru.index') }}">
+            href="{{ route('admin.guru.index') }}">
             Data Guru
         </a>
         <a class="nav-item {{ request()->routeIs('admin.kelas.*') ? 'active' : '' }}"
-           href="{{ route('admin.kelas.index') }}">
+            href="{{ route('admin.kelas.index') }}">
             Data Kelas
         </a>
         <a class="nav-item {{ request()->routeIs('admin.pengajaran') ? 'active' : '' }}"
-           href="{{ route('admin.pengajaran') }}">
+            href="{{ route('admin.pengajaran') }}">
             Data Pengajaran
         </a>
         <a class="nav-item {{ request()->routeIs('admin.event') ? 'active' : '' }}"
-           href="{{ route('admin.event') }}">
+            href="{{ route('admin.event') }}">
             Event Sekolah
         </a>
         <a class="nav-item {{ request()->routeIs('admin.panduan') ? 'active' : '' }}"
-           href="{{ route('admin.panduan') }}">
+            href="{{ route('admin.panduan') }}">
             Panduan Penggunaan
         </a>
     </nav>

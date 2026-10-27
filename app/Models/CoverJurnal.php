@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PengaturanSistem extends Model
+class CoverJurnal extends Model
 {
-    protected $table = 'pengaturan_sistem';
+    protected $table = 'cover_jurnal';
 
     protected $fillable = [
+        'admin_id',
         'nama_sekolah',
         'npsn',
         'alamat',
@@ -19,8 +20,13 @@ class PengaturanSistem extends Model
         'nip_kepsek',
     ];
 
-    public static function getSetting()
+    public function admin()
     {
-        return self::first();
+        return $this->belongsTo(Admin::class);
+    }
+
+    public function jurnal()
+    {
+        return $this->hasMany(Journal::class);
     }
 }
