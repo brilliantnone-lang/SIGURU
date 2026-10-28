@@ -9,10 +9,21 @@
             <h1>Data Pengajaran</h1>
             <p class="subtitle">Hubungkan Guru, Kelas, dan Mata Pelajaran</p>
         </div>
-        <button class="add-pengajaran-button" type="button">
+        <a href="{{ route('admin.pengajaran.create') }}" class="add-pengajaran-button" style="text-decoration: none;">
             <span aria-hidden="true">＋</span> Tambah Data
-        </button>
+        </a>
     </div>
+
+    @if(session('success'))
+        <div style="background:#dcfce7;color:#166534;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #bbf7d0;">
+            {{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div style="background:#fee2e2;color:#991b1b;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #fecaca;">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <div class="pengajaran-table-card">
         <div class="pengajaran-table-wrap">
@@ -34,257 +45,29 @@
                             <td>{{ $j->kelas->nama_kelas ?? '-' }}</td>
                             <td>{{ $j->mataPelajaran->nama_mata_pelajaran ?? '-' }}</td>
                             <td>{{ ucfirst($j->hari) }}</td>
-                            <td>Jam ke-{{ $j->jam_mulai_ke }}@if($j->jam_selesai_ke != $j->jam_mulai_ke) s/d
-                            {{ $j->jam_selesai_ke }}@endif
+                            <td>
+                                Jam ke-{{ $j->jam_mulai_ke }}@if($j->jam_selesai_ke != $j->jam_mulai_ke) s/d
+                                {{ $j->jam_selesai_ke }}@endif
                             </td>
                             <td>
                                 <div class="pengajaran-actions">
-                                    <button class="table-action edit" type="button" aria-label="Edit data">✎</button>
+                                    <a href="{{ route('admin.pengajaran.edit', $j->id) }}" class="table-action edit" title="Edit data">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
 
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
-                                    </button>
-
+                                    <form action="{{ route('admin.pengajaran.destroy', $j->id) }}" method="POST" onsubmit="return confirm('Hapus jadwal ini?');" style="display:inline; margin:0; padding:0;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="table-action delete" title="Hapus data">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
                     @empty
-                        {{-- Data dummy --}}
                         <tr>
-                            <td>Siti Rahmawati, S.Pd.</td>
-                            <td>VII A</td>
-                            <td>Bahasa Indonesia</td>
-                            <td>Senin</td>
-                            <td>Jam ke-1</td>
-                            <td>
-                                <div class="pengajaran-actions"><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Ahmad Fauzi, S.Pd.</td>
-                            <td>VII B</td>
-                            <td>Matematika</td>
-                            <td>Senin</td>
-                            <td>Jam ke-2</td>
-                            <td>
-                                <div class="pengajaran-actions"><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Nurul Hidayah, S.Pd.</td>
-                            <td>VII C</td>
-                            <td>IPA</td>
-                            <td>Selasa</td>
-                            <td>Jam ke-3</td>
-                            <td>
-                                <div class="pengajaran-actions"><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Budi Santoso, S.Pd.</td>
-                            <td>VIII A</td>
-                            <td>Bahasa Inggris</td>
-                            <td>Selasa</td>
-                            <td>Jam ke-4</td>
-                            <td>
-                                <div class="pengajaran-actions"><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Dewi Anggraini, S.Pd.</td>
-                            <td>VIII B</td>
-                            <td>IPS</td>
-                            <td>Rabu</td>
-                            <td>Jam ke-5</td>
-                            <td>
-                                <div class="pengajaran-actions"><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Muhammad Rizky, S.Pd.</td>
-                            <td>VIII C</td>
-                            <td>PJOK</td>
-                            <td>Rabu</td>
-                            <td>Jam ke-6</td>
-                            <td>
-                                <div class="pengajaran-actions"><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Rina Wulandari, S.Pd.</td>
-                            <td>VIII D</td>
-                            <td>Seni Budaya</td>
-                            <td>Kamis</td>
-                            <td>Jam ke-7</td>
-                            <td>
-                                <div class="pengajaran-actions"><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Fajar Maulana, S.Pd.</td>
-                            <td>IX A</td>
-                            <td>PKn</td>
-                            <td>Kamis</td>
-                            <td>Jam ke-8</td>
-                            <td>
-                                <div class="pengajaran-actions"><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Lilis Kartika, S.Pd.</td>
-                            <td>IX B</td>
-                            <td>Prakarya</td>
-                            <td>Jumat</td>
-                            <td>Jam ke-1</td>
-                            <td>
-                                <div class="pengajaran-actions"><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Andi Pratama, S.Pd.</td>
-                            <td>IX C</td>
-                            <td>TIK</td>
-                            <td>Jumat</td>
-                            <td>Jam ke-2</td>
-                            <td>
-                                <div class="pengajaran-actions">
-                                    <button class="table-action edit" type="button" aria-label="Edit guru" title="Edit guru">
-                                        <i class="bi bi-pencil-fill"></i>
-                                    </button>
-
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <i class="bi bi-trash3"></i>
-                                    </button>
-                                </div>
-
-                            </td>
+                            <td colspan="6" style="text-align:center; padding:40px; color:#888;">Belum ada data pengajaran. Silakan tambah baru.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -292,16 +75,7 @@
         </div>
 
         <div class="pengajaran-table-footer">
-            <span>Menampilkan 1-10 dari 48 data pengajaran</span>
-            <div class="pagination" aria-label="Pagination">
-                <button class="page-button" type="button">‹</button>
-                <button class="page-button active" type="button">1</button>
-                <button class="page-button" type="button">2</button>
-                <button class="page-button" type="button">3</button>
-                <button class="page-button" type="button">4</button>
-                <button class="page-button" type="button">5</button>
-                <span>…</span>
-            </div>
+            <span>Menampilkan {{ count($jadwal ?? []) }} data pengajaran</span>
         </div>
     </div>
 
@@ -444,7 +218,7 @@
             border: 1px solid;
             border-radius: 7px;
             background: #fff;
-            font-size: 17px;
+            font-size: 15px;
             line-height: 1;
             cursor: pointer;
             transition: background .15s ease;
@@ -472,32 +246,6 @@
             margin-top: 16px;
             color: #40574F;
             font-size: 10px;
-        }
-
-        .pagination {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .page-button {
-            min-width: 24px;
-            height: 24px;
-            padding: 0 7px;
-            border: 1px solid #D8E2DC;
-            border-radius: 5px;
-            background: #FFFFFF;
-            color: #173D2B;
-            font: inherit;
-            font-size: 10px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
-            cursor: pointer;
-        }
-
-        .page-button.active {
-            background: #B9F4B2;
-            border-color: #70C86B;
-            color: #173D2B;
         }
 
         @media (max-width: 700px) {

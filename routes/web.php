@@ -73,9 +73,14 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     ]);
 
     // Data Pengajaran
-    Route::get('/data-pengajaran', function () {
-        return view('admin.data-pengajaran');
-    })->name('pengajaran');
+    Route::resource('data-pengajaran', \App\Http\Controllers\Admin\JadwalController::class)->names([
+        'index' => 'pengajaran.index',
+        'create' => 'pengajaran.create',
+        'store' => 'pengajaran.store',
+        'edit' => 'pengajaran.edit',
+        'update' => 'pengajaran.update',
+        'destroy' => 'pengajaran.destroy',
+    ]);
 
     // Event Sekolah
     Route::get('/event-sekolah', function () {
