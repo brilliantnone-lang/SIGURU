@@ -47,7 +47,7 @@
             href="{{ route('admin.pengajaran.index') }}">
             Data Pengajaran
         </a>
-        <a class="nav-item {{ request()->routeIs('admin.event') ? 'active' : '' }}"
+        <a class="nav-item {{ request()->routeIs('admin.event.*') ? 'active' : '' }}"
             href="{{ route('admin.event.index') }}">
             Event Sekolah
         </a>

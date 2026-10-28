@@ -4,68 +4,67 @@
 
 @section('content')
 
-    <div class="guide-intro">
-        <h1>Panduan Penggunaan</h1>
-        <p>Semua yang perlu Anda ketahui untuk menggunakan sistem jurnal mengajar sebagai Admin.</p>
+<div class="guide-intro">
+    <h1>Panduan Penggunaan</h1>
+    <p>Semua yang perlu Anda ketahui untuk menggunakan sistem jurnal mengajar sebagai Admin.</p>
+</div>
+
+<div class="guide-welcome">
+    <div class="guide-book-icon" aria-hidden="true">♧</div>
+    <div>
+        <h2>Selamat datang di Halaman Panduan Penggunaan Admin</h2>
+        <p>Ikuti panduan singkat ini untuk mengelola data, mengatur sistem, dan memastikan seluruh informasi pada sistem jurnal mengajar berjalan dengan baik.</p>
     </div>
+</div>
 
-    <div class="guide-welcome">
-        <div class="guide-book-icon" aria-hidden="true">♧</div>
-        <div>
-            <h2>Selamat datang di Halaman Panduan Penggunaan Admin</h2>
-            <p>Ikuti panduan singkat ini untuk mengelola data, mengatur sistem, dan memastikan seluruh informasi pada sistem jurnal mengajar berjalan dengan baik.</p>
-        </div>
-    </div>
+<div class="guide-grid">
+    <article class="guide-card">
+        <span class="guide-number">01</span>
+        <h3>Melihat Dashboard</h3>
+        <p>Buka menu Dashboard untuk melihat ringkasan data seperti jumlah guru, siswa, kelas, mata pelajaran, dan jumlah mengajar yang telah masuk ke sistem.</p>
+        <a href="{{ route('admin.dashboard') }}" class="guide-link" style="text-decoration:none;">Buka Dashboard &rarr;</a>
+    </article>
 
-    <div class="guide-grid">
-        <article class="guide-card">
-            <span class="guide-number">01</span>
-            <h3>Melihat Dashboard</h3>
-            <p>Buka menu Dashboard untuk melihat ringkasan data seperti jumlah guru, siswa, kelas, mata pelajaran, dan jumlah mengajar yang telah masuk ke sistem.</p>
-            <span class="guide-link">Buka dashboard</span>
-        </article>
+    <article class="guide-card">
+        <span class="guide-number">02</span>
+        <h3>Mengelola Data Guru</h3>
+        <p>Gunakan menu Data Guru untuk menambah, mengubah, melihat, dan mengelola data guru. Pastikan data guru selalu diperbarui agar dapat digunakan dalam pengisian jurnal.</p>
+        <a href="{{ route('admin.guru.index') }}" class="guide-link" style="text-decoration:none;">Kelola Data Guru &rarr;</a>
+    </article>
 
-        <article class="guide-card">
-            <span class="guide-number">02</span>
-            <h3>Mengelola Data Guru</h3>
-            <p>Gunakan menu Data Guru untuk menambah, mengubah, melihat, dan mengelola data guru. Pastikan data guru selalu diperbarui agar dapat digunakan dalam pengisian jurnal.</p>
-            <span class="guide-link">Kelola data guru</span>
-        </article>
+    <article class="guide-card">
+        <span class="guide-number">03</span>
+        <h3>Mengelola Data Siswa &amp; Kelas</h3>
+        <p>Gunakan menu Data Kelas untuk menambah kelas, lalu klik ikon tambah siswa di setiap kelas untuk mengelola data siswa yang terdaftar.</p>
+        <a href="{{ route('admin.kelas.index') }}" class="guide-link" style="text-decoration:none;">Kelola Data Kelas &rarr;</a>
+    </article>
 
-        <article class="guide-card">
-            <span class="guide-number">03</span>
-            <h3>Mengelola Data Siswa &amp; Kelas</h3>
-            <p>Gunakan menu Data Siswa dan Data Kelas untuk menambah, mengubah, dan mengelola data siswa serta kelas yang terdaftar dalam sistem.</p>
-            <span class="guide-link">Kelola data siswa dan kelas</span>
-        </article>
+    <article class="guide-card">
+        <span class="guide-number">04</span>
+        <h3>Mengelola Data Pengajaran</h3>
+        <p>Gunakan menu Data Pengajaran untuk mengatur hubungan antara guru, mata pelajaran, dan kelas. Data ini digunakan pada saat guru mengisi jurnal mengajar harian.</p>
+        <a href="{{ route('admin.pengajaran.index') }}" class="guide-link" style="text-decoration:none;">Atur Data Pengajaran &rarr;</a>
+    </article>
 
-        <article class="guide-card">
-            <span class="guide-number">04</span>
-            <h3>Mengelola Data Pengajaran</h3>
-            <p>Gunakan menu Data Pengajaran untuk mengatur hubungan antara guru, mata pelajaran, dan kelas. Data ini digunakan pada saat guru mengisi jurnal mengajar harian.</p>
-            <span class="guide-link">Atur data pengajaran</span>
-        </article>
+    <article class="guide-card">
+        <span class="guide-number">05</span>
+        <h3>Mengelola Kalender &amp; Event</h3>
+        <p>Gunakan menu Event Sekolah untuk mengatur hari libur, upacara rutin, atau kegiatan penting lainnya yang dapat menggantikan jam pelajaran.</p>
+        <a href="{{ route('admin.event.index') }}" class="guide-link" style="text-decoration:none;">Kelola Event Sekolah &rarr;</a>
+    </article>
 
-        <article class="guide-card">
-            <span class="guide-number">05</span>
-            <h3>Mengelola Kalender Akademik</h3>
-            <p>Gunakan menu Kalender Akademik untuk menambahkan dan mengatur informasi kalender akademik seperti tahun ajaran, semester, hari libur, dan kegiatan penting lainnya.</p>
-            <span class="guide-link">Kelola kalender akademik</span>
-        </article>
-
-        <article class="guide-card">
-            <span class="guide-number">06</span>
-            <h3>Melihat Jurnal</h3>
-            <p>Gunakan menu Jurnal Harian Guru untuk melihat data jurnal yang telah diunggah oleh guru.</p>
-            <span class="guide-link">Lihat jurnal</span>
-        </article>
-    </div>
+    <article class="guide-card">
+        <span class="guide-number">06</span>
+        <h3>Melihat Jurnal</h3>
+        <p>Gunakan menu Jurnal Harian Guru untuk melihat data jurnal yang telah diunggah oleh guru.</p>
+        <a href="#" class="guide-link" style="text-decoration:none;">Lihat Jurnal &rarr;</a>
+    </article>
+</div>
 
 @endsection
 
 @push('styles')
 <style>
-    /* ====== CSS khusus halaman Panduan Penggunaan ====== */
     .guide-intro {
         margin-bottom: 30px;
     }
@@ -162,21 +161,47 @@
     .guide-link {
         margin-top: auto;
         color: #0A4C2E;
-        font-size: 9px;
+        font-size: 10px;
         font-weight: 700;
+        transition: color 0.2s;
+    }
+
+    .guide-link:hover {
+        color: #16834F;
     }
 
     @media (max-width: 900px) {
-        .guide-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .guide-card { padding: 22px 20px 18px; }
+        .guide-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .guide-card {
+            padding: 22px 20px 18px;
+        }
     }
 
     @media (max-width: 600px) {
-        .guide-intro { margin-bottom: 22px; }
-        .guide-welcome { align-items: flex-start; padding: 14px; }
-        .guide-welcome h2 { font-size: 14px; }
-        .guide-grid { grid-template-columns: 1fr; gap: 14px; }
-        .guide-card { min-height: 160px; }
+        .guide-intro {
+            margin-bottom: 22px;
+        }
+
+        .guide-welcome {
+            align-items: flex-start;
+            padding: 14px;
+        }
+
+        .guide-welcome h2 {
+            font-size: 14px;
+        }
+
+        .guide-grid {
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
+
+        .guide-card {
+            min-height: 160px;
+        }
     }
 </style>
 @endpush
