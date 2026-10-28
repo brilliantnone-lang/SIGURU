@@ -27,6 +27,7 @@
                 <thead>
                     <tr>
                         <th>Tahun Ajaran</th>
+                        <th>Semester</th>
                         <th>Periode Aktif</th>
                         <th>File</th>
                         <th>Aksi</th>
@@ -36,6 +37,7 @@
                     @forelse($kalenders as $k)
                     <tr>
                         <td><strong>{{ $k->tahun_ajaran }}</strong></td>
+                        <td><span style="background:#E1ECE6; padding:3px 8px; border-radius:4px; font-size:10px; font-weight:600;">{{ $k->semester }}</span></td>
                         <td style="font-size:11px;">
                             {{ $k->tanggal_mulai->format('d M Y') }} - {{ $k->tanggal_selesai->format('d M Y') }}
                         </td>
@@ -62,7 +64,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" style="text-align:center; padding:40px; color:#888;">Belum ada dokumen kalender akademik.</td>
+                        <td colspan="5" style="text-align:center; padding:40px; color:#888;">Belum ada dokumen kalender akademik.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -192,26 +194,4 @@
         cursor: pointer;
     }
 </style>
-
-@php
-$kalenderAktif = \App\Models\KalenderAkademik::getKalenderAktif();
-@endphp
-
-@if($kalenderAktif)
-<div style="background:#f0fdf4; padding:20px; border-radius:12px; border:1px solid #bbf7d0; margin-bottom:20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-    <h4 style="margin:0 0 5px; font-size:16px; color:#166534;"><i class="bi bi-calendar-event"></i> Kalender Akademik Aktif</h4>
-    <p style="margin:0 0 15px; font-size:13px; color:#14532d;">
-        Tahun Ajaran: <strong>{{ $kalenderAktif->tahun_ajaran }}</strong> <br>
-        Periode Berlaku: <strong>{{ $kalenderAktif->tanggal_mulai->translatedFormat('d F Y') }}</strong> s/d <strong>{{ $kalenderAktif->tanggal_selesai->translatedFormat('d F Y') }}</strong>
-    </p>
-    <a href="{{ asset('storage/' . $kalenderAktif->path_file) }}" target="_blank" style="display:inline-block; padding:8px 16px; background:#0A4C2E; color:#fff; text-decoration:none; border-radius:6px; font-size:12px; font-weight:600;">
-        Lihat Dokumen Kalender
-    </a>
-</div>
-@else
-<div style="background:#f8faf9; padding:20px; border-radius:12px; border:1px solid #E1ECE6;">
-    <p style="margin:0; font-size:13px; color:#5D756B;"><i class="bi bi-info-circle"></i> Belum ada kalender akademik untuk periode saat ini.</p>
-</div>
-@endif
-
 @endsection

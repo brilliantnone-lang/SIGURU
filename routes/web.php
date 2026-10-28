@@ -6,6 +6,10 @@ use App\Http\Controllers\Admin\CoverJurnalController;
 use \App\Http\Controllers\Admin\GuruController;
 use \App\Http\Controllers\Admin\MataPelajaranController;
 use \App\Http\Controllers\Admin\KalenderAkademikController;
+use \App\Http\Controllers\Admin\JournalController;
+use \App\Http\Controllers\Admin\BahanAjarController;
+use \App\Http\Controllers\Admin\RekapAbsensiController;
+use \App\Http\Controllers\Admin\DashboardController;
 
 // ===== AUTH =====
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -20,9 +24,7 @@ Route::get('/', function () {
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
 
     // Dashboard
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Data Cover (CRUD Lengkap)
     Route::resource('data-cover', CoverJurnalController::class);
@@ -99,9 +101,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     })->name('panduan');
 
     // ===== Menu yang belum ada file-nya (sementara redirect ke dashboard) =====
-    Route::get('/rekap-absensi', function () {
-        return view('admin.absensi'); // ganti nanti
-    })->name('rekap-absensi');
+    Route::get('/rekap-absensi', [RekapAbsensiController::class, 'index'])->name('rekap-absensi.index');
+    Route::get('/rekap-absensi/detail', [RekapAbsensiController::class, 'detail'])->name('rekap-absensi.detail');
 
     Route::resource('kalender', KalenderAkademikController::class)->names([
         'index' => 'kalender.index',
@@ -112,13 +113,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         'destroy' => 'kalender.destroy',
     ]);
 
-    Route::get('/jurnal', function () {
-        return view('admin.jurnal'); // ganti nanti
-    })->name('jurnal');
+    Route::get('/jurnal', [JournalController::class, 'index'])->name('jurnal.index');
 
-    Route::get('/bahan-ajar', function () {
-        return view('admin.bahan-ajar'); // ganti nanti
-    })->name('bahan-ajar');
+    Route::get('/bahan-ajar', [BahanAjarController::class, 'index'])->name('bahan-ajar.index');
 });
 
 // ===== GURU =====

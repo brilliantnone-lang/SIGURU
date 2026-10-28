@@ -5,20 +5,20 @@
             href="{{ route('admin.dashboard') }}">
             Dashboard
         </a>
-        <a class="nav-item {{ request()->routeIs('admin.rekap-absensi') ? 'active' : '' }}"
-            href="{{ route('admin.rekap-absensi') }}">
+        <a class="nav-item {{ request()->routeIs('admin.rekap-absensi.*') ? 'active' : '' }}"
+            href="{{ route('admin.rekap-absensi.index') }}">
             Rekapitulasi Absensi Siswa
         </a>
-        <a class="nav-item {{ request()->routeIs('admin.kalender') ? 'active' : '' }}"
+        <a class="nav-item {{ request()->routeIs('admin.kalender.*') ? 'active' : '' }}"
             href="{{ route('admin.kalender.index') }}">
             Kalender Akademik
         </a>
-        <a class="nav-item {{ request()->routeIs('admin.jurnal') ? 'active' : '' }}"
-            href="{{ route('admin.jurnal') }}">
+        <a class="nav-item {{ request()->routeIs('admin.jurnal.*') ? 'active' : '' }}"
+            href="{{ route('admin.jurnal.index') }}">
             Jurnal Harian Guru
         </a>
-        <a class="nav-item {{ request()->routeIs('admin.bahan-ajar') ? 'active' : '' }}"
-            href="{{ route('admin.bahan-ajar') }}">
+        <a class="nav-item {{ request()->routeIs('admin.bahan-ajar.*') ? 'active' : '' }}"
+            href="{{ route('admin.bahan-ajar.index') }}">
             Bahan Ajar Guru
         </a>
     </nav>

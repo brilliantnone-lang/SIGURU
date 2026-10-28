@@ -11,6 +11,7 @@ class KalenderAkademik extends Model
     protected $fillable = [
         'admin_id', 
         'tahun_ajaran', 
+        'semester',
         'tanggal_mulai', 
         'tanggal_selesai', 
         'nama_file', 

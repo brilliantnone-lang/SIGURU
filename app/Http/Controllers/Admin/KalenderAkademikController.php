@@ -13,7 +13,7 @@ class KalenderAkademikController extends Controller
 {
     public function index()
     {
-        $kalenders = KalenderAkademik::orderBy('tahun_ajaran', 'desc')->get();
+        $kalenders = KalenderAkademik::orderBy('tahun_ajaran', 'desc')->orderBy('semester', 'asc')->get();
         return view('admin.kalender', compact('kalenders'));
     }
 
@@ -26,6 +26,7 @@ class KalenderAkademikController extends Controller
     {
         $request->validate([
             'tahun_ajaran' => 'required|string|max:20',
+            'semester' => 'required|in:Ganjil,Genap',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
             'file_kalender' => 'required|mimes:pdf,doc,docx|max:10240',
@@ -41,6 +42,7 @@ class KalenderAkademikController extends Controller
             KalenderAkademik::create([
                 'admin_id' => $admin->id ?? 1,
                 'tahun_ajaran' => $request->tahun_ajaran,
+                'semester' => $request->semester,
                 'tanggal_mulai' => $request->tanggal_mulai,
                 'tanggal_selesai' => $request->tanggal_selesai,
                 'nama_file' => $namaFile,
@@ -64,6 +66,7 @@ class KalenderAkademikController extends Controller
 
         $request->validate([
             'tahun_ajaran' => 'required|string|max:20',
+            'semester' => 'required|in:Ganjil,Genap',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
             'file_kalender' => 'nullable|mimes:pdf,doc,docx|max:10240',
@@ -71,6 +74,7 @@ class KalenderAkademikController extends Controller
 
         $data = [
             'tahun_ajaran' => $request->tahun_ajaran,
+            'semester' => $request->semester,
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
         ];
