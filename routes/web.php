@@ -83,9 +83,14 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     ]);
 
     // Event Sekolah
-    Route::get('/event-sekolah', function () {
-        return view('admin.event-sekolah');
-    })->name('event');
+    Route::resource('event-sekolah', \App\Http\Controllers\Admin\EventSekolahController::class)->names([
+        'index' => 'event.index',
+        'create' => 'event.create',
+        'store' => 'event.store',
+        'edit' => 'event.edit',
+        'update' => 'event.update',
+        'destroy' => 'event.destroy',
+    ]);
 
     // Panduan Penggunaan
     Route::get('/panduan', function () {

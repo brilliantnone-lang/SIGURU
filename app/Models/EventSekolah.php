@@ -16,6 +16,8 @@ class EventSekolah extends Model
         'jam_mulai_ke',
         'jam_selesai_ke',
         'is_full_day',
+        'is_rutin',        // <-- Tambah ini
+        'hari_rutin',      // <-- Tambah ini
         'admin_id',
     ];
 

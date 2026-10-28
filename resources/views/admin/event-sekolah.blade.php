@@ -9,17 +9,29 @@
             <h1>Event Sekolah</h1>
             <p class="subtitle">Masukkan Kegiatan Sekolah yang Diluar Pembelajaran</p>
         </div>
-        <button class="add-event-button" type="button">
+        <a href="{{ route('admin.event.create') }}" class="add-event-button" style="text-decoration: none;">
             <span aria-hidden="true">＋</span> Tambah Event
-        </button>
+        </a>
     </div>
+
+    {{-- Notifikasi --}}
+    @if(session('success'))
+        <div style="background:#dcfce7;color:#166534;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #bbf7d0;">
+            {{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div style="background:#fee2e2;color:#991b1b;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #fecaca;">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <div class="event-table-card">
         <div class="event-table-wrap">
             <table class="event-table">
                 <thead>
                     <tr>
-                        <th>Tanggal</th>
+                        <th>Waktu Pelaksanaan</th>
                         <th>Keterangan</th>
                         <th>Jam Pelajaran</th>
                         <th>Aksi</th>
@@ -28,135 +40,52 @@
                 <tbody>
                     @forelse($events ?? [] as $e)
                         <tr>
-                            <td>{{ \Carbon\Carbon::parse($e->tanggal_mulai)->translatedFormat('d F Y') }}</td>
-                            <td>{{ $e->nama_event }}</td>
+                            <td>
+                                @if($e->is_rutin)
+                                    <span style="font-weight:700; color:#0A4C2E; background:#dcfce7; padding:4px 8px; border-radius:4px; font-size:10px;">
+                                        Rutin: {{ ucfirst($e->hari_rutin) }}
+                                    </span>
+                                @else
+                                    <span style="font-weight:600;">
+                                        {{ \Carbon\Carbon::parse($e->tanggal_mulai)->translatedFormat('d M Y') }}
+                                        @if($e->tanggal_selesai && $e->tanggal_selesai != $e->tanggal_mulai)
+                                            - {{ \Carbon\Carbon::parse($e->tanggal_selesai)->translatedFormat('d M Y') }}
+                                        @endif
+                                    </span>
+                                @endif
+                            </td>
+                            <td>
+                                <strong>{{ $e->nama_event }}</strong>
+                                @if($e->deskripsi)
+                                    <br><small style="color:#5D756B;">{{ $e->deskripsi }}</small>
+                                @endif
+                            </td>
                             <td>
                                 @if($e->is_full_day)
-                                    Semua Jam
+                                    <span style="color:#c2410c; font-weight:600;">Full Day (Seharian)</span>
                                 @else
-                                    Jam ke-{{ $e->jam_mulai_ke }} – Jam ke-{{ $e->jam_selesai_ke }}
+                                    Jam ke-{{ $e->jam_mulai_ke }} s/d Jam ke-{{ $e->jam_selesai_ke }}
                                 @endif
                             </td>
                             <td>
                                 <div class="event-actions">
-                                    <button class="table-action edit" type="button" aria-label="Edit guru" title="Edit guru">
+                                    <a href="{{ route('admin.event.edit', $e->id) }}" class="table-action edit" title="Edit event">
                                         <i class="bi bi-pencil-fill"></i>
-                                    </button>
-
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <i class="bi bi-trash3"></i>
-                                    </button>
+                                    </a>
+                                    
+                                    <form action="{{ route('admin.event.destroy', $e->id) }}" method="POST" onsubmit="return confirm('Hapus event ini?');" style="display:inline; margin:0; padding:0;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="table-action delete" title="Hapus event">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </form>
                                 </div>
-
                             </td>
                         </tr>
                     @empty
-                        {{-- Data dummy --}}
                         <tr>
-                            <td>17 Agustus 2026</td>
-                            <td>Upacara Hari Kemerdekaan</td>
-                            <td>Semua Jam</td>
-                            <td>
-                                <div class="event-actions"><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>25 Agustus 2026</td>
-                            <td>Kegiatan Bimtek Guru</td>
-                            <td>Jam ke-1 – Jam ke-4</td>
-                            <td>
-                                <div class="event-actions"><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1 September 2026</td>
-                            <td>Rapat Koordinasi Sekolah</td>
-                            <td>Jam ke-1 – Jam ke-2</td>
-                            <td>
-                                <div class="event-actions"><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>10 September 2026</td>
-                            <td>Kegiatan Sekolah</td>
-                            <td>Semua Jam</td>
-                            <td>
-                                <div class="event-actions"><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>20 September 2026</td>
-                            <td>Kegiatan Peringatan Sekolah</td>
-                            <td>Semua Jam</td>
-                            <td>
-                                <div class="event-actions"><button class="table-action edit" type="button">✎</button>
-                                    <button class="table-action delete" type="button" aria-label="Hapus guru"
-                                        title="Hapus guru">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18" />
-                                            <path d="M8 6V4h8v2" />
-                                            <path d="M19 6l-1 14H6L5 6" />
-                                            <path d="M10 11v6" />
-                                            <path d="M14 11v6" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
+                            <td colspan="4" style="text-align:center; padding:40px; color:#888;">Belum ada event sekolah. Silakan tambah baru.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -164,16 +93,7 @@
         </div>
 
         <div class="event-table-footer">
-            <span>Menampilkan 1-5 dari 48 event sekolah</span>
-            <div class="pagination" aria-label="Pagination">
-                <button class="page-button" type="button">‹</button>
-                <button class="page-button active" type="button">1</button>
-                <button class="page-button" type="button">2</button>
-                <button class="page-button" type="button">3</button>
-                <button class="page-button" type="button">4</button>
-                <button class="page-button" type="button">5</button>
-                <span>…</span>
-            </div>
+            <span>Menampilkan {{ count($events ?? []) }} event sekolah</span>
         </div>
     </div>
 
@@ -216,6 +136,7 @@
             font-weight: 600;
             white-space: nowrap;
             cursor: pointer;
+            text-decoration: none;
         }
 
         .event-table-card {
@@ -237,7 +158,7 @@
             border-collapse: collapse;
             table-layout: fixed;
             color: #173D2B;
-            font-size: 10px;
+            font-size: 11px;
         }
 
         .event-table thead {
@@ -247,13 +168,13 @@
         .event-table th {
             padding: 10px 8px;
             color: #0A4C2E;
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 700;
             text-align: center;
         }
 
         .event-table td {
-            padding: 11px 8px;
+            padding: 12px 8px;
             border-bottom: 1px solid #E8EFEB;
             vertical-align: middle;
             overflow-wrap: break-word;
@@ -266,23 +187,24 @@
         /* Lebar kolom */
         .event-table th:nth-child(1),
         .event-table td:nth-child(1) {
-            width: 20%;
+            width: 25%;
             text-align: center;
         }
 
         .event-table th:nth-child(2),
         .event-table td:nth-child(2) {
-            width: 34%;
+            width: 35%;
         }
 
         .event-table th:nth-child(3),
         .event-table td:nth-child(3) {
-            width: 20%;
+            width: 25%;
+            text-align: center;
         }
 
         .event-table th:nth-child(4),
         .event-table td:nth-child(4) {
-            width: 16%;
+            width: 15%;
             text-align: center;
         }
 
@@ -292,7 +214,6 @@
             align-items: center;
             gap: 8px;
         }
-
 
         .table-action {
             display: inline-flex;
@@ -304,7 +225,7 @@
             border: 1px solid;
             border-radius: 7px;
             background: #fff;
-            font-size: 17px;
+            font-size: 15px;
             line-height: 1;
             cursor: pointer;
             transition: background .15s ease;
@@ -324,41 +245,14 @@
             background: #f4f8f5;
         }
 
-
         .event-table-footer {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            margin: 66px 14px 0;
+            margin: 20px 14px 0;
             color: #40574F;
             font-size: 11px;
-        }
-
-        .pagination {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .page-button {
-            min-width: 24px;
-            height: 24px;
-            padding: 0 7px;
-            border: 1px solid #D8E2DC;
-            border-radius: 5px;
-            background: #FFFFFF;
-            color: #173D2B;
-            font: inherit;
-            font-size: 10px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
-            cursor: pointer;
-        }
-
-        .page-button.active {
-            background: #B9F4B2;
-            border-color: #70C86B;
-            color: #173D2B;
         }
 
         @media (max-width: 700px) {
