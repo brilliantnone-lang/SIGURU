@@ -1,7 +1,6 @@
-
 @extends('layouts.app')
 
-@section('title', 'Kalender Akademik')
+@section('title', 'Kalender Akademik - SIGURU')
 
 @section('content')
 <style>
@@ -19,7 +18,7 @@
     }
 
     .kalender-heading {
-        margin-bottom: 27px;
+        margin-bottom: 20px;
     }
 
     .kalender-heading h3 {
@@ -33,6 +32,18 @@
         margin: 3px 0 0;
         color: #52665e;
         font-size: 12px;
+    }
+
+    .kalender-info {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 6px;
+        padding: 10px 15px;
+        margin-bottom: 15px;
+        display: inline-block;
+        font-size: 12px;
+        color: #166534;
+        font-weight: 600;
     }
 
     .kalender-pdf-wrapper {
@@ -82,13 +93,6 @@
         line-height: 1.7;
     }
 
-    .kalender-pdf-empty code {
-        padding: 3px 6px;
-        color: #e4f5eb;
-        background: #3b4b44;
-        border-radius: 4px;
-    }
-
     .kalender-open-link {
         display: inline-flex;
         align-items: center;
@@ -113,7 +117,7 @@
         }
 
         .kalender-heading {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .kalender-pdf-wrapper {
@@ -129,28 +133,41 @@
         <p>Dokumen kalender akademik tahun ajaran berjalan</p>
     </div>
 
-    <div class="kalender-pdf-wrapper">
-        @if (file_exists(public_path('dokumen/kalender-akademik.pdf')))
+    @if($kalenderAktif)
+        {{-- Info Kalender Aktif --}}
+        <div class="kalender-info">
+            <i class="bi bi-calendar-check"></i>
+            Aktif: Tahun Ajaran {{ $kalenderAktif->tahun_ajaran }} - Semester {{ $kalenderAktif->semester }}
+            ({{ \Carbon\Carbon::parse($kalenderAktif->tanggal_mulai)->translatedFormat('d M Y') }} s/d {{ \Carbon\Carbon::parse($kalenderAktif->tanggal_selesai)->translatedFormat('d M Y') }})
+        </div>
+
+        {{-- Preview PDF --}}
+        <div class="kalender-pdf-wrapper">
             <iframe
                 class="kalender-pdf"
-                src="{{ asset('dokumen/kalender-akademik.pdf') }}#toolbar=1&navpanes=1&view=FitH"
+                src="{{ asset('storage/' . $kalenderAktif->path_file) }}#toolbar=1&navpanes=1&view=FitH"
                 title="Dokumen Kalender Akademik"
             ></iframe>
-        @else
+        </div>
+        
+        <div style="margin-top: 15px; text-align: right;">
+            <a href="{{ asset('storage/' . $kalenderAktif->path_file) }}" target="_blank" class="kalender-open-link" style="margin-top:0;">
+                <i class="bi bi-box-arrow-up-right"></i> Buka di Tab Baru
+            </a>
+        </div>
+    @else
+        {{-- Jika Belum Ada Kalender Aktif --}}
+        <div class="kalender-pdf-wrapper">
             <div class="kalender-pdf-empty">
                 <i class="bi bi-file-earmark-pdf"></i>
-
-                <h4>Dokumen Kalender Akademik</h4>
-
+                <h4>Belum Ada Kalender Aktif</h4>
                 <p>
-                    File PDF kalender akademik belum ditemukan.
-                    Letakkan dokumen kalender sekolah pada folder
-                    <code>public/dokumen/kalender-akademik.pdf</code>
-                    agar tampil di halaman ini.
+                    Saat ini belum ada dokumen kalender akademik yang periode aktifnya mencakup hari ini.
+                    Silakan hubungi Admin untuk mengunggah kalender akademik.
                 </p>
             </div>
-        @endif
-    </div>
+        </div>
+    @endif
 
 </div>
 @endsection

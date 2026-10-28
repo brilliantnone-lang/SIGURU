@@ -155,40 +155,31 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     })->name('panduan');
 });
 
-
 // ===== KEPSEK =====
-Route::middleware(['auth', 'role:kepsek'])
-    ->prefix('kepsek')
-    ->name('kepsek.')
-    ->group(function () {
+Route::middleware(['auth', 'role:kepsek'])->prefix('kepsek')->name('kepsek.')->group(function () {
 
-        // Dashboard
-        Route::get('/dashboard', function () {
-            return view('kepsek.dashboard');
-        })->name('dashboard');
+    // Dashboard
+    Route::get('/dashboard', [\App\Http\Controllers\Kepsek\DashboardController::class, 'index'])->name('dashboard');
 
-        // Rekapitulasi Absensi Siswa
-        Route::get('/rekapitulasi-absensi', function () {
-            return view('kepsek.rekapitulasi-absensi');
-        })->name('rekapitulasi-absensi');
+    // Rekapitulasi Absensi Siswa (Sementara Closure, nanti kita buat Controllernya)
+    Route::get('/rekapitulasi-absensi', [\App\Http\Controllers\Kepsek\RekapAbsensiController::class, 'index'])->name('rekapitulasi-absensi.index');
 
-        // Validasi Jurnal
-        Route::get('/validasi-jurnal', function () {
-            return view('kepsek.validasi-jurnal');
-        })->name('validasi-jurnal');
+    // Validasi Jurnal (Sementara Closure)
+    Route::get('/validasi-jurnal', function () {
+        return view('kepsek.validasi-jurnal');
+    })->name('validasi-jurnal.index');
 
-        // Bahan Ajar
-        Route::get('/bahan-ajar', function () {
-            return view('kepsek.bahan-ajar');
-        })->name('bahan-ajar');
+    // Bahan Ajar
+    Route::get('/bahan-ajar', [\App\Http\Controllers\Kepsek\BahanAjarController::class, 'index'])->name('bahan-ajar.index');
 
-        // Kalender Akademik
-        Route::get('/kalender', function () {
-            return view('kepsek.kalender');
-        })->name('kalender');
+    // Kalender Akademik
+    Route::get('/kalender', function () {
+        $kalenderAktif = \App\Models\KalenderAkademik::getKalenderAktif();
+        return view('kepsek.kalender', compact('kalenderAktif'));
+    })->name('kalender');
 
-        // Panduan Penggunaan
-        Route::get('/panduan', function () {
-            return view('kepsek.panduan');
-        })->name('panduan');
-    });
+    // Panduan Penggunaan
+    Route::get('/panduan', function () {
+        return view('kepsek.panduan');
+    })->name('panduan');
+});

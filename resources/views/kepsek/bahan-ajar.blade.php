@@ -1,520 +1,314 @@
 @extends('layouts.app')
 
-@section('title', 'Bahan Ajar Guru')
+@section('title', 'Bahan Ajar Guru - SIGURU')
 
 @section('content')
-    <style>
-        .kepsek-bahan-page {
-            width: 100%;
-            min-width: 0;
-            color: #26332f;
-            font-family: inherit;
-        }
+<div class="admin-bahan-ajar">
 
-        .kepsek-bahan-page *,
-        .kepsek-bahan-page *::before,
-        .kepsek-bahan-page *::after {
-            box-sizing: border-box;
-        }
+    <div class="bahan-ajar-heading">
+        <h1>Bahan Ajar Guru</h1>
+        <p>Melihat bahan ajar yang digunakan guru</p>
+    </div>
 
-        /* Heading */
-        .bahan-heading {
-            margin-bottom: 20px;
-        }
+    {{-- Filter --}}
+    <form action="{{ route('kepsek.bahan-ajar.index') }}" method="GET" class="bahan-ajar-filter">
+        <div class="bahan-filter-field">
+            <label for="filterGuruBahan">Guru</label>
+            <select id="filterGuruBahan" name="guru_id">
+                <option value="">Semua Guru</option>
+                @foreach($gurus as $g)
+                <option value="{{ $g->id }}" {{ request('guru_id') == $g->id ? 'selected' : '' }}>
+                    {{ $g->user->name ?? '-' }}
+                </option>
+                @endforeach
+            </select>
+        </div>
 
-        .bahan-heading h3 {
-            margin: 0;
-            color: #17211f;
-            font-size: 24px;
-            font-weight: 700;
-        }
+        <div class="bahan-filter-field">
+            <label for="filterMapelBahan">Mata Pelajaran</label>
+            <select id="filterMapelBahan" name="mata_pelajaran_id">
+                <option value="">Semua Mata Pelajaran</option>
+                @foreach($mataPelajarans as $mapel)
+                <option value="{{ $mapel->id }}" {{ request('mata_pelajaran_id') == $mapel->id ? 'selected' : '' }}>
+                    {{ $mapel->nama_mata_pelajaran }}
+                </option>
+                @endforeach
+            </select>
+        </div>
 
-        .bahan-heading p {
-            margin: 3px 0 0;
-            color: #52665e;
-            font-size: 12px;
-        }
+        <button type="submit" class="bahan-filter-button">
+            <i class="bi bi-search"></i> Tampilkan
+        </button>
+    </form>
 
-        /* Filter */
-        .bahan-filter {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
-            align-items: end;
-            gap: 14px;
-            margin: 0 0 8px;
-            padding: 11px;
-            background: #fff;
-            border: 1px solid #e1e8e4;
-            border-radius: 7px;
-            box-shadow: 0 2px 5px rgba(38, 51, 47, .05);
-        }
+    {{-- Daftar bahan ajar --}}
+    <section class="bahan-ajar-panel">
+        <div class="bahan-ajar-panel-heading">
+            <span aria-hidden="true">▱</span>
+            <h2>Daftar Bahan Ajar Guru</h2>
+        </div>
 
-        .bahan-filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            min-width: 0;
-        }
+        <div class="bahan-ajar-table-scroll">
+            <table class="bahan-ajar-table">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Nama Guru</th>
+                        <th>Mata Pelajaran</th>
+                        <th>File Bahan Ajar</th>
+                        <th>Waktu Upload</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($bahanAjar as $i => $b)
+                    <tr>
+                        <td>{{ $i + 1 }}</td>
+                        <td>{{ $b->guru->user->name ?? '-' }}</td>
+                        <td>{{ $b->guru->mataPelajaran->nama_mata_pelajaran ?? '-' }}</td>
+                        <td>
+                            <div class="bahan-file-list">
+                                <div class="bahan-file-item">
+                                    <span class="bahan-file-icon file-pdf">PDF</span>
+                                    <a href="{{ asset('storage/' . $b->path_file) }}" target="_blank" class="bahan-file-name" style="color:#145b3c; text-decoration:none;">
+                                        {{ $b->nama_file }}
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ $b->created_at->translatedFormat('d M Y') }}</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" style="text-align:center; padding:40px; color:#888;">Belum ada bahan ajar yang diunggah oleh guru.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-        .bahan-filter-group label {
-            color: #35483e;
-            font-size: 10px;
-            font-weight: 600;
-        }
+        <div class="bahan-ajar-footer">
+            <span>Menampilkan {{ count($bahanAjar) }} bahan ajar</span>
+        </div>
+    </section>
 
-        .bahan-filter-group select {
-            width: 100%;
-            min-width: 0;
-            height: 31px;
-            padding: 0 8px;
-            color: #48574f;
-            background: #fff;
-            border: 1px solid #dce4df;
-            border-radius: 5px;
-            font-family: inherit;
-            font-size: 10px;
-            outline: none;
-        }
+</div>
 
-        .bahan-filter-group select:focus {
-            border-color: #299b6b;
-            box-shadow: 0 0 0 2px rgba(41, 155, 107, .1);
+<style>
+    /* CSS sama persis dengan Admin Bahan Ajar */
+    .admin-bahan-ajar {
+        width: 100%;
+        min-width: 0;
+        color: #263b35;
+        font-family: inherit;
+    }
+
+    .admin-bahan-ajar *,
+    .admin-bahan-ajar *::before,
+    .admin-bahan-ajar *::after {
+        box-sizing: border-box;
+    }
+
+    .bahan-ajar-heading {
+        margin-bottom: 16px;
+    }
+
+    .bahan-ajar-heading h1 {
+        margin: 0;
+        color: #17211f;
+        font-size: 25px;
+        font-weight: 700;
+        line-height: 1.35;
+    }
+
+    .bahan-ajar-heading p {
+        margin: 3px 0 0;
+        color: #52665e;
+        font-size: 13px;
+    }
+
+    .bahan-ajar-filter {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        align-items: end;
+        gap: 16px;
+        margin-bottom: 10px;
+        padding: 14px;
+        background: #fff;
+        border: 1px solid #dfe5e2;
+        border-radius: 7px;
+        box-shadow: 0 2px 3px rgba(30, 50, 40, 0.04);
+    }
+
+    .bahan-filter-field {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        min-width: 0;
+    }
+
+    .bahan-filter-field label {
+        color: #40534b;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .bahan-filter-field select {
+        width: 100%;
+        min-width: 0;
+        height: 34px;
+        padding: 0 9px;
+        color: #46574f;
+        background: #fff;
+        border: 1px solid #dce4e0;
+        border-radius: 5px;
+        font: inherit;
+        font-size: 11px;
+    }
+
+    .bahan-filter-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-width: 95px;
+        height: 34px;
+        padding: 0 13px;
+        color: #fff;
+        background: #145b3c;
+        border: none;
+        border-radius: 5px;
+        font: inherit;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .bahan-filter-button:hover {
+        background: #10482f;
+    }
+
+    .bahan-ajar-panel {
+        min-width: 0;
+        padding: 12px;
+        background: #fff;
+        border: 1px solid #e0e7e4;
+        border-radius: 7px;
+    }
+
+    .bahan-ajar-panel-heading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+
+    .bahan-ajar-panel-heading>span {
+        color: #26935c;
+        font-size: 19px;
+    }
+
+    .bahan-ajar-panel-heading h2 {
+        margin: 0;
+        color: #263b35;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .bahan-ajar-table-scroll {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .bahan-ajar-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        font-size: 10px;
+    }
+
+    .bahan-ajar-table thead {
+        background: #fff;
+    }
+
+    .bahan-ajar-table th {
+        padding: 9px 7px;
+        color: #30483c;
+        font-size: 10px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .bahan-ajar-table td {
+        padding: 8px 7px;
+        color: #35443c;
+        border-bottom: 1px solid #f0f2f1;
+        vertical-align: middle;
+    }
+
+    .bahan-ajar-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .bahan-ajar-table tbody tr:hover {
+        background: #fafcfb;
+    }
+
+    .bahan-file-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 190px;
+    }
+
+    .bahan-file-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        min-width: 0;
+    }
+
+    .bahan-file-icon {
+        display: inline-flex;
+        flex: 0 0 11px;
+        width: 11px;
+        height: 14px;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        color: #fff;
+        background: #d85d52;
+        border-radius: 2px;
+        font-size: 4px;
+        font-weight: 700;
+    }
+
+    .bahan-file-name {
+        overflow-wrap: anywhere;
+        line-height: 1.4;
+    }
+
+    .bahan-ajar-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 12px;
+        padding: 5px 3px 10px;
+    }
+
+    .bahan-ajar-footer>span {
+        color: #52665e;
+        font-size: 11px;
+    }
+
+    @media (max-width: 760px) {
+        .bahan-ajar-filter {
+            grid-template-columns: 1fr;
         }
 
         .bahan-filter-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            height: 31px;
-            padding: 0 13px;
-            color: #fff;
-            background: #176b48;
-            border: none;
-            border-radius: 5px;
-            font-size: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .bahan-filter-button:hover {
-            background: #12583b;
-        }
-
-        /* Panel tabel */
-        .bahan-table-panel {
-            min-width: 0;
-            padding: 11px;
-            background: #fff;
-            border: 1px solid #e2eae5;
-            border-radius: 7px;
-        }
-
-        .bahan-panel-heading {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            margin: 0 0 12px 2px;
-        }
-
-        .bahan-panel-heading i {
-            color: #299b6b;
-            font-size: 13px;
-        }
-
-        .bahan-panel-heading h4 {
-            margin: 0;
-            color: #263b35;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .bahan-table-wrapper {
             width: 100%;
-            overflow-x: auto;
         }
-
-        .bahan-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 9px;
-        }
-
-        .bahan-table th {
-            padding: 7px 6px;
-            color: #35483e;
-            font-size: 9px;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .bahan-table td {
-            padding: 7px 6px;
-            color: #35423d;
-            border-bottom: 1px solid #edf1ee;
-            vertical-align: top;
-        }
-
-        .bahan-table tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        .bahan-table tbody tr:hover {
-            background: #f8fbf9;
-        }
-
-        .bahan-number {
-            width: 30px;
-        }
-
-        .bahan-files {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            min-width: 150px;
-        }
-
-        .bahan-file-link {
-            display: flex;
-            align-items: flex-start;
-            gap: 5px;
-            color: #35423d;
-            text-decoration: none;
-            line-height: 1.4;
-            overflow-wrap: anywhere;
-        }
-
-        .bahan-file-link:hover {
-            color: #176b48;
-            text-decoration: underline;
-        }
-
-        .bahan-file-link i {
-            flex-shrink: 0;
-            font-size: 12px;
-        }
-
-        .file-pdf {
-            color: #e34d4d;
-        }
-
-        .bahan-empty {
-            padding: 22px !important;
-            color: #7a8780 !important;
-            text-align: center;
-        }
-
-        /* Footer */
-        .bahan-table-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 13px;
-            padding: 0 3px;
-            color: #52665e;
-            font-size: 9px;
-        }
-
-        .bahan-pagination {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-        }
-
-        .bahan-pagination button {
-            min-width: 23px;
-            height: 23px;
-            padding: 0 5px;
-            color: #52665e;
-            background: #fff;
-            border: 1px solid #dce4df;
-            border-radius: 4px;
-            font-size: 9px;
-            cursor: pointer;
-        }
-
-        .bahan-pagination button.active {
-            color: #176b48;
-            background: #e0f4e7;
-            border-color: #8fd3a8;
-        }
-
-        .bahan-pagination button:disabled {
-            opacity: .45;
-            cursor: not-allowed;
-        }
-
-        @media (max-width: 750px) {
-            .bahan-filter {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .bahan-filter-button {
-                grid-column: 1 / -1;
-                width: 100%;
-            }
-
-            .bahan-table {
-                min-width: 650px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .bahan-heading h3 {
-                font-size: 21px;
-            }
-
-            .bahan-filter {
-                gap: 10px;
-                padding: 9px;
-            }
-
-            .bahan-table-panel {
-                padding: 8px;
-            }
-
-            .bahan-table-footer {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-        }
-    </style>
-
-    <div class="kepsek-bahan-page">
-
-        {{-- Heading --}}
-        <div class="bahan-heading">
-            <h3>Bahan Ajar Guru</h3>
-            <p>Melihat bahan ajar yang digunakan guru</p>
-        </div>
-
-        {{-- Filter --}}
-        <form id="bahanFilter" class="bahan-filter">
-
-            <div class="bahan-filter-group">
-                <label for="filterGuru">Guru</label>
-                <select id="filterGuru">
-                    <option value="">Semua Guru</option>
-                    <option value="Siti Rahmah, S.Pd.">Siti Rahmah, S.Pd.</option>
-                    <option value="Budi Santoso, S.Pd.">Budi Santoso, S.Pd.</option>
-                    <option value="Aisyah Putri, S.Pd.">Aisyah Putri, S.Pd.</option>
-                    <option value="Rizki Maulana, S.Pd.">Rizki Maulana, S.Pd.</option>
-                    <option value="Dewi Lestari, S.Pd.">Dewi Lestari, S.Pd.</option>
-                </select>
-            </div>
-
-            <div class="bahan-filter-group">
-                <label for="filterMapel">Mata Pelajaran</label>
-                <select id="filterMapel">
-                    <option value="">Semua Mata Pelajaran</option>
-                    <option value="Matematika">Matematika</option>
-                    <option value="IPA">IPA</option>
-                    <option value="Bahasa Indonesia">Bahasa Indonesia</option>
-                    <option value="IPS">IPS</option>
-                    <option value="Bahasa Inggris">Bahasa Inggris</option>
-                </select>
-            </div>
-
-            <div class="bahan-filter-group">
-                <label for="filterTahunAjaranBahan">Tahun Ajaran</label>
-                <select id="filterTahunAjaranBahan">
-                    <option value="">Semua Tahun Ajaran</option>
-                    <option>2024/2025</option>
-                    <option>2025/2026</option>
-                    <option>2026/2027</option>
-                </select>
-            </div>
-
-            <button type="submit" class="bahan-filter-button">
-                <i class="bi bi-search"></i>
-                Tampilkan
-            </button>
-
-        </form>
-
-        {{-- Daftar bahan ajar --}}
-        <section class="bahan-table-panel">
-
-            <div class="bahan-panel-heading">
-                <i class="bi bi-folder2"></i>
-                <h4>Daftar Bahan Ajar Guru</h4>
-            </div>
-
-            @php
-                $bahanAjar = [
-                    [
-                        'Siti Rahmah, S.Pd.',
-                        'Matematika',
-                        [
-                            ['Persamaan Linear Satu Variabel.pdf', 'pdf'],
-                            ['Latihan Soal PLSV.pdf', 'pdf'],
-                            ['LKPD PLSV.pdf', 'pdf'],
-                        ],
-                        '29 Sep 2026',
-                        '2025/2026',
-                    ],
-                    [
-                        'Budi Santoso, S.Pd.',
-                        'IPA',
-                        [
-                            ['Sistem Pernapasan Manusia.pdf', 'pdf'],
-                            ['LKPD Sistem Pernapasan.pdf', 'pdf'],
-                        ],
-                        '29 Sep 2026',
-                        '2025/2026',
-                    ],
-                    [
-                        'Aisyah Putri, S.Pd.',
-                        'Bahasa Indonesia',
-                        [
-                            ['Teks Eksposisi.pdf', 'pdf'],
-                            ['LKPD Teks Eksposisi.pdf', 'pdf'],
-                        ],
-                        '28 Sep 2026',
-                        '2025/2026',
-                    ],
-                    [
-                        'Rizki Maulana, S.Pd.',
-                        'IPS',
-                        [
-                            ['Kondisi Geografis Indonesia.pdf', 'pdf'],
-                            ['Modul IPS Bab 1.pdf', 'pdf'],
-                        ],
-                        '28 Sep 2026',
-                        '2025/2026',
-                    ],
-                    [
-                        'Dewi Lestari, S.Pd.',
-                        'Bahasa Inggris',
-                        [
-                            ['Describing People.pdf', 'pdf'],
-                            ['Daily Activity.pdf', 'pdf'],
-                        ],
-                        '27 Sep 2026',
-                        '2025/2026',
-                    ],
-                ];
-            @endphp
-
-            <div class="bahan-table-wrapper">
-                <table class="bahan-table">
-                    <thead>
-                        <tr>
-                            <th class="bahan-number">No</th>
-                            <th>Nama</th>
-                            <th>Mata Pelajaran</th>
-                            <th>File Bahan Ajar</th>
-                            <th>TimeStamp</th>
-                            <th>Tahun Ajaran</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="bahanTableBody">
-                        @foreach ($bahanAjar as $index => $item)
-                            <tr data-guru="{{ $item[0] }}" data-mapel="{{ $item[1] }}" data-tahun="{{ $item[4] }}">
-                                <td class="bahan-number">{{ $index + 1 }}</td>
-                                <td>{{ $item[0] }}</td>
-                                <td>{{ $item[1] }}</td>
-
-                                <td>
-                                    <div class="bahan-files">
-                                        @foreach ($item[2] as $file)
-                                            @php
-                                                $fileIcon = match ($file[1]) {
-                                                    'pdf' => 'bi-file-earmark-pdf-fill',
-                                                    default => 'bi-file-earmark',
-                                                };
-
-                                                $fileClass = match ($file[1]) {
-                                                    'pdf' => 'file-pdf',
-                                                    default => '',
-                                                };
-                                            @endphp
-
-                                            <a href="#" class="bahan-file-link"
-                                                onclick="event.preventDefault(); alert('File contoh belum terhubung ke dokumen asli.');">
-                                                <i class="bi {{ $fileIcon }} {{ $fileClass }}"></i>
-                                                <span>{{ $file[0] }}</span>
-                                            </a>
-                                        @endforeach
-                                    </div>
-                                </td>
-
-                                <td>{{ $item[3] }}</td>
-                                <td>{{ $item[4] }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="bahan-table-footer">
-                <span id="bahanCount">Menampilkan 1-5 dari 48 bahan ajar</span>
-
-                <div class="bahan-pagination" id="bahanPagination">
-                    <button type="button" disabled aria-label="Halaman sebelumnya">
-                        &lt;
-                    </button>
-                    <button type="button" class="active">1</button>
-                    <button type="button">2</button>
-                    <button type="button">3</button>
-                    <button type="button">4</button>
-                    <button type="button">5</button>
-                    <button type="button" disabled>...</button>
-                    <button type="button" aria-label="Halaman berikutnya">
-                        &gt;
-                    </button>
-                </div>
-            </div>
-
-        </section>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('bahanFilter');
-            const filterGuru = document.getElementById('filterGuru');
-            const filterMapel = document.getElementById('filterMapel');
-            const filterTahun = document.getElementById('filterTahunAjaranBahan');
-            const tbody = document.getElementById('bahanTableBody');
-            const count = document.getElementById('bahanCount');
-            const pagination = document.getElementById('bahanPagination');
-
-            form.addEventListener('submit', function (event) {
-                event.preventDefault();
-
-                const rows = Array.from(tbody.querySelectorAll('tr'));
-                let visible = 0;
-
-                rows.forEach(function (row) {
-                    const cocokGuru =
-                        !filterGuru.value || row.dataset.guru === filterGuru.value;
-
-                    const cocokMapel =
-                        !filterMapel.value || row.dataset.mapel === filterMapel.value;
-
-                    const cocokTahun =
-                        !filterTahun.value || row.dataset.tahun === filterTahun.value;
-
-                    const cocok = cocokGuru && cocokMapel && cocokTahun;
-                    row.style.display = cocok ? '' : 'none';
-
-                    if (cocok) {
-                        visible++;
-                        row.cells[0].textContent = visible;
-                    }
-                });
-
-                count.textContent = visible
-                    ? `Menampilkan 1-${visible} dari ${visible} bahan ajar contoh`
-                    : 'Tidak ada bahan ajar yang sesuai dengan filter';
-
-                pagination.style.display = visible ? 'flex' : 'none';
-            });
-        });
-    </script>
+    }
+</style>
 @endsection

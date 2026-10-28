@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('title', 'Panduan Penggunaan')
@@ -233,7 +232,8 @@
                 oleh guru. Pilih jurnal yang ingin diperiksa dengan menekan aksi Lihat.
             </p>
 
-            <a href="{{ route('kepsek.validasi-jurnal') }}" class="panduan-card-link">
+            {{-- Link Diperbaiki ke .index --}}
+            <a href="{{ route('kepsek.validasi-jurnal.index') }}" class="panduan-card-link">
                 Lihat daftar jurnal
                 <i class="bi bi-arrow-right"></i>
             </a>
@@ -289,7 +289,8 @@
                 waktu yang diinginkan.
             </p>
 
-            <a href="{{ route('kepsek.rekapitulasi-absensi') }}" class="panduan-card-link">
+            {{-- Link Diperbaiki ke .index --}}
+            <a href="{{ route('kepsek.rekapitulasi-absensi.index') }}" class="panduan-card-link">
                 Lihat rekapitulasi absensi
                 <i class="bi bi-arrow-right"></i>
             </a>
