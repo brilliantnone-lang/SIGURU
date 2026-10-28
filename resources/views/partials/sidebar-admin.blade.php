@@ -10,7 +10,7 @@
             Rekapitulasi Absensi Siswa
         </a>
         <a class="nav-item {{ request()->routeIs('admin.kalender') ? 'active' : '' }}"
-            href="{{ route('admin.kalender') }}">
+            href="{{ route('admin.kalender.index') }}">
             Kalender Akademik
         </a>
         <a class="nav-item {{ request()->routeIs('admin.jurnal') ? 'active' : '' }}"

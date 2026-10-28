@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CoverJurnalController;
 use \App\Http\Controllers\Admin\GuruController;
 use \App\Http\Controllers\Admin\MataPelajaranController;
+use \App\Http\Controllers\Admin\KalenderAkademikController;
 
 // ===== AUTH =====
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -102,9 +103,14 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         return view('admin.absensi'); // ganti nanti
     })->name('rekap-absensi');
 
-    Route::get('/kalender', function () {
-        return view('admin.kalender'); // ganti nanti
-    })->name('kalender');
+    Route::resource('kalender', KalenderAkademikController::class)->names([
+        'index' => 'kalender.index',
+        'create' => 'kalender.create',
+        'store' => 'kalender.store',
+        'edit' => 'kalender.edit',
+        'update' => 'kalender.update',
+        'destroy' => 'kalender.destroy',
+    ]);
 
     Route::get('/jurnal', function () {
         return view('admin.jurnal'); // ganti nanti
