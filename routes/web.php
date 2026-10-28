@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CoverJurnalController;
+use \App\Http\Controllers\Admin\GuruController;
 
 // ===== AUTH =====
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -25,9 +26,14 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('data-cover', CoverJurnalController::class);
 
     // Data Guru
-    Route::get('/data-guru', function () {
-        return view('admin.data-guru');
-    })->name('guru.index');
+    Route::resource('data-guru', GuruController::class)->names([
+        'index' => 'guru.index',
+        'create' => 'tambah-guru',
+        'store' => 'guru.store',
+        'edit' => 'guru.edit',
+        'update' => 'guru.update',
+        'destroy' => 'guru.destroy',
+    ]);
 
 
     Route::get('/data-guru/tambah', function () {
@@ -71,7 +77,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/bahan-ajar', function () {
         return view('admin.bahan-ajar'); // ganti nanti
     })->name('bahan-ajar');
-
 });
 
 // ===== GURU =====
@@ -109,7 +114,6 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     Route::get('/panduan', function () {
         return view('guru.panduan');
     })->name('panduan');
-
 });
 
 
