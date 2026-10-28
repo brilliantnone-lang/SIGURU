@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CoverJurnalController;
 use \App\Http\Controllers\Admin\GuruController;
+use \App\Http\Controllers\Admin\MataPelajaranController;
 
 // ===== AUTH =====
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -33,6 +34,16 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         'edit' => 'guru.edit',
         'update' => 'guru.update',
         'destroy' => 'guru.destroy',
+    ]);
+
+    // Data Mata Pelajaran
+    Route::resource('data-mapel', MataPelajaranController::class)->names([
+        'index' => 'mapel.index',
+        'create' => 'mapel.create',
+        'store' => 'mapel.store',
+        'edit' => 'mapel.edit',
+        'update' => 'mapel.update',
+        'destroy' => 'mapel.destroy',
     ]);
 
 

@@ -29,6 +29,12 @@
             href="{{ route('admin.data-cover.index') }}">
             Data Cover
         </a>
+
+        <a class="nav-item {{ request()->routeIs('admin.mapel.*') ? 'active' : '' }}"
+            href="{{ route('admin.mapel.index') }}">
+            Data Mata Pelajaran
+        </a>
+
         <a class="nav-item {{ request()->routeIs('admin.guru.*') ? 'active' : '' }}"
             href="{{ route('admin.guru.index') }}">
             Data Guru
