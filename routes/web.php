@@ -165,9 +165,9 @@ Route::middleware(['auth', 'role:kepsek'])->prefix('kepsek')->name('kepsek.')->g
     Route::get('/rekapitulasi-absensi', [\App\Http\Controllers\Kepsek\RekapAbsensiController::class, 'index'])->name('rekapitulasi-absensi.index');
 
     // Validasi Jurnal (Sementara Closure)
-    Route::get('/validasi-jurnal', function () {
-        return view('kepsek.validasi-jurnal');
-    })->name('validasi-jurnal.index');
+    Route::get('/validasi-jurnal', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'index'])->name('validasi-jurnal.index');
+    Route::get('/validasi-jurnal/{id}', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'show'])->name('validasi-jurnal.show');
+    Route::put('/validasi-jurnal/{id}', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'update'])->name('validasi-jurnal.update');
 
     // Bahan Ajar
     Route::get('/bahan-ajar', [\App\Http\Controllers\Kepsek\BahanAjarController::class, 'index'])->name('bahan-ajar.index');

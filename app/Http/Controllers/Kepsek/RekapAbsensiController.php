@@ -103,6 +103,7 @@ class RekapAbsensiController extends Controller
             }
         }
 
-        return view('admin.absensi', compact('data', 'kelas', 'tanggal', 'kelasId', 'status', 'mode', 'statusMap', 'namaKelas'));
+        return view('kepsek.rekapitulasi-absensi', compact('data', 'kelas', 'tanggal', 'kelasId', 'status', 'mode', 'statusMap', 'namaKelas'));
     }
+    
 }

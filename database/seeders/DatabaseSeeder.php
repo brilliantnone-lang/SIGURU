@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             // 2. Data User (Butuh tabel users)
             UserSeeder::class,
             GuruSeeder::class, // Sekarang dipanggil setelah mapel & user siap
+            DummyDataSeeder::class,
         ]);
     }
 }

@@ -13,6 +13,7 @@ return new class extends Migration
             $table->foreignId('guru_id')->constrained('guru')->cascadeOnDelete();
             $table->foreignId('guru_pendamping_id')->nullable()->constrained('guru')->nullOnDelete();
             $table->foreignId('kelas_id')->constrained('kelas')->cascadeOnDelete();
+            $table->foreignId('jadwal_id')->nullable()->constrained('jadwal')->nullOnDelete();
             $table->integer('jam_mulai_ke');
             $table->integer('jam_selesai_ke');
             $table->date('tanggal');

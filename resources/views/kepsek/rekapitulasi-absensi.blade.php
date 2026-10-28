@@ -11,7 +11,7 @@
     </div>
 
     {{-- Filter --}}
-    <form action="{{ route('kepsek.rekapitulasi-absensi.index') }}" method="GET" class="rekap-filter">
+    <form action="{{ route('admin.rekap-absensi.index') }}" method="GET" class="rekap-filter">
         <div class="filter-field">
             <label for="filter-tanggal">Tanggal (Opsional)</label>
             <input type="date" id="filter-tanggal" name="tanggal" value="{{ $tanggal }}">
