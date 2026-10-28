@@ -53,9 +53,24 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 
     // Data Kelas
-    Route::get('/data-kelas', function () {
-        return view('admin.data-kelas');
-    })->name('kelas.index');
+    Route::resource('data-kelas', \App\Http\Controllers\Admin\KelasController::class)->names([
+        'index' => 'kelas.index',
+        'create' => 'kelas.create',
+        'store' => 'kelas.store',
+        'edit' => 'kelas.edit',
+        'update' => 'kelas.update',
+        'destroy' => 'kelas.destroy',
+    ]);
+
+    // Data Murid
+    Route::resource('data-murid', \App\Http\Controllers\Admin\MuridController::class)->names([
+        'index' => 'murid.index',
+        'create' => 'murid.create',
+        'store' => 'murid.store',
+        'edit' => 'murid.edit',
+        'update' => 'murid.update',
+        'destroy' => 'murid.destroy',
+    ]);
 
     // Data Pengajaran
     Route::get('/data-pengajaran', function () {
