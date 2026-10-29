@@ -31,6 +31,13 @@
     <div class="section-label">PENGATURAN</div>
 
     <nav class="nav">
+        <a class="nav-item {{ request()->routeIs('kepsek.profil') ? 'active' : '' }}"
+            href="{{ route('kepsek.profil') }}">
+            Profil Saya
+        </a>
+    </nav>
+
+    <nav class="nav">
         <a class="nav-item {{ request()->routeIs('kepsek.panduan') ? 'active' : '' }}"
             href="{{ route('kepsek.panduan') }}">
             Panduan Penggunaan

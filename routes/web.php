@@ -196,17 +196,23 @@ Route::middleware(['auth', 'role:kepsek'])->prefix('kepsek')->name('kepsek.')->g
     // Dashboard
     Route::get('/dashboard', [\App\Http\Controllers\Kepsek\DashboardController::class, 'index'])->name('dashboard');
 
-    // Rekapitulasi Absensi Siswa (Sementara Closure, nanti kita buat Controllernya)
+    // Rekapitulasi Absensi Siswa
     Route::get('/rekapitulasi-absensi', [\App\Http\Controllers\Kepsek\RekapAbsensiController::class, 'index'])->name('rekapitulasi-absensi.index');
 
-    // Validasi Jurnal (Sementara Closure)
+    // List Semester
     Route::get('/validasi-jurnal', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'index'])->name('validasi-jurnal.index');
-    Route::get('/validasi-jurnal/{id}', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'show'])->name('validasi-jurnal.show');
-    Route::put('/validasi-jurnal/{id}', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'update'])->name('validasi-jurnal.update');
 
-    Route::get('/form-validasi', function () {
-        return view('kepsek.form-validasi');
-    })->name('form-validasi');
+    // List Guru di Semester
+    Route::get('/validasi-jurnal/semester/{id}', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'show'])->name('validasi-jurnal.show');
+
+    // Detail Jurnal Per Guru + Form Validasi
+    Route::get('/validasi-jurnal/semester/{cover_id}/guru/{guru_id}', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'jurnalGuru'])->name('validasi-jurnal.guru');
+
+    // Proses Validasi Massal Per Guru
+    Route::put('/validasi-jurnal/semester/{cover_id}/guru/{guru_id}', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'validasiGuru'])->name('validasi-jurnal.validasi-guru');
+
+    // Detail Per Jurnal (TTD)
+    Route::get('/validasi-jurnal/detail/{id}', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'detailJurnal'])->name('validasi-jurnal.detail');
 
     // Bahan Ajar
     Route::get('/bahan-ajar', [\App\Http\Controllers\Kepsek\BahanAjarController::class, 'index'])->name('bahan-ajar.index');
@@ -221,4 +227,8 @@ Route::middleware(['auth', 'role:kepsek'])->prefix('kepsek')->name('kepsek.')->g
     Route::get('/panduan', function () {
         return view('kepsek.panduan');
     })->name('panduan');
+
+    // Profil & TTD
+    Route::get('/profil', [\App\Http\Controllers\Kepsek\ProfilController::class, 'index'])->name('profil');
+    Route::post('/profil/ttd', [\App\Http\Controllers\Kepsek\ProfilController::class, 'updateTtd'])->name('profil.ttd');
 });

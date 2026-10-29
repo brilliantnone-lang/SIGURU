@@ -66,4 +66,9 @@ class Journal extends Model
     {
         return $this->jam_selesai_ke - $this->jam_mulai_ke + 1;
     }
+
+    public function coverJurnal()
+    {
+        return $this->belongsTo(CoverJurnal::class);
+    }
 }

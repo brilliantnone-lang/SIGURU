@@ -14,6 +14,7 @@ class User extends Authenticatable
         'name',
         'username',
         'jenis_kelamin',
+        'ttd_kepsek',
         'password',
         'role',
     ];
