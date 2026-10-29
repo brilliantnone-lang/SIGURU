@@ -1,303 +1,173 @@
 @extends('layouts.app')
 
-@section('title', 'Kalender Akademik')
-
-@section('sidebar')
-    <a href="{{ route('guru.dashboard') }}">
-        <i class="bi bi-speedometer2"></i> Dashboard
-    </a>
-@endsection
+@section('title', 'Kalender Akademik - SIGURU')
 
 @section('content')
-<div class="kalender-page">
-
-    {{-- Header --}}
-    <div class="kalender-header">
-        <h2>Kalender Akademik</h2>
-        <p>Dokumen kalender akademik tahun ajaran berjalan</p>
-    </div>
-
-    {{-- Pratinjau Dokumen --}}
-    <section class="kalender-document">
-        <div class="pdf-toolbar">
-            <div class="pdf-menu">
-                <i class="bi bi-list"></i>
-                <span>Kalender Akademik.pdf</span>
-            </div>
-
-            <div class="pdf-controls">
-                <button type="button" class="pdf-control" id="pdf-prev" aria-label="Halaman sebelumnya">
-                    <i class="bi bi-chevron-left"></i>
-                </button>
-                <span class="pdf-page-number">
-                    <span id="current-page">1</span>
-                    <span>/</span>
-                    <span id="total-pages">1</span>
-                </span>
-                <button type="button" class="pdf-control" id="pdf-next" aria-label="Halaman berikutnya">
-                    <i class="bi bi-chevron-right"></i>
-                </button>
-                <span class="pdf-divider"></span>
-                <button type="button" class="pdf-control" id="pdf-zoom-out" aria-label="Perkecil">
-                    <i class="bi bi-dash-lg"></i>
-                </button>
-                <span id="pdf-zoom-value">75%</span>
-                <button type="button" class="pdf-control" id="pdf-zoom-in" aria-label="Perbesar">
-                    <i class="bi bi-plus-lg"></i>
-                </button>
-                <button type="button" class="pdf-control" id="pdf-fullscreen" aria-label="Layar penuh">
-                    <i class="bi bi-arrows-fullscreen"></i>
-                </button>
-            </div>
-        </div>
-
-        <div class="pdf-viewer" id="pdf-viewer">
-            <div class="pdf-thumbnail">
-                <div class="thumbnail-page">
-                    <i class="bi bi-file-earmark-pdf"></i>
-                    <span>1</span>
-                </div>
-            </div>
-
-            <div class="pdf-canvas-area">
-                <div class="pdf-placeholder">
-                    <i class="bi bi-file-earmark-pdf"></i>
-                    <h3>Kalender Akademik</h3>
-                    <p>Dokumen kalender akademik akan ditampilkan di sini.</p>
-                    <small>Tambahkan file PDF kalender akademik untuk mengaktifkan pratinjau.</small>
-                </div>
-            </div>
-        </div>
-    </section>
-
-</div>
-
 <style>
-    .kalender-page {
+    .kepsek-kalender {
         width: 100%;
-        color: #222;
+        min-width: 0;
+        color: #26332f;
         font-family: inherit;
     }
 
-    .kalender-header {
-        margin: 0 0 22px;
+    .kepsek-kalender *,
+    .kepsek-kalender *::before,
+    .kepsek-kalender *::after {
+        box-sizing: border-box;
     }
 
-    .kalender-header h2 {
-        margin: 0 0 5px;
-        font-size: 26px;
-        line-height: 1.25;
-        font-weight: 700;
-        color: #173D2B;
+    .kalender-heading {
+        margin-bottom: 20px;
     }
 
-    .kalender-header p {
+    .kalender-heading h3 {
         margin: 0;
-        font-size: 12px;
-        color: #40574F;
+        color: #17211f;
+        font-size: 24px;
+        font-weight: 700;
     }
 
-    .kalender-document {
+    .kalender-heading p {
+        margin: 3px 0 0;
+        color: #52665e;
+        font-size: 12px;
+    }
+
+    .kalender-info {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 6px;
+        padding: 10px 15px;
+        margin-bottom: 15px;
+        display: inline-block;
+        font-size: 12px;
+        color: #166534;
+        font-weight: 600;
+    }
+
+    .kalender-pdf-wrapper {
         width: 100%;
-        height: 315px;
-        margin-top: 24px;
+        height: 560px;
         overflow: hidden;
+        background: #26332f;
+        border: 1px solid #d5ded9;
         border-radius: 4px;
-        background: #333d3b;
     }
 
-    .pdf-toolbar {
-        height: 31px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 8px;
-        padding: 0 8px;
-        background: #333d3b;
-        color: #fff;
-    }
-
-    .pdf-menu {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        min-width: 0;
-        font-size: 10px;
-    }
-
-    .pdf-menu i {
-        font-size: 12px;
-    }
-
-    .pdf-menu span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .pdf-controls {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 10px;
-        white-space: nowrap;
-    }
-
-    .pdf-control {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 17px;
-        height: 20px;
-        padding: 0;
-        border: none;
-        background: transparent;
-        color: #fff;
-        cursor: pointer;
-        font-size: 10px;
-    }
-
-    .pdf-control:hover {
-        background: #53615d;
-        border-radius: 3px;
-    }
-
-    .pdf-page-number {
-        display: flex;
-        gap: 3px;
-    }
-
-    .pdf-divider {
-        height: 14px;
-        width: 1px;
-        background: #67716e;
-        margin: 0 3px;
-    }
-
-    .pdf-viewer {
-        height: calc(100% - 31px);
-        display: flex;
-        overflow: hidden;
-        background: #303a37;
-    }
-
-    .pdf-thumbnail {
-        flex: 0 0 43px;
-        padding: 10px 5px;
-        background: #35413e;
-        border-right: 1px solid #59625f;
-    }
-
-    .thumbnail-page {
+    .kalender-pdf {
+        display: block;
         width: 100%;
-        aspect-ratio: 0.7;
+        height: 100%;
+        border: 0;
+        background: #26332f;
+    }
+
+    .kalender-pdf-empty {
         display: flex;
+        height: 100%;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 5px;
-        background: #fff;
-        color: #39765f;
-        font-size: 10px;
-    }
-
-    .thumbnail-page i {
-        font-size: 19px;
-    }
-
-    .thumbnail-page span {
-        color: #444;
-    }
-
-    .pdf-canvas-area {
-        flex: 1;
-        min-width: 0;
-        padding: 13px 12px;
-        overflow: auto;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-    }
-
-    .pdf-placeholder {
-        width: min(100%, 600px);
-        min-height: 260px;
-        padding: 40px 20px;
-        background: #fff;
+        gap: 12px;
+        padding: 24px;
+        color: #fff;
         text-align: center;
-        color: #39765f;
     }
 
-    .pdf-placeholder > i {
-        font-size: 35px;
+    .kalender-pdf-empty i {
+        font-size: 42px;
+        color: #cbd8d1;
     }
 
-    .pdf-placeholder h3 {
-        margin: 10px 0 7px;
-        font-size: 17px;
+    .kalender-pdf-empty h4 {
+        margin: 0;
+        font-size: 16px;
     }
 
-    .pdf-placeholder p {
-        margin: 0 0 8px;
-        color: #777;
+    .kalender-pdf-empty p {
+        max-width: 420px;
+        margin: 0;
+        color: #d5dfda;
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .kalender-open-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 5px;
+        padding: 9px 13px;
+        color: #fff;
+        background: #176b48;
+        border-radius: 5px;
         font-size: 11px;
+        text-decoration: none;
     }
 
-    .pdf-placeholder small {
-        color: #999;
-        font-size: 10px;
+    .kalender-open-link:hover {
+        background: #12583b;
+        color: #fff;
     }
 
-    @media (max-width: 600px) {
-        .kalender-header h2 {
-            font-size: 22px;
+    @media (max-width: 700px) {
+        .kalender-heading h3 {
+            font-size: 21px;
         }
 
-        .kalender-header p {
-            font-size: 12px;
+        .kalender-heading {
+            margin-bottom: 15px;
         }
 
-        .kalender-document {
-            height: 350px;
-        }
-
-        .pdf-controls {
-            gap: 2px;
-        }
-
-        .pdf-thumbnail {
-            flex-basis: 35px;
-        }
-
-        .pdf-placeholder {
-            padding: 35px 12px;
+        .kalender-pdf-wrapper {
+            height: 460px;
         }
     }
 </style>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const viewer = document.getElementById('pdf-viewer');
-        const zoomValue = document.getElementById('pdf-zoom-value');
-        let zoom = 75;
+<div class="kepsek-kalender">
 
-        document.getElementById('pdf-zoom-in').addEventListener('click', function () {
-            zoom = Math.min(150, zoom + 10);
-            zoomValue.textContent = zoom + '%';
-        });
+    <div class="kalender-heading">
+        <h3>Kalender Akademik</h3>
+        <p>Dokumen kalender akademik tahun ajaran berjalan</p>
+    </div>
 
-        document.getElementById('pdf-zoom-out').addEventListener('click', function () {
-            zoom = Math.max(50, zoom - 10);
-            zoomValue.textContent = zoom + '%';
-        });
+    @if($kalenderAktif)
+        {{-- Info Kalender Aktif --}}
+        <div class="kalender-info">
+            <i class="bi bi-calendar-check"></i>
+            Aktif: Tahun Ajaran {{ $kalenderAktif->tahun_ajaran }} - Semester {{ $kalenderAktif->semester }}
+            ({{ \Carbon\Carbon::parse($kalenderAktif->tanggal_mulai)->translatedFormat('d M Y') }} s/d {{ \Carbon\Carbon::parse($kalenderAktif->tanggal_selesai)->translatedFormat('d M Y') }})
+        </div>
 
-        document.getElementById('pdf-fullscreen').addEventListener('click', function () {
-            if (!document.fullscreenElement) {
-                viewer.requestFullscreen?.();
-            } else {
-                document.exitFullscreen?.();
-            }
-        });
-    });
-</script>
+        {{-- Preview PDF --}}
+        <div class="kalender-pdf-wrapper">
+            <iframe
+                class="kalender-pdf"
+                src="{{ asset('storage/' . $kalenderAktif->path_file) }}#toolbar=1&navpanes=1&view=FitH"
+                title="Dokumen Kalender Akademik"
+            ></iframe>
+        </div>
+        
+        <div style="margin-top: 15px; text-align: right;">
+            <a href="{{ asset('storage/' . $kalenderAktif->path_file) }}" target="_blank" class="kalender-open-link" style="margin-top:0;">
+                <i class="bi bi-box-arrow-up-right"></i> Buka di Tab Baru
+            </a>
+        </div>
+    @else
+        {{-- Jika Belum Ada Kalender Aktif --}}
+        <div class="kalender-pdf-wrapper">
+            <div class="kalender-pdf-empty">
+                <i class="bi bi-file-earmark-pdf"></i>
+                <h4>Belum Ada Kalender Aktif</h4>
+                <p>
+                    Saat ini belum ada dokumen kalender akademik yang periode aktifnya mencakup hari ini.
+                    Silakan hubungi Admin untuk mengunggah kalender akademik.
+                </p>
+            </div>
+        </div>
+    @endif
+
+</div>
 @endsection

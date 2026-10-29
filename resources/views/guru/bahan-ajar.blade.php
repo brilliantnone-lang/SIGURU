@@ -2,16 +2,9 @@
 
 @section('title', 'Bahan Ajar Guru')
 
-@section('sidebar')
-    <a href="{{ route('guru.dashboard') }}">
-        <i class="bi bi-speedometer2"></i> Dashboard
-    </a>
-@endsection
-
 @section('content')
 <div class="bahan-ajar-page">
 
-    {{-- Header --}}
     <div class="bahan-ajar-header">
         <div>
             <h2>Bahan Ajar Guru</h2>
@@ -24,18 +17,23 @@
         </a>
     </div>
 
-    {{-- Informasi Jumlah Bahan Ajar --}}
+    @if(session('success'))
+    <div style="background:#dcfce7;color:#166534;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #bbf7d0;">{{ session('success') }}</div>
+    @endif
+    @if(session('error'))
+    <div style="background:#fee2e2;color:#991b1b;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #fecaca;">{{ session('error') }}</div>
+    @endif
+
     <div class="bahan-summary">
         <div class="summary-icon">
             <i class="bi bi-files"></i>
         </div>
         <div>
-            <h3>2 Bahan Ajar Tersimpan</h3>
+            <h3>{{ $bahanAjar->count() }} Bahan Ajar Tersimpan</h3>
             <p>Masukkan semua dokumen pendukung pembelajaran untuk memudahkan anda</p>
         </div>
     </div>
 
-    {{-- Daftar Bahan Ajar --}}
     <section class="bahan-card">
         <div class="bahan-card-heading">
             <i class="bi bi-files"></i>
@@ -56,55 +54,43 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @forelse($bahanAjar as $b)
                     <tr>
                         <td>
-                            <strong>Modul Ajar Teks Deskripsi</strong>
-                            <small>modul-teks-deskripsi.pdf</small>
+                            <strong>{{ $b->nama_file }}</strong>
+                            <small>{{ basename($b->path_file) }}</small>
+                            @if($b->catatan)
+                            <small style="color:#39765f; font-style:italic; margin-top:3px; display:block;">📝 {{ $b->catatan }}</small>
+                            @endif
                         </td>
                         <td>
                             <strong>Kelas VII</strong>
-                            <small>Bahasa Indonesia</small>
+                            <small>Mata Pelajaran</small>
                         </td>
-                        <td class="upload-date">12 Agustus 2026</td>
+                        <td class="upload-date">{{ $b->created_at->translatedFormat('d F Y') }}</td>
                         <td>
                             <div class="bahan-actions">
-                                <a href="#" class="bahan-action action-download" title="Unduh bahan ajar">
+                                <a href="{{ asset('storage/' . $b->path_file) }}" target="_blank" class="bahan-action action-download" title="Unduh bahan ajar">
                                     <i class="bi bi-download"></i>
                                 </a>
-                                <a href="{{ route('guru.edit-bahan-ajar') }}" class="bahan-action action-edit" title="Edit bahan ajar">
+                                <a href="{{ route('guru.edit-bahan-ajar', $b->id) }}" class="bahan-action action-edit" title="Edit bahan ajar">
                                     <i class="bi bi-pencil-fill"></i>
                                 </a>
-                                <button type="button" class="bahan-action action-delete" title="Hapus bahan ajar">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                                <form action="{{ route('guru.bahan-ajar.destroy', $b->id) }}" method="POST" onsubmit="return confirm('Hapus bahan ajar ini?');" style="display:inline; margin:0; padding:0;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bahan-action action-delete" title="Hapus bahan ajar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
-
+                    @empty
                     <tr>
-                        <td>
-                            <strong>Modul Ajar Kata Kerja</strong>
-                            <small>modul-teks-deskripsi.pdf</small>
-                        </td>
-                        <td>
-                            <strong>Kelas VII</strong>
-                            <small>Bahasa Indonesia</small>
-                        </td>
-                        <td class="upload-date">12 Agustus 2026</td>
-                        <td>
-                            <div class="bahan-actions">
-                                <a href="#" class="bahan-action action-download" title="Unduh bahan ajar">
-                                    <i class="bi bi-download"></i>
-                                </a>
-                                <a href="{{ route('guru.edit-bahan-ajar') }}" class="bahan-action action-edit" title="Edit bahan ajar">
-                                    <i class="bi bi-pencil-fill"></i>
-                                </a>
-                                <button type="button" class="bahan-action action-delete" title="Hapus bahan ajar">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </div>
-                        </td>
+                        <td colspan="4" style="text-align:center; padding:40px; color:#888;">Belum ada bahan ajar. Silakan unggah.</td>
                     </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -113,6 +99,7 @@
 </div>
 
 <style>
+    /* CSS sama persis dengan desain awal */
     .bahan-ajar-page {
         width: 100%;
         color: #222;
@@ -214,7 +201,7 @@
         padding: 10px 18px 8px;
     }
 
-    .bahan-card-heading > i {
+    .bahan-card-heading>i {
         color: #39765f;
         font-size: 25px;
     }

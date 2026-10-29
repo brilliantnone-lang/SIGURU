@@ -1,60 +1,45 @@
-
 @extends('layouts.app')
 
 @section('title', 'Dashboard Guru')
 
-@section('sidebar')
-    <a href="{{ route('guru.dashboard') }}" class="active">
-        <i class="bi bi-speedometer2"></i> Dashboard
-    </a>
-@endsection
-
 @section('content')
 <div class="guru-dashboard">
 
-    {{-- Header Dashboard --}}
     <div class="dashboard-header">
-        <h2>Hallo, {{ Auth::user()->name }}!</h2>
+        <h2>Hallo, {{ $guru->user->name ?? Auth::user()->name }}!</h2>
         <p>Selamat mengajar hari ini, berikut ringkasan dari aktivitas anda hari ini</p>
-
         <div class="dashboard-date">
             <i class="bi bi-calendar2-week-fill"></i>
-            <span>{{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y') }}</span>
+            <span>{{ now()->locale('id')->translatedFormat('l, d F Y') }}</span>
         </div>
     </div>
 
     {{-- Statistik --}}
     <div class="dashboard-stats">
         <div class="stat-card">
-            <div class="stat-icon stat-green">
-                <i class="bi bi-clock-history"></i>
-            </div>
+            <div class="stat-icon stat-green"><i class="bi bi-clock-history"></i></div>
             <div class="stat-info">
                 <span class="stat-label">Jam Mengajar Hari Ini</span>
-                <div class="stat-number">2</div>
+                <div class="stat-number">{{ $totalJadwalHariIni }}</div>
                 <small>Sesi hari ini</small>
             </div>
         </div>
 
         <div class="stat-card">
-            <div class="stat-icon stat-blue">
-                <i class="bi bi-journals"></i>
-            </div>
+            <div class="stat-icon stat-blue"><i class="bi bi-journals"></i></div>
             <div class="stat-info">
-                <span class="stat-label">Jurnal Terisi</span>
-                <div class="stat-number">1<span class="stat-total">/2</span></div>
-                <small>1 jurnal menunggu untuk diisi</small>
+                <span class="stat-label">Jurnal Terisi Hari Ini</span>
+                <div class="stat-number">{{ $totalJurnalHariIni }}<span class="stat-total">/{{ $totalJadwalHariIni }}</span></div>
+                <small>{{ max(0, $totalJadwalHariIni - $totalJurnalHariIni) }} jurnal menunggu untuk diisi</small>
             </div>
         </div>
 
         <div class="stat-card">
-            <div class="stat-icon stat-orange">
-                <i class="bi bi-mortarboard-fill"></i>
-            </div>
+            <div class="stat-icon stat-orange"><i class="bi bi-mortarboard-fill"></i></div>
             <div class="stat-info">
-                <span class="stat-label">Total Jurnal</span>
-                <div class="stat-number">10<span class="stat-total">/12</span></div>
-                <small>2 jurnal menunggu untuk diisi</small>
+                <span class="stat-label">Total Jurnal Sampai Hari Ini</span>
+                <div class="stat-number">{{ $totalJurnalSampaiHariIni }}<span class="stat-total">/{{ $totalTargetSampaiHariIni }}</span></div>
+                <small>{{ max(0, $totalTargetSampaiHariIni - $totalJurnalSampaiHariIni) }} jurnal menunggu untuk diisi</small>
             </div>
         </div>
     </div>
@@ -62,9 +47,7 @@
     {{-- Jadwal Mengajar --}}
     <div class="schedule-card">
         <div class="schedule-heading">
-            <div class="schedule-heading-icon">
-                <i class="bi bi-calendar2-check"></i>
-            </div>
+            <div class="schedule-heading-icon"><i class="bi bi-calendar2-check"></i></div>
             <div>
                 <h3>Jadwal Mengajar Hari Ini</h3>
                 <p>Kelola kegiatan belajar mengajar Anda hari ini</p>
@@ -82,83 +65,60 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @forelse($jadwalHariIni as $j)
+                    @php
+                    $sudahIsi = in_array($j->id, $jurnalHariIni);
+                    @endphp
                     <tr>
                         <td>
-                            <strong>07.30 – 08.10</strong>
-                            <small>Jam ke 1-2</small>
+                            <strong>Jam ke-{{ $j->jam_mulai_ke }} - {{ $j->jam_selesai_ke }}</strong>
+                            <small>{{ $j->mataPelajaran->nama_mata_pelajaran ?? '-' }}</small>
                         </td>
                         <td>
                             <div class="subject-info">
-                                <div class="subject-icon">
-                                    <i class="bi bi-book-half"></i>
-                                </div>
+                                <div class="subject-icon"><i class="bi bi-book-half"></i></div>
                                 <div>
-                                    <strong>Kelas VII A</strong>
-                                    <small>Bahasa Indonesia</small>
+                                    <strong>Kelas {{ $j->kelas->nama_kelas ?? '-' }}</strong>
+                                    <small>{{ $j->mataPelajaran->nama_mata_pelajaran ?? '-' }}</small>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <span class="journal-status status-done">
-                                <i class="bi bi-circle-fill"></i>
-                                Sudah Diisi
-                            </span>
+                            @if($sudahIsi)
+                            <span class="journal-status status-done"><i class="bi bi-circle-fill"></i> Sudah Diisi</span>
+                            @else
+                            <span class="journal-status status-pending"><i class="bi bi-circle-fill"></i> Belum Diisi</span>
+                            @endif
                         </td>
                         <td>
-                            <a href="{{ route('guru.lihat-jurnal') }}" class="schedule-action action-view">
-                                Lihat Jurnal <i class="bi bi-arrow-right"></i>
-                            </a>
+                            @if($sudahIsi)
+                            <a href="{{ route('guru.jurnal-harian') }}" class="schedule-action action-view">Lihat Jurnal <i class="bi bi-arrow-right"></i></a>
+                            @else
+                            <a href="{{ route('guru.jurnal-harian') }}" class="schedule-action action-fill">Isi Jurnal <i class="bi bi-arrow-right"></i></a>
+                            @endif
                         </td>
                     </tr>
-
+                    @empty
                     <tr>
-                        <td>
-                            <strong>10.00 – 10.40</strong>
-                            <small>Jam ke 3-4</small>
-                        </td>
-                        <td>
-                            <div class="subject-info">
-                                <div class="subject-icon">
-                                    <i class="bi bi-book-half"></i>
-                                </div>
-                                <div>
-                                    <strong>Kelas IX E</strong>
-                                    <small>Bahasa Indonesia</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="journal-status status-pending">
-                                <i class="bi bi-circle-fill"></i>
-                                Belum Diisi
-                            </span>
-                        </td>
-                        <td>
-                            <a href="{{ route('guru.tambah-jurnal') }}" class="schedule-action action-fill">
-                                Isi Jurnal <i class="bi bi-arrow-right"></i>
-                            </a>
-                        </td>
+                        <td colspan="4" style="text-align:center; padding:30px; color:#888;">Tidak ada jadwal mengajar hari ini.</td>
                     </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
     </div>
 
     {{-- Pengingat --}}
+    @if($pengingat->count() > 0)
     <div class="journal-reminder">
-        <div class="reminder-icon">
-            <i class="bi bi-bell"></i>
-        </div>
-
+        <div class="reminder-icon"><i class="bi bi-bell"></i></div>
         <div class="reminder-text">
             <h3>Pengingat Jurnal Mengajar</h3>
-            <p>Belum mengisi jurnal pada hari Rabu, 30 September 2026 kelas VIIID. Yuk, lengkapi sekarang</p>
+            <p>Anda memiliki {{ $pengingat->count() }} jurnal minggu lalu yang belum diisi. Yuk, lengkapi sekarang!</p>
         </div>
-
-        <a href="{{ route('guru.tambah-jurnal') }}" class="reminder-action">
-            Isi Jurnal <i class="bi bi-arrow-right"></i>
-        </a>
+        <a href="{{ route('guru.jurnal-harian') }}" class="reminder-action">Isi Jurnal <i class="bi bi-arrow-right"></i></a>
     </div>
+    @endif
 
 </div>
 

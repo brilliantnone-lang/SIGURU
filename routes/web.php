@@ -120,9 +120,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 // ===== GURU =====
 Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('guru.dashboard');
-    })->name('dashboard');
+    // Dashboard
+    Route::get('/dashboard', [\App\Http\Controllers\Guru\DashboardController::class, 'index'])->name('dashboard');
 
     // Jurnal Harian
     Route::get('/jurnal-harian', function () {
@@ -150,19 +149,16 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     })->name('catatan-revisi');
 
     // Presensi Siswa
-    Route::get('/presensi-siswa', function () {
-        return view('guru.presensi-siswa');
-    })->name('presensi-siswa');
+    Route::get('/presensi-siswa', [\App\Http\Controllers\Guru\AbsensiController::class, 'index'])->name('presensi-siswa');
+    Route::post('/presensi-siswa', [\App\Http\Controllers\Guru\AbsensiController::class, 'store'])->name('presensi-siswa.store');
 
     // Bahan Ajar
-    Route::get('/bahan-ajar', function () {
-        return view('guru.bahan-ajar');
-    })->name('bahan-ajar');
-
-    // Unggah Bahan Ajar
-    Route::get('/bahan-ajar/unggah', function () {
-        return view('guru.unggah-bahan-ajar');
-    })->name('unggah-bahan-ajar');
+    Route::get('/bahan-ajar', [\App\Http\Controllers\Guru\BahanAjarController::class, 'index'])->name('bahan-ajar');
+    Route::get('/bahan-ajar/unggah', [\App\Http\Controllers\Guru\BahanAjarController::class, 'create'])->name('unggah-bahan-ajar');
+    Route::post('/bahan-ajar', [\App\Http\Controllers\Guru\BahanAjarController::class, 'store'])->name('bahan-ajar.store');
+    Route::get('/bahan-ajar/{id}/edit', [\App\Http\Controllers\Guru\BahanAjarController::class, 'edit'])->name('edit-bahan-ajar');
+    Route::put('/bahan-ajar/{id}', [\App\Http\Controllers\Guru\BahanAjarController::class, 'update'])->name('bahan-ajar.update');
+    Route::delete('/bahan-ajar/{id}', [\App\Http\Controllers\Guru\BahanAjarController::class, 'destroy'])->name('bahan-ajar.destroy');
 
     // Edit Bahan Ajar
     Route::get('/bahan-ajar/edit', function () {
@@ -171,18 +167,14 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
 
     // Kalender Akademik
     Route::get('/kalender', function () {
-        return view('guru.kalender');
+        $kalenderAktif = \App\Models\KalenderAkademik::getKalenderAktif();
+        return view('guru.kalender', compact('kalenderAktif'));
     })->name('kalender');
 
-    // Profil Saya
-    Route::get('/profil-saya', function () {
-        return view('guru.profil-saya');
-    })->name('profil-saya');
-
-    // Edit Profil
-    Route::get('/profil-saya/edit', function () {
-        return view('guru.edit-profil');
-    })->name('edit-profil');
+    // Profil
+    Route::get('/profil-saya', [\App\Http\Controllers\Guru\ProfilController::class, 'index'])->name('profil-saya');
+    Route::get('/profil-saya/edit', [\App\Http\Controllers\Guru\ProfilController::class, 'edit'])->name('edit-profil');
+    Route::put('/profil-saya', [\App\Http\Controllers\Guru\ProfilController::class, 'update'])->name('profil-saya.update');
 
     // Panduan Penggunaan
     Route::get('/panduan', function () {
