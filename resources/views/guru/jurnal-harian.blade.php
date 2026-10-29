@@ -19,7 +19,7 @@
             <p>Dokumentasikan setiap kegiatan pembelajaran dengan mudah dan rapi.</p>
         </div>
 
-        <a href="#" class="btn-tambah-jurnal">
+        <a href="{{ route('guru.tambah-jurnal') }}" class="btn-tambah-jurnal">
             <i class="bi bi-plus-lg"></i>
             Tambah Jurnal
         </a>
@@ -64,7 +64,7 @@
                             </span>
                         </td>
                         <td>
-                            <a href="#" class="btn-table-action btn-revision">
+                            <a href="{{ route('guru.catatan-revisi') }}" class="btn-table-action btn-revision">
                                 Lihat Catatan Perbaikan
                             </a>
                         </td>
@@ -120,10 +120,10 @@
                         <td><span class="history-status">Tuntas</span></td>
                         <td>
                             <div class="history-actions">
-                                <a href="#" class="icon-action action-detail" title="Lihat jurnal">
+                                <a href="{{ route('guru.lihat-jurnal') }}" class="icon-action action-detail" title="Lihat jurnal">
                                     <i class="bi bi-eye-fill"></i>
                                 </a>
-                                <a href="#" class="icon-action action-edit" title="Edit jurnal">
+                                <a href="{{ route('guru.edit-jurnal') }}" class="icon-action action-edit" title="Edit jurnal">
                                     <i class="bi bi-pencil-fill"></i>
                                 </a>
                                 <button type="button" class="icon-action action-delete" title="Hapus jurnal">
@@ -142,10 +142,10 @@
                         <td><span class="history-status">Tuntas</span></td>
                         <td>
                             <div class="history-actions">
-                                <a href="#" class="icon-action action-detail" title="Lihat jurnal">
+                                <a href="{{ route('guru.lihat-jurnal') }}" class="icon-action action-detail" title="Lihat jurnal">
                                     <i class="bi bi-eye-fill"></i>
                                 </a>
-                                <a href="#" class="icon-action action-edit" title="Edit jurnal">
+                                <a href="{{ route('guru.edit-jurnal') }}" class="icon-action action-edit" title="Edit jurnal">
                                     <i class="bi bi-pencil-fill"></i>
                                 </a>
                                 <button type="button" class="icon-action action-delete" title="Hapus jurnal">
@@ -164,10 +164,10 @@
                         <td><span class="history-status">Tuntas</span></td>
                         <td>
                             <div class="history-actions">
-                                <a href="#" class="icon-action action-detail" title="Lihat jurnal">
+                                <a href="{{ route('guru.lihat-jurnal') }}" class="icon-action action-detail" title="Lihat jurnal">
                                     <i class="bi bi-eye-fill"></i>
                                 </a>
-                                <a href="#" class="icon-action action-edit" title="Edit jurnal">
+                                <a href="{{ route('guru.edit-jurnal') }}" class="icon-action action-edit" title="Edit jurnal">
                                     <i class="bi bi-pencil-fill"></i>
                                 </a>
                                 <button type="button" class="icon-action action-delete" title="Hapus jurnal">
@@ -186,10 +186,10 @@
                         <td><span class="history-status">Tuntas</span></td>
                         <td>
                             <div class="history-actions">
-                                <a href="#" class="icon-action action-detail" title="Lihat jurnal">
+                                <a href="{{ route('guru.lihat-jurnal') }}" class="icon-action action-detail" title="Lihat jurnal">
                                     <i class="bi bi-eye-fill"></i>
                                 </a>
-                                <a href="#" class="icon-action action-edit" title="Edit jurnal">
+                                <a href="{{ route('guru.edit-jurnal') }}" class="icon-action action-edit" title="Edit jurnal">
                                     <i class="bi bi-pencil-fill"></i>
                                 </a>
                                 <button type="button" class="icon-action action-delete" title="Hapus jurnal">
@@ -208,10 +208,10 @@
                         <td><span class="history-status">Tuntas</span></td>
                         <td>
                             <div class="history-actions">
-                                <a href="#" class="icon-action action-detail" title="Lihat jurnal">
+                                <a href="{{ route('guru.lihat-jurnal') }}" class="icon-action action-detail" title="Lihat jurnal">
                                     <i class="bi bi-eye-fill"></i>
                                 </a>
-                                <a href="#" class="icon-action action-edit" title="Edit jurnal">
+                                <a href="{{ route('guru.edit-jurnal') }}" class="icon-action action-edit" title="Edit jurnal">
                                     <i class="bi bi-pencil-fill"></i>
                                 </a>
                                 <button type="button" class="icon-action action-delete" title="Hapus jurnal">

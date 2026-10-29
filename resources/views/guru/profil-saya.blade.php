@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('title', 'Profil Saya')
@@ -12,13 +11,13 @@
 @section('content')
 <div class="profil-page">
 
-    {{-- Header --}}
+    {{-- HEADER --}}
     <div class="profil-header">
         <h2>Profil {{ Auth::user()->name }}</h2>
         <p>Kelola informasi profil dan keamanan akun Anda</p>
     </div>
 
-    {{-- Kartu Identitas Guru --}}
+    {{-- KARTU IDENTITAS GURU --}}
     <section class="profil-identity">
         <div class="profil-avatar">
             {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
@@ -27,6 +26,7 @@
         <div class="identity-info">
             <h3>{{ Auth::user()->name }}</h3>
             <p>Guru Bahasa Indonesia</p>
+
             <span class="guru-active">
                 <i class="bi bi-check-circle"></i>
                 Guru Aktif
@@ -34,25 +34,29 @@
         </div>
     </section>
 
-    {{-- Detail Profil --}}
+    {{-- DETAIL PROFIL --}}
     <div class="profil-grid">
 
-        {{-- Informasi Pribadi --}}
+        {{-- INFORMASI PRIBADI --}}
         <section class="profil-card personal-card">
             <div class="profil-card-header">
                 <i class="bi bi-person"></i>
+
                 <div class="card-heading-text">
                     <h3>Informasi Pribadi</h3>
                     <p>Data akun dan identitas guru</p>
                 </div>
 
-                <button type="button" class="btn-edit-contact" id="btn-edit-profil">
+                {{-- TOMBOL MENUJU HALAMAN EDIT PROFIL --}}
+                <a href="{{ route('guru.edit-profil') }}"
+                   class="btn-edit-profil">
                     <i class="bi bi-pencil-fill"></i>
-                    Edit Kontak
-                </button>
+                    Edit Profil
+                </a>
             </div>
 
             <div class="personal-info-grid">
+
                 <div class="personal-info-item">
                     <span>Nama Lengkap</span>
                     <strong>{{ Auth::user()->name }}</strong>
@@ -70,70 +74,39 @@
 
                 <div class="personal-info-item">
                     <span>Nomor Telepon</span>
-                    <strong id="display-phone">0812-3456-7890</strong>
+                    <strong>0812-3456-7890</strong>
                 </div>
+
             </div>
         </section>
 
-        {{-- Mata Pelajaran Linear --}}
+        {{-- MATA PELAJARAN LINEAR --}}
         <section class="profil-card subject-card">
             <div class="profil-card-header">
                 <i class="bi bi-mortarboard"></i>
+
                 <div class="card-heading-text">
                     <h3>Mata Pelajaran Linear</h3>
                 </div>
             </div>
 
-            <p class="subject-description">Penugasan mata pelajaran tetap</p>
+            <p class="subject-description">
+                Penugasan mata pelajaran tetap
+            </p>
 
             <div class="subject-info">
                 <i class="bi bi-book"></i>
+
                 <div>
                     <strong>Bahasa Indonesia</strong>
                     <p>Kelas VII, VIII, IX · Tahun Ajaran 2026/2027</p>
                 </div>
+
                 <i class="bi bi-check-circle subject-check"></i>
             </div>
         </section>
 
     </div>
-
-    {{-- Modal Edit Kontak --}}
-    <div class="profil-modal-overlay" id="profil-modal" hidden>
-        <div class="profil-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-            <div class="modal-header">
-                <h3 id="modal-title">Edit Kontak</h3>
-                <button type="button" id="btn-close-modal" class="btn-close-modal" aria-label="Tutup">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-
-            <form id="form-edit-profil">
-                <label for="input-phone">Nomor Telepon</label>
-                <input
-                    type="tel"
-                    id="input-phone"
-                    name="phone"
-                    value="0812-3456-7890"
-                    placeholder="Masukkan nomor telepon"
-                    required
-                >
-
-                <div class="modal-actions">
-                    <button type="button" class="btn-cancel" id="btn-cancel-modal">
-                        Batal
-                    </button>
-                    <button type="submit" class="btn-save-contact">
-                        Simpan
-                    </button>
-                </div>
-                <p class="modal-note">
-                    Perubahan ini hanya untuk pratinjau frontend dan belum disimpan ke database.
-                </p>
-            </form>
-        </div>
-    </div>
-
 </div>
 
 <style>
@@ -143,6 +116,7 @@
         font-family: inherit;
     }
 
+    /* HEADER */
     .profil-header {
         margin: 0 0 22px 5px;
     }
@@ -160,6 +134,7 @@
         color: #555;
     }
 
+    /* IDENTITAS GURU */
     .profil-identity {
         display: flex;
         align-items: center;
@@ -170,6 +145,7 @@
         border-radius: 26px;
         background: #e6eee9;
         box-shadow: 0 4px 9px rgba(0, 0, 0, .18);
+        box-sizing: border-box;
     }
 
     .profil-avatar {
@@ -185,6 +161,11 @@
         color: #245541;
         font-size: 19px;
         font-weight: 700;
+        box-sizing: border-box;
+    }
+
+    .identity-info {
+        min-width: 0;
     }
 
     .identity-info h3 {
@@ -192,6 +173,7 @@
         color: #245541;
         font-size: 18px;
         font-weight: 500;
+        overflow-wrap: anywhere;
     }
 
     .identity-info p {
@@ -212,6 +194,7 @@
         font-weight: 600;
     }
 
+    /* GRID KARTU */
     .profil-grid {
         display: grid;
         grid-template-columns: minmax(0, 1.65fr) minmax(220px, 1fr);
@@ -226,8 +209,10 @@
         border-radius: 27px;
         background: #fff;
         box-shadow: 0 3px 8px rgba(0, 0, 0, .18);
+        box-sizing: border-box;
     }
 
+    /* HEADER KARTU */
     .profil-card-header {
         display: flex;
         align-items: flex-start;
@@ -236,6 +221,7 @@
     }
 
     .profil-card-header > i {
+        flex-shrink: 0;
         color: #245541;
         font-size: 19px;
     }
@@ -250,7 +236,6 @@
         font-size: 16px;
         font-weight: 700;
         color: #244c39;
-        white-space: nowrap;
     }
 
     .card-heading-text p {
@@ -259,24 +244,32 @@
         color: #929b95;
     }
 
-    .btn-edit-contact {
+    /* TOMBOL EDIT PROFIL */
+    .btn-edit-profil {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 5px;
-        padding: 2px 0;
-        border: none;
-        background: transparent;
-        color: #244c39;
-        font-size: 9px;
-        font-weight: 650;
+        flex-shrink: 0;
+        padding: 6px 10px;
+        border: 1px solid #39765f;
+        border-radius: 7px;
+        background: #39765f;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        text-decoration: none;
         white-space: nowrap;
-        cursor: pointer;
+        transition: background .2s, border-color .2s;
     }
 
-    .btn-edit-contact:hover {
-        color: #39765f;
+    .btn-edit-profil:hover {
+        background: #2e624e;
+        border-color: #2e624e;
+        color: #fff;
     }
 
+    /* INFORMASI PRIBADI */
     .personal-info-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -304,6 +297,7 @@
         font-weight: 650;
     }
 
+    /* MATA PELAJARAN */
     .subject-card {
         padding-left: 18px;
         padding-right: 15px;
@@ -326,6 +320,7 @@
     }
 
     .subject-info > i:first-child {
+        flex-shrink: 0;
         color: #62a784;
         font-size: 18px;
     }
@@ -351,106 +346,12 @@
     }
 
     .subject-info .subject-check {
+        flex-shrink: 0;
         color: #245541;
         font-size: 12px;
     }
 
-    /* Modal edit kontak */
-    .profil-modal-overlay[hidden] {
-        display: none;
-    }
-
-    .profil-modal-overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 1050;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        background: rgba(0, 0, 0, .35);
-    }
-
-    .profil-modal {
-        width: 100%;
-        max-width: 390px;
-        padding: 22px;
-        border-radius: 14px;
-        background: #fff;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, .18);
-    }
-
-    .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    .modal-header h3 {
-        margin: 0;
-        font-size: 18px;
-        color: #245541;
-    }
-
-    .btn-close-modal {
-        border: none;
-        background: transparent;
-        color: #777;
-        cursor: pointer;
-    }
-
-    #form-edit-profil label {
-        display: block;
-        margin-bottom: 7px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    #form-edit-profil input {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1px solid #ced8d2;
-        border-radius: 7px;
-        font: inherit;
-        font-size: 13px;
-        box-sizing: border-box;
-    }
-
-    .modal-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 8px;
-        margin-top: 18px;
-    }
-
-    .modal-actions button {
-        padding: 9px 14px;
-        border-radius: 6px;
-        font: inherit;
-        font-size: 12px;
-        cursor: pointer;
-    }
-
-    .btn-cancel {
-        border: 1px solid #ccc;
-        background: #fff;
-        color: #555;
-    }
-
-    .btn-save-contact {
-        border: 1px solid #39765f;
-        background: #39765f;
-        color: #fff;
-    }
-
-    .modal-note {
-        margin: 12px 0 0;
-        color: #999;
-        font-size: 10px;
-        line-height: 1.5;
-    }
-
+    /* RESPONSIVE */
     @media (max-width: 760px) {
         .profil-grid {
             grid-template-columns: 1fr;
@@ -466,65 +367,32 @@
         }
     }
 
-    @media (max-width: 420px) {
+    @media (max-width: 480px) {
         .profil-header h2 {
             font-size: 22px;
+        }
+
+        .profil-card {
+            padding: 15px;
+        }
+
+        .profil-card-header {
+            flex-wrap: wrap;
+        }
+
+        .card-heading-text h3 {
+            font-size: 14px;
+        }
+
+        .btn-edit-profil {
+            font-size: 10px;
+            padding: 6px 8px;
         }
 
         .personal-info-grid {
             padding-left: 0;
             column-gap: 10px;
         }
-
-        .card-heading-text h3 {
-            white-space: normal;
-        }
     }
 </style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const modal = document.getElementById('profil-modal');
-        const editButton = document.getElementById('btn-edit-profil');
-        const closeButton = document.getElementById('btn-close-modal');
-        const cancelButton = document.getElementById('btn-cancel-modal');
-        const form = document.getElementById('form-edit-profil');
-        const phoneInput = document.getElementById('input-phone');
-        const phoneDisplay = document.getElementById('display-phone');
-
-        function closeModal() {
-            modal.hidden = true;
-        }
-
-        editButton.addEventListener('click', function () {
-            phoneInput.value = phoneDisplay.textContent.trim();
-            modal.hidden = false;
-            phoneInput.focus();
-        });
-
-        closeButton.addEventListener('click', closeModal);
-        cancelButton.addEventListener('click', closeModal);
-
-        modal.addEventListener('click', function (event) {
-            if (event.target === modal) {
-                closeModal();
-            }
-        });
-
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            phoneDisplay.textContent = phoneInput.value.trim();
-            closeModal();
-
-            alert('Nomor telepon diperbarui untuk pratinjau. Perubahan belum disimpan ke database.');
-        });
-
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape' && !modal.hidden) {
-                closeModal();
-            }
-        });
-    });
-</script>
 @endsection

@@ -18,7 +18,7 @@
             <p>Simpan dan kelola seluruh materi pembelajaran dalam satu tempat.</p>
         </div>
 
-        <a href="#" class="btn-upload-bahan">
+        <a href="{{ route('guru.unggah-bahan-ajar') }}" class="btn-upload-bahan">
             <i class="bi bi-plus-lg"></i>
             Unggah Bahan Ajar
         </a>
@@ -71,9 +71,9 @@
                                 <a href="#" class="bahan-action action-download" title="Unduh bahan ajar">
                                     <i class="bi bi-download"></i>
                                 </a>
-                                <button type="button" class="bahan-action action-edit" title="Edit bahan ajar">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
+                                <a href="{{ route('guru.edit-bahan-ajar') }}" class="bahan-action action-edit" title="Edit bahan ajar">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
                                 <button type="button" class="bahan-action action-delete" title="Hapus bahan ajar">
                                     <i class="bi bi-trash"></i>
                                 </button>
@@ -96,9 +96,9 @@
                                 <a href="#" class="bahan-action action-download" title="Unduh bahan ajar">
                                     <i class="bi bi-download"></i>
                                 </a>
-                                <button type="button" class="bahan-action action-edit" title="Edit bahan ajar">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
+                                <a href="{{ route('guru.edit-bahan-ajar') }}" class="bahan-action action-edit" title="Edit bahan ajar">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
                                 <button type="button" class="bahan-action action-delete" title="Hapus bahan ajar">
                                     <i class="bi bi-trash"></i>
                                 </button>

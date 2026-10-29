@@ -129,6 +129,26 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
         return view('guru.jurnal-harian');
     })->name('jurnal-harian');
 
+    // Tambah Jurnal
+    Route::get('/jurnal-harian/tambah', function () {
+        return view('guru.tambah-jurnal');
+    })->name('tambah-jurnal');
+
+    // Lihat Jurnal
+    Route::get('/jurnal-harian/lihat', function () {
+        return view('guru.lihat-jurnal');
+    })->name('lihat-jurnal');
+
+    // Edit Jurnal
+    Route::get('/jurnal-harian/edit', function () {
+        return view('guru.edit-jurnal');
+    })->name('edit-jurnal');
+
+    // Catatan Revisi Jurnal
+    Route::get('/jurnal-harian/revisi', function () {
+        return view('guru.catatan-revisi');
+    })->name('catatan-revisi');
+
     // Presensi Siswa
     Route::get('/presensi-siswa', function () {
         return view('guru.presensi-siswa');
@@ -139,6 +159,16 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
         return view('guru.bahan-ajar');
     })->name('bahan-ajar');
 
+     // Unggah Bahan Ajar
+    Route::get('/bahan-ajar/unggah', function () {
+        return view('guru.unggah-bahan-ajar');
+    })->name('unggah-bahan-ajar');
+
+    // Edit Bahan Ajar
+    Route::get('/bahan-ajar/edit', function () {
+        return view('guru.edit-bahan-ajar');
+    })->name('edit-bahan-ajar');
+
     // Kalender Akademik
     Route::get('/kalender', function () {
         return view('guru.kalender');
@@ -148,6 +178,11 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     Route::get('/profil-saya', function () {
         return view('guru.profil-saya');
     })->name('profil-saya');
+
+    // Edit Profil
+    Route::get('/profil-saya/edit', function () {
+        return view('guru.edit-profil');
+    })->name('edit-profil');
 
     // Panduan Penggunaan
     Route::get('/panduan', function () {

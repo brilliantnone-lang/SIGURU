@@ -86,7 +86,7 @@
                 <thead>
                     <tr>
                         <th>No.</th>
-                        <th>Tanggal</th>
+                        <th>Semester</th>
                         <th>Nama Guru</th>
                         <th>Mata Pelajaran</th>
                         <th>Kelas</th>
