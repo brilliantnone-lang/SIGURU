@@ -159,7 +159,7 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
         return view('guru.bahan-ajar');
     })->name('bahan-ajar');
 
-     // Unggah Bahan Ajar
+    // Unggah Bahan Ajar
     Route::get('/bahan-ajar/unggah', function () {
         return view('guru.unggah-bahan-ajar');
     })->name('unggah-bahan-ajar');
@@ -203,6 +203,10 @@ Route::middleware(['auth', 'role:kepsek'])->prefix('kepsek')->name('kepsek.')->g
     Route::get('/validasi-jurnal', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'index'])->name('validasi-jurnal.index');
     Route::get('/validasi-jurnal/{id}', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'show'])->name('validasi-jurnal.show');
     Route::put('/validasi-jurnal/{id}', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'update'])->name('validasi-jurnal.update');
+
+    Route::get('/form-validasi', function () {
+        return view('kepsek.form-validasi');
+    })->name('form-validasi');
 
     // Bahan Ajar
     Route::get('/bahan-ajar', [\App\Http\Controllers\Kepsek\BahanAjarController::class, 'index'])->name('bahan-ajar.index');

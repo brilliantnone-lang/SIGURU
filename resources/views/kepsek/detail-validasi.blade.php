@@ -16,7 +16,7 @@
             </p>
         </div>
 
-        <a href="{{ route('kepsek.validasi-jurnal.index') }}"
+        <a href="{{ route('kepsek.form-validasi.index') }}"
            style="display:inline-flex; align-items:center; justify-content:center; gap:7px;
                   padding:10px 16px; border:1px solid #064E3B; border-radius:7px;
                   background:#064E3B; color:#fff; text-decoration:none;

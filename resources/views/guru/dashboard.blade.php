@@ -105,7 +105,7 @@
                             </span>
                         </td>
                         <td>
-                            <a href="#" class="schedule-action action-view">
+                            <a href="{{ route('guru.lihat-jurnal') }}" class="schedule-action action-view">
                                 Lihat Jurnal <i class="bi bi-arrow-right"></i>
                             </a>
                         </td>
@@ -134,7 +134,7 @@
                             </span>
                         </td>
                         <td>
-                            <a href="#" class="schedule-action action-fill">
+                            <a href="{{ route('guru.tambah-jurnal') }}" class="schedule-action action-fill">
                                 Isi Jurnal <i class="bi bi-arrow-right"></i>
                             </a>
                         </td>
@@ -155,7 +155,7 @@
             <p>Belum mengisi jurnal pada hari Rabu, 30 September 2026 kelas VIIID. Yuk, lengkapi sekarang</p>
         </div>
 
-        <a href="#" class="reminder-action">
+        <a href="{{ route('guru.tambah-jurnal') }}" class="reminder-action">
             Isi Jurnal <i class="bi bi-arrow-right"></i>
         </a>
     </div>
