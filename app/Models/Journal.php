@@ -25,6 +25,11 @@ class Journal extends Model
         'validated_at',
         'catatan_validasi',
         'foto_kegiatan',
+        'jenis_pengajar',
+        'jenis_penggantian',
+        'guru_pengganti_id',
+        'guru_digantikan_id',
+        'metode_absensi',
     ];
 
     protected $casts = [
@@ -71,4 +76,21 @@ class Journal extends Model
     {
         return $this->belongsTo(CoverJurnal::class);
     }
+
+    public function guruPengganti()
+    {
+        return $this->belongsTo(
+            \App\Models\Guru::class,
+            'guru_pengganti_id'
+        );
+    }
+
+    public function guruDigantikan()
+    {
+        return $this->belongsTo(
+            \App\Models\Guru::class,
+            'guru_digantikan_id'
+        );
+    }
+
 }

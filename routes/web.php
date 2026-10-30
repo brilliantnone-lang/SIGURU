@@ -10,6 +10,7 @@ use \App\Http\Controllers\Admin\JournalController;
 use \App\Http\Controllers\Admin\BahanAjarController;
 use \App\Http\Controllers\Admin\RekapAbsensiController;
 use \App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Guru\JurnalController;
 
 // ===== AUTH =====
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -123,13 +124,44 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     // Dashboard
     Route::get('/dashboard', [\App\Http\Controllers\Guru\DashboardController::class, 'index'])->name('dashboard');
 
+
     // Jurnal
-    Route::get('/jurnal-harian',        [\App\Http\Controllers\Guru\JurnalController::class, 'index'])->name('jurnal-harian');
-    Route::get('/jurnal-harian/tambah', [\App\Http\Controllers\Guru\JurnalController::class, 'create'])->name('tambah-jurnal');
-    Route::post('/jurnal-harian',       [\App\Http\Controllers\Guru\JurnalController::class, 'store'])->name('jurnal.store');
-    Route::get('/jurnal-harian/{id}',      [\App\Http\Controllers\Guru\JurnalController::class, 'show'])->name('lihat-jurnal');
-    Route::get('/jurnal-harian/{id}/edit', [\App\Http\Controllers\Guru\JurnalController::class, 'edit'])->name('edit-jurnal');
-    Route::put('/jurnal-harian/{id}',      [\App\Http\Controllers\Guru\JurnalController::class, 'update'])->name('jurnal.update');
+    Route::get('/jurnal-harian', [
+        \App\Http\Controllers\Guru\JurnalController::class,
+        'index'
+    ])->name('jurnal-harian');
+
+    Route::get('/jurnal-harian/tambah', [
+        \App\Http\Controllers\Guru\JurnalController::class,
+        'create'
+    ])->name('tambah-jurnal');
+
+    Route::post('/jurnal-harian', [
+        \App\Http\Controllers\Guru\JurnalController::class,
+        'store'
+    ])->name('jurnal.store');
+
+    Route::get('/jurnal-harian/{id}', [
+        \App\Http\Controllers\Guru\JurnalController::class,
+        'show'
+    ])->name('lihat-jurnal');
+
+    Route::get('/jurnal-harian/{id}/edit', [
+        \App\Http\Controllers\Guru\JurnalController::class,
+        'edit'
+    ])->name('edit-jurnal');
+
+    Route::put('/jurnal-harian/{id}', [
+        \App\Http\Controllers\Guru\JurnalController::class,
+        'update'
+    ])->name('jurnal.update');
+
+    // Tambahan: mengambil daftar siswa berdasarkan jadwal
+    Route::get('/jurnal-harian/get-murid/{jadwal_id}', [
+        \App\Http\Controllers\Guru\JurnalController::class,
+        'getMurid'
+    ])->name('jurnal.get-murid');
+
 
     // Get Murid (AJAX presensi)
     Route::get('/get-murid/{jadwal_id}', [\App\Http\Controllers\Guru\JurnalController::class, 'getMurid'])->name('get-murid');
