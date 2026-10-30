@@ -1,19 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Jurnal Harian Guru')
+@section('title', 'Tambah Jurnal')
 
 @section('content')
 <div class="create-jurnal-page">
-
-    {{-- HEADER HALAMAN --}}
     <div class="page-heading">
         <h2>Jurnal Harian Guru</h2>
         <p>Dokumentasikan setiap kegiatan pembelajaran dengan mudah dan rapi.</p>
     </div>
 
-    {{-- KARTU FORMULIR --}}
     <div class="form-card">
-
         <div class="form-card-heading">
             <i class="bi bi-journal-bookmark-fill"></i>
             <div>
@@ -22,193 +18,100 @@
             </div>
         </div>
 
-        {{-- STATUS MENGAJAR --}}
-        <div class="teaching-status-box">
-            <h4>Status Mengajar</h4>
-            <p>Pilih peran Anda pada sesi pembelajaran ini.</p>
-
-            <div class="teaching-options">
-                <label class="teaching-option active">
-                    <input type="radio" name="status_mengajar"
-                           value="pengampu" checked>
-                    <span>Guru Pengampu</span>
-                </label>
-
-                <label class="teaching-option">
-                    <input type="radio" name="status_mengajar"
-                           value="pengganti">
-                    <span>Guru Pengganti</span>
-                </label>
-            </div>
+        @if($errors->any())
+        <div style="background:#fee2e2;color:#991b1b;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #fecaca;">
+            <ul style="margin:0; padding-left:20px;">
+                @foreach($errors->all() as $error) <li>{{ $error }}</li> @endforeach
+            </ul>
         </div>
+        @endif
 
-        {{-- FORM INPUT --}}
-        <form action="#" method="POST" enctype="multipart/form-data"
-              id="formTambahJurnal">
+        <form action="{{ route('guru.jurnal.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-
             <div class="form-grid">
-
-                {{-- TANGGAL --}}
                 <div class="form-group">
-                    <label for="tanggal">
-                        Tanggal Mengajar <span class="required">*</span>
-                    </label>
-                    <input type="date" id="tanggal" name="tanggal"
-                           value="{{ date('Y-m-d') }}" required>
-                </div>
-
-                {{-- KELAS --}}
-                <div class="form-group">
-                    <label for="kelas_id">
-                        Kelas <span class="required">*</span>
-                    </label>
-                    <select id="kelas_id" name="kelas_id" required>
-                        <option value="">Pilih Kelas</option>
-                        <option value="1">VII A</option>
-                        <option value="2">VII B</option>
-                        <option value="3">VIII A</option>
-                        <option value="4">VIII B</option>
-                        <option value="5">IX A</option>
+                    <label>Jadwal Mengajar *</label>
+                    <select name="jadwal_id" id="jadwal_id" required>
+                        <option value="">-- Pilih Jadwal --</option>
+                        @foreach($jadwalTersedia as $j)
+                        <option value="{{ $j->id }}">{{ $j->kelas->nama_kelas }} - {{ $j->mataPelajaran->nama_mata_pelajaran }} (Jam {{ $j->jam_mulai_ke }}-{{ $j->jam_selesai_ke }})</option>
+                        @endforeach
                     </select>
                 </div>
 
-                {{-- MATA PELAJARAN --}}
                 <div class="form-group">
-                    <label for="mata_pelajaran">
-                        Mata Pelajaran <span class="required">*</span>
-                    </label>
-                    <input type="text" id="mata_pelajaran"
-                           name="mata_pelajaran"
-                           placeholder="Masukkan mata pelajaran" required>
-                </div>
-
-                {{-- JAM PELAJARAN --}}
-                <div class="form-group">
-                    <label for="jam_pelajaran">
-                        Jam Pelajaran <span class="required">*</span>
-                    </label>
-                    <select id="jam_pelajaran" name="jam_pelajaran" required>
-                        <option value="">Pilih Jam Pelajaran</option>
-                        <option value="1-2">Jam ke 1-2</option>
-                        <option value="3-4">Jam ke 3-4</option>
-                        <option value="5-6">Jam ke 5-6</option>
-                        <option value="7-8">Jam ke 7-8</option>
+                    <label>Cover Jurnal (Semester) *</label>
+                    <select name="cover_jurnal_id" required>
+                        @if($coverAktif)
+                        <option value="{{ $coverAktif->id }}">{{ $coverAktif->semester }} {{ $coverAktif->tahun_ajaran }}</option>
+                        @else
+                        <option value="">Tidak ada cover aktif</option>
+                        @endif
                     </select>
                 </div>
 
-                {{-- POKOK BAHASAN --}}
+                <div class="form-group">
+                    <label>Guru Pendamping (Opsional)</label>
+                    <select name="guru_pendamping_id">
+                        <option value="">-- Tidak Ada --</option>
+                        @foreach($gurus as $g)
+                        <option value="{{ $g->id }}">{{ $g->user->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Tanggal Mengajar *</label>
+                    <input type="date" name="tanggal" value="{{ old('tanggal', date('Y-m-d')) }}" required>
+                </div>
+
                 <div class="form-group full-width">
-                    <label for="pokok_bahasan">
-                        Pokok Bahasan/Materi <span class="required">*</span>
-                    </label>
-                    <input type="text" id="pokok_bahasan"
-                           name="pokok_bahasan"
-                           placeholder="Tuliskan pokok bahasan yang diajarkan hari ini"
-                           required>
+                    <label>Pokok Bahasan *</label>
+                    <input type="text" name="pokok_bahasan" value="{{ old('pokok_bahasan') }}" required>
                 </div>
 
-                {{-- STATUS PENYELESAIAN --}}
                 <div class="form-group">
-                    <label for="status_penyelesaian">
-                        Status Penyelesaian <span class="required">*</span>
-                    </label>
-                    <select id="status_penyelesaian"
-                            name="status_penyelesaian" required>
-                        <option value="selesai">Tuntas</option>
+                    <label>Status Penyelesaian *</label>
+                    <select name="status_penyelesaian" required>
+                        <option value="selesai">Selesai</option>
                         <option value="belum_selesai">Belum Selesai</option>
                     </select>
                 </div>
 
-                {{-- SEMESTER --}}
                 <div class="form-group">
-                    <label for="semester">
-                        Status Jurnal / Semester <span class="required">*</span>
-                    </label>
-                    <select id="semester" name="semester" required>
-                        <option value="2026/2027-Ganjil">
-                            2026/2027 Semester Ganjil
-                        </option>
-                        <option value="2026/2027-Genap">
-                            2026/2027 Semester Genap
-                        </option>
-                    </select>
+                    <label>Alasan Belum Selesai</label>
+                    <input type="text" name="alasan_belum_selesai" value="{{ old('alasan_belum_selesai') }}">
                 </div>
 
-                {{-- ALASAN BELUM SELESAI --}}
-                <div class="form-group full-width"
-                     id="alasanGroup" hidden>
-                    <label for="alasan_belum_selesai">
-                        Alasan Belum Selesai <span class="required">*</span>
-                    </label>
-                    <textarea id="alasan_belum_selesai"
-                              name="alasan_belum_selesai" rows="2"
-                              placeholder="Jelaskan alasan materi belum selesai"></textarea>
+                <div class="form-group full-width" id="presensi-container" style="display:none; margin-top:20px; border-top:1px solid #eee; padding-top:15px;">
+                    <h4 style="margin-bottom:10px;">Presensi Siswa</h4>
+                    <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                        <thead>
+                            <tr style="background:#edf6f0;">
+                                <th>No</th>
+                                <th>Nama</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="murid-list"></tbody>
+                    </table>
                 </div>
 
-                {{-- ABSENSI --}}
-                <div class="form-group full-width attendance-group">
-                    <label>
-                        Absensi Siswa <span class="required">*</span>
-                    </label>
-
-                    <label class="radio-line">
-                        <input type="radio" name="sumber_absensi"
-                               value="otomatis" checked>
-                        <span>Ambil Data dari Absensi Siswa</span>
-                    </label>
-
-                    <label class="radio-line disabled-option">
-                        <input type="radio" name="sumber_absensi"
-                               value="manual" disabled>
-                        <span>Masukkan Data Absen Sendiri</span>
-                    </label>
-                </div>
-
-                {{-- CATATAN TAMBAHAN --}}
                 <div class="form-group full-width">
-                    <label for="keterangan">Catatan Tambahan</label>
-                    <input type="text" id="keterangan" name="keterangan"
-                           placeholder="Catatan atau evaluasi pembelajaran (opsional)">
+                    <label>Keterangan</label>
+                    <input type="text" name="keterangan" value="{{ old('keterangan') }}">
                 </div>
 
-                {{-- FOTO KEGIATAN --}}
                 <div class="form-group full-width">
-                    <label for="foto_kegiatan">Foto Kegiatan</label>
-
-                    <label class="upload-box" for="foto_kegiatan">
-                        <input type="file" id="foto_kegiatan"
-                               name="foto_kegiatan"
-                               accept="image/jpeg,image/png"
-                               hidden>
-
-                        <div class="upload-placeholder" id="uploadPlaceholder">
-                            <i class="bi bi-image-fill"></i>
-                            <i class="bi bi-grid-fill"></i>
-                            <strong>Klik untuk pilih foto kegiatan pembelajaran</strong>
-                            <span>JPG atau PNG - Batas Ukuran 3 MB</span>
-                        </div>
-
-                        <img id="previewFoto" alt="Pratinjau foto kegiatan"
-                             hidden>
-                    </label>
-
-                    <small class="upload-error" id="uploadError"></small>
+                    <label>Foto Kegiatan</label>
+                    <input type="file" name="foto_kegiatan" accept="image/*">
                 </div>
-
             </div>
 
-            {{-- TOMBOL --}}
             <div class="form-actions">
-                <a href="{{ url()->previous() }}" class="btn-cancel">
-                    Batal
-                </a>
-
-                <button type="submit" class="btn-save">
-                    Simpan Jurnal
-                </button>
+                <a href="{{ route('guru.jurnal-harian') }}" class="btn-cancel">Batal</a>
+                <button type="submit" class="btn-save">Simpan Jurnal</button>
             </div>
-
         </form>
     </div>
 </div>
@@ -216,7 +119,6 @@
 <style>
     .create-jurnal-page {
         width: 100%;
-        max-width: 100%;
         color: #202720;
         font-family: inherit;
         padding-bottom: 15px;
@@ -256,7 +158,7 @@
         margin-bottom: 12px;
     }
 
-    .form-card-heading > i {
+    .form-card-heading>i {
         flex-shrink: 0;
         font-size: 27px;
         color: #39765f;
@@ -275,67 +177,10 @@
         font-size: 10px;
     }
 
-    .teaching-status-box {
-        margin-bottom: 13px;
-        padding: 12px;
-        border: 2px solid #d2e4db;
-        border-radius: 12px;
-        background: #effaf5;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
-    }
-
-    .teaching-status-box h4 {
-        margin: 0 0 4px;
-        color: #161f1a;
-        font-size: 14px;
-        font-weight: 700;
-    }
-
-    .teaching-status-box > p {
-        margin: 0 0 9px;
-        color: #999;
-        font-size: 10px;
-    }
-
-    .teaching-options {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 7px;
-    }
-
-    .teaching-option {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 5px 10px;
-        border: 1px solid #d5ded9;
-        border-radius: 9px;
-        background: #fff;
-        color: #929a95;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: .15s ease;
-    }
-
-    .teaching-option input,
-    .radio-line input {
-        margin: 0;
-        accent-color: #39765f;
-        cursor: pointer;
-    }
-
-    .teaching-option.active {
-        border-color: #8cc8ad;
-        background: #d9f8e9;
-        color: #39765f;
-    }
-
     .form-grid {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        column-gap: 38px;
-        row-gap: 10px;
+        gap: 12px 38px;
         padding: 0 12px;
     }
 
@@ -350,156 +195,30 @@
         grid-column: 1 / -1;
     }
 
-    .form-group > label:not(.radio-line):not(.upload-box) {
+    .form-group>label {
         margin: 0;
         color: #111;
         font-size: 13px;
         font-weight: 700;
-        line-height: 1.3;
     }
 
-    .required {
-        color: #dc2626;
-    }
-
-    .form-group input[type="text"],
-    .form-group input[type="date"],
+    .form-group input,
     .form-group select,
     .form-group textarea {
-        box-sizing: border-box;
         width: 100%;
-        min-width: 0;
-        min-height: 30px;
-        padding: 5px 8px;
+        min-height: 34px;
+        padding: 6px 9px;
         border: 1px solid #bdbdbd;
         border-radius: 8px;
-        outline: none;
-        background: #fff;
-        color: #303030;
         font-family: inherit;
         font-size: 12px;
-        transition: border-color .15s, box-shadow .15s;
-    }
-
-    .form-group textarea {
-        resize: vertical;
-        min-height: 60px;
+        outline: none;
     }
 
     .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
+    .form-group select:focus {
         border-color: #39765f;
         box-shadow: 0 0 0 2px rgba(57, 118, 95, .12);
-    }
-
-    .form-group input::placeholder,
-    .form-group textarea::placeholder {
-        color: #999;
-        opacity: 1;
-    }
-
-    .attendance-group {
-        gap: 8px;
-    }
-
-    .attendance-group > label:first-child {
-        margin-bottom: 1px;
-    }
-
-    .radio-line {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        min-height: 18px;
-        margin: 0;
-        color: #444;
-        font-size: 12px;
-        font-weight: 400;
-        cursor: pointer;
-    }
-
-    .radio-line input {
-        width: 12px;
-        height: 12px;
-        flex-shrink: 0;
-    }
-
-    .disabled-option {
-        color: #c5c5c5;
-        cursor: not-allowed;
-    }
-
-    .disabled-option input {
-        cursor: not-allowed;
-    }
-
-    .upload-box {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-sizing: border-box;
-        min-height: 102px;
-        padding: 10px;
-        border: 2px solid #d2e4db;
-        border-radius: 11px;
-        background: #effaf5;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
-        cursor: pointer;
-        transition: background .15s, border-color .15s;
-    }
-
-    .upload-box:hover {
-        border-color: #8ebda6;
-        background: #e7f6ee;
-    }
-
-    .upload-placeholder {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        gap: 4px;
-        text-align: center;
-        color: #39765f;
-    }
-
-    .upload-placeholder > i:first-child {
-        font-size: 26px;
-        line-height: 1;
-    }
-
-    .upload-placeholder > i:nth-child(2) {
-        display: none;
-    }
-
-    .upload-placeholder strong {
-        margin-top: 5px;
-        font-size: 13px;
-        font-weight: 700;
-    }
-
-    .upload-placeholder span {
-        font-size: 11px;
-    }
-
-    #previewFoto {
-        display: block;
-        max-width: 100%;
-        max-height: 240px;
-        border-radius: 6px;
-        object-fit: contain;
-    }
-
-    #previewFoto[hidden],
-    .upload-placeholder[hidden] {
-        display: none;
-    }
-
-    .upload-error {
-        color: #b91c1c;
-        font-size: 11px;
     }
 
     .form-actions {
@@ -523,18 +242,12 @@
         font-weight: 600;
         text-decoration: none;
         cursor: pointer;
-        transition: background .15s;
     }
 
     .btn-cancel {
         border: 1px solid #aaa;
         background: #fff;
         color: #555;
-    }
-
-    .btn-cancel:hover {
-        background: #f5f5f5;
-        color: #333;
     }
 
     .btn-save {
@@ -544,119 +257,47 @@
     }
 
     .btn-save:hover {
-        border-color: #2e624e;
         background: #2e624e;
-    }
-
-    @media (max-width: 650px) {
-        .page-heading h2 {
-            font-size: 22px;
-        }
-
-        .form-card {
-            padding: 12px 10px;
-        }
-
-        .form-grid {
-            grid-template-columns: minmax(0, 1fr);
-            gap: 12px;
-            padding: 0 2px;
-        }
-
-        .form-group.full-width {
-            grid-column: auto;
-        }
-
-        .teaching-option {
-            font-size: 12px;
-        }
-
-        .form-actions {
-            margin-top: 15px;
-        }
     }
 </style>
 
+@push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Pilihan status mengajar
-    const teachingOptions = document.querySelectorAll('.teaching-option');
+    document.getElementById('jadwal_id').addEventListener('change', function() {
+        const jadwalId = this.value;
+        const container = document.getElementById('presensi-container');
+        const muridList = document.getElementById('murid-list');
 
-    teachingOptions.forEach(function (option) {
-        option.querySelector('input').addEventListener('change', function () {
-            teachingOptions.forEach(function (item) {
-                item.classList.toggle(
-                    'active',
-                    item.querySelector('input').checked
-                );
+        if (!jadwalId) {
+            container.style.display = 'none';
+            return;
+        }
+
+        container.style.display = 'block';
+        muridList.innerHTML = '<tr><td colspan="3" style="text-align:center;">Memuat data...</td></tr>';
+
+        fetch(`/guru/get-murid/${jadwalId}`)
+            .then(response => response.json())
+            .then(data => {
+                muridList.innerHTML = '';
+                data.forEach((murid, index) => {
+                    muridList.innerHTML += `
+                    <tr>
+                        <td>${index+1}</td>
+                        <td>${murid.nama_siswa}</td>
+                        <td>
+                            <select name="absensi[${murid.id}]">
+                                <option value="hadir">Hadir</option>
+                                <option value="sakit">Sakit</option>
+                                <option value="izin">Izin</option>
+                                <option value="alpa">Alpa</option>
+                            </select>
+                        </td>
+                    </tr>
+                `;
+                });
             });
-        });
     });
-
-    // Tampilkan alasan jika materi belum selesai
-    const statusSelect = document.getElementById('status_penyelesaian');
-    const alasanGroup = document.getElementById('alasanGroup');
-    const alasanInput = document.getElementById('alasan_belum_selesai');
-
-    function updateAlasan() {
-        const belumSelesai = statusSelect.value === 'belum_selesai';
-
-        alasanGroup.hidden = !belumSelesai;
-        alasanInput.required = belumSelesai;
-
-        if (!belumSelesai) {
-            alasanInput.value = '';
-        }
-    }
-
-    statusSelect.addEventListener('change', updateAlasan);
-    updateAlasan();
-
-    // Pratinjau foto kegiatan
-    const fotoInput = document.getElementById('foto_kegiatan');
-    const previewFoto = document.getElementById('previewFoto');
-    const uploadPlaceholder = document.getElementById('uploadPlaceholder');
-    const uploadError = document.getElementById('uploadError');
-    const maxSize = 3 * 1024 * 1024;
-
-    fotoInput.addEventListener('change', function () {
-        const file = fotoInput.files[0];
-
-        uploadError.textContent = '';
-
-        if (!file) {
-            previewFoto.hidden = true;
-            previewFoto.removeAttribute('src');
-            uploadPlaceholder.hidden = false;
-            return;
-        }
-
-        if (!['image/jpeg', 'image/png'].includes(file.type)) {
-            uploadError.textContent = 'Foto harus berformat JPG atau PNG.';
-            fotoInput.value = '';
-            previewFoto.hidden = true;
-            uploadPlaceholder.hidden = false;
-            return;
-        }
-
-        if (file.size > maxSize) {
-            uploadError.textContent = 'Ukuran foto maksimal 3 MB.';
-            fotoInput.value = '';
-            previewFoto.hidden = true;
-            uploadPlaceholder.hidden = false;
-            return;
-        }
-
-        const reader = new FileReader();
-
-        reader.onload = function (event) {
-            previewFoto.src = event.target.result;
-            previewFoto.hidden = false;
-            uploadPlaceholder.hidden = true;
-        };
-
-        reader.readAsDataURL(file);
-    });
-});
 </script>
+@endpush
 @endsection

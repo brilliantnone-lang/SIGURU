@@ -31,9 +31,7 @@
             <div class="teaching-options">
                 <span class="teaching-option active">
                     <i class="bi bi-record-circle-fill"></i>
-                    {{ $jurnal->status_mengajar == 'pengganti'
-                        ? 'Guru Pengganti'
-                        : 'Guru Pengampu' }}
+                    {{ $jurnal->guru_pendamping_id ? 'Guru Pendamping' : 'Guru Pengampu' }}
                 </span>
             </div>
         </div>
@@ -45,11 +43,7 @@
             <div class="detail-item">
                 <span class="detail-label">Tanggal Mengajar</span>
                 <div class="detail-value">
-                    @if($jurnal->tanggal)
-                        {{ \Carbon\Carbon::parse($jurnal->tanggal)->translatedFormat('d/m/Y') }}
-                    @else
-                        -
-                    @endif
+                    {{ $jurnal->tanggal ? $jurnal->tanggal->translatedFormat('d F Y') : '-' }}
                 </div>
             </div>
 
@@ -65,9 +59,7 @@
             <div class="detail-item">
                 <span class="detail-label">Mata Pelajaran</span>
                 <div class="detail-value">
-                    {{ $jurnal->jadwal->mataPelajaran->nama_mata_pelajaran
-                        ?? $jurnal->mata_pelajaran
-                        ?? '-' }}
+                    {{ $jurnal->jadwal->mataPelajaran->nama_mata_pelajaran ?? '-' }}
                 </div>
             </div>
 
@@ -75,7 +67,7 @@
             <div class="detail-item">
                 <span class="detail-label">Jam Pelajaran</span>
                 <div class="detail-value">
-                    Jam ke {{ $jurnal->jam_mulai_ke ?? '-' }}-{{ $jurnal->jam_selesai_ke ?? '-' }}
+                    Jam ke {{ $jurnal->jam_mulai_ke }} - {{ $jurnal->jam_selesai_ke }}
                 </div>
             </div>
 
@@ -92,29 +84,43 @@
                 <span class="detail-label">Status Penyelesaian</span>
                 <div class="detail-value">
                     @if($jurnal->status_penyelesaian == 'selesai')
-                        <span class="status-badge status-complete">Tuntas</span>
+                    <span class="status-badge status-complete">Tuntas</span>
                     @else
-                        <span class="status-badge status-incomplete">Belum Selesai</span>
+                    <span class="status-badge status-incomplete">Belum Selesai</span>
                     @endif
                 </div>
             </div>
 
-            {{-- SEMESTER --}}
+            {{-- SEMESTER (DARI COVER JURNAL) --}}
             <div class="detail-item">
                 <span class="detail-label">Tahun Ajaran / Semester</span>
                 <div class="detail-value">
-                    {{ $jurnal->semester ?? '-' }}
+                    @if($jurnal->coverJurnal)
+                    {{ $jurnal->coverJurnal->semester }} {{ $jurnal->coverJurnal->tahun_ajaran }}
+                    @else
+                    -
+                    @endif
                 </div>
             </div>
 
             {{-- ALASAN BELUM SELESAI --}}
             @if($jurnal->status_penyelesaian != 'selesai')
-                <div class="detail-item full-width">
-                    <span class="detail-label">Alasan Belum Selesai</span>
-                    <div class="detail-value">
-                        {{ $jurnal->alasan_belum_selesai ?? '-' }}
-                    </div>
+            <div class="detail-item full-width">
+                <span class="detail-label">Alasan Belum Selesai</span>
+                <div class="detail-value">
+                    {{ $jurnal->alasan_belum_selesai ?? '-' }}
                 </div>
+            </div>
+            @endif
+
+            {{-- GURU PENDAMPING (JIKA ADA) --}}
+            @if($jurnal->guru_pendamping_id)
+            <div class="detail-item full-width">
+                <span class="detail-label">Guru Pendamping</span>
+                <div class="detail-value">
+                    {{ $jurnal->guruPendamping->user->name ?? '-' }}
+                </div>
+            </div>
             @endif
 
         </div>
@@ -127,25 +133,26 @@
             </div>
 
             <div class="attendance-content">
-
                 @php
-                    $absensi = $jurnal->absensi_siswa ?? null;
+                $rekap = [
+                'hadir' => 0,
+                'sakit' => 0,
+                'izin' => 0,
+                'alpa' => 0,
+                ];
+                foreach ($jurnal->attendances as $att) {
+                if (isset($rekap[$att->status_kehadiran])) {
+                $rekap[$att->status_kehadiran]++;
+                }
+                }
                 @endphp
 
-                @if(is_array($absensi) || is_object($absensi))
-                    @foreach($absensi as $jenis => $jumlah)
-                        <div class="attendance-item">
-                            <span>{{ ucfirst($jenis) }}</span>
-                            <strong>{{ $jumlah }}</strong>
-                        </div>
-                    @endforeach
-                @else
-                    <div class="attendance-item">
-                        <span>Data Absensi</span>
-                        <strong>Belum tersedia</strong>
-                    </div>
-                @endif
-
+                @foreach($rekap as $status => $jumlah)
+                <div class="attendance-item">
+                    <span>{{ ucfirst($status) }}</span>
+                    <strong>{{ $jumlah }}</strong>
+                </div>
+                @endforeach
             </div>
 
             <p class="attendance-note">
@@ -167,17 +174,16 @@
 
             <div class="photo-box">
                 @if($jurnal->foto_kegiatan)
-                    <img
-                        src="{{ asset('storage/' . $jurnal->foto_kegiatan) }}"
-                        alt="Foto kegiatan pembelajaran"
-                        class="activity-photo"
-                    >
+                <img
+                    src="{{ asset('storage/' . $jurnal->foto_kegiatan) }}"
+                    alt="Foto kegiatan pembelajaran"
+                    class="activity-photo">
                 @else
-                    <div class="empty-photo">
-                        <i class="bi bi-image"></i>
-                        <strong>Belum ada foto kegiatan</strong>
-                        <span>Foto kegiatan pembelajaran belum diunggah.</span>
-                    </div>
+                <div class="empty-photo">
+                    <i class="bi bi-image"></i>
+                    <strong>Belum ada foto kegiatan</strong>
+                    <span>Foto kegiatan pembelajaran belum diunggah.</span>
+                </div>
                 @endif
             </div>
         </div>
@@ -235,7 +241,7 @@
         margin-bottom: 12px;
     }
 
-    .detail-card-heading > i {
+    .detail-card-heading>i {
         font-size: 27px;
         color: #39765f;
     }
@@ -268,7 +274,7 @@
         font-weight: 700;
     }
 
-    .teaching-status-box > p {
+    .teaching-status-box>p {
         margin: 0 0 9px;
         color: #999;
         font-size: 10px;
@@ -417,7 +423,7 @@
         margin: 14px 12px 0;
     }
 
-    .photo-section > .detail-label {
+    .photo-section>.detail-label {
         display: block;
         margin-bottom: 7px;
     }

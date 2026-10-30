@@ -123,30 +123,16 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     // Dashboard
     Route::get('/dashboard', [\App\Http\Controllers\Guru\DashboardController::class, 'index'])->name('dashboard');
 
-    // Jurnal Harian
-    Route::get('/jurnal-harian', function () {
-        return view('guru.jurnal-harian');
-    })->name('jurnal-harian');
+    // Jurnal
+    Route::get('/jurnal-harian',        [\App\Http\Controllers\Guru\JurnalController::class, 'index'])->name('jurnal-harian');
+    Route::get('/jurnal-harian/tambah', [\App\Http\Controllers\Guru\JurnalController::class, 'create'])->name('tambah-jurnal');
+    Route::post('/jurnal-harian',       [\App\Http\Controllers\Guru\JurnalController::class, 'store'])->name('jurnal.store');
+    Route::get('/jurnal-harian/{id}',      [\App\Http\Controllers\Guru\JurnalController::class, 'show'])->name('lihat-jurnal');
+    Route::get('/jurnal-harian/{id}/edit', [\App\Http\Controllers\Guru\JurnalController::class, 'edit'])->name('edit-jurnal');
+    Route::put('/jurnal-harian/{id}',      [\App\Http\Controllers\Guru\JurnalController::class, 'update'])->name('jurnal.update');
 
-    // Tambah Jurnal
-    Route::get('/jurnal-harian/tambah', function () {
-        return view('guru.tambah-jurnal');
-    })->name('tambah-jurnal');
-
-    // Lihat Jurnal
-    Route::get('/jurnal-harian/lihat', function () {
-        return view('guru.lihat-jurnal');
-    })->name('lihat-jurnal');
-
-    // Edit Jurnal
-    Route::get('/jurnal-harian/edit', function () {
-        return view('guru.edit-jurnal');
-    })->name('edit-jurnal');
-
-    // Catatan Revisi Jurnal
-    Route::get('/jurnal-harian/revisi', function () {
-        return view('guru.catatan-revisi');
-    })->name('catatan-revisi');
+    // Get Murid (AJAX presensi)
+    Route::get('/get-murid/{jadwal_id}', [\App\Http\Controllers\Guru\JurnalController::class, 'getMurid'])->name('get-murid');
 
     // Presensi Siswa
     Route::get('/presensi-siswa', [\App\Http\Controllers\Guru\AbsensiController::class, 'index'])->name('presensi-siswa');

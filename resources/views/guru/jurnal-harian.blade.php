@@ -1,132 +1,266 @@
 @extends('layouts.app')
 
-@section('title', 'Jurnal Guru')
+@section('title', 'Jurnal Harian Guru')
 
 @section('content')
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-    <div>
-        <h1 style="margin:0 0 5px; font-size:26px; font-weight:650; color:#111;">
-            Jurnal: {{ $guru->user->name ?? '-' }}
-        </h1>
-        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:5px;">
-            <span style="font-size:12px; color:#555;">
-                Semester {{ $cover->semester }} {{ $cover->tahun_ajaran }}
-            </span>
-            <span style="background:#e1ece6; padding:2px 8px; border-radius:4px; font-weight:600; font-size:11px; color:#14532d;">
-                {{ $terisi }} / {{ $target }} Jurnal
-            </span>
+<div class="jurnal-page">
 
-            {{-- Status hanya muncul jika semester selesai --}}
-            @if($isSelesai)
-            @if($isLengkap)
-            <span style="background:#dcfce7; color:#166534; padding:4px 10px; border-radius:6px; font-weight:700; font-size:11px;">Siap Divalidasi</span>
-            @else
-            <span style="background:#fff0c9; color:#a86600; padding:4px 10px; border-radius:6px; font-weight:700; font-size:11px;">Belum Lengkap</span>
-            @endif
-            @endif
+    <div class="jurnal-page-header">
+        <div>
+            <h2>Jurnal Harian Guru</h2>
+            <p>Dokumentasikan setiap kegiatan pembelajaran dengan mudah dan rapi.</p>
         </div>
+        <a href="{{ route('guru.tambah-jurnal') }}" class="btn-tambah-jurnal">
+            <i class="bi bi-plus-lg"></i> Tambah Jurnal
+        </a>
     </div>
-    <a href="{{ route('kepsek.validasi-jurnal.show', $cover->id) }}" style="color:#40574F; text-decoration:none; font-size:13px;"><i class="bi bi-arrow-left"></i> Kembali</a>
-</div>
 
-@if(session('success'))
-<div style="background:#dcfce7;color:#166534;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #bbf7d0;">{{ session('success') }}</div>
-@endif
-@if(session('error'))
-<div style="background:#fee2e2;color:#991b1b;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #fecaca;">{{ session('error') }}</div>
-@endif
+    @if(session('success'))
+    <div style="background:#dcfce7;color:#166534;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #bbf7d0;">{{ session('success') }}</div>
+    @endif
+    @if(session('error'))
+    <div style="background:#fee2e2;color:#991b1b;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #fecaca;">{{ session('error') }}</div>
+    @endif
 
-{{-- BANNER FORM VALIDASI --}}
-@if($isSelesai)
-@if($isLengkap)
-<div style="background:#f8faf9; padding:20px; border-radius:12px; border:1px solid #E1ECE6; margin-bottom:25px;">
-    <h3 style="margin:0 0 12px; font-size:15px; color:#111;">Validasi Semua Jurnal {{ $guru->user->name ?? '' }}</h3>
-
-    <form id="formValidasi" action="{{ route('kepsek.validasi-jurnal.validasi-guru', [$cover->id, $guru->id]) }}" method="POST">
-        @csrf
-        @method('PUT')
-
-        <div id="catatanWrapper" style="display:none; margin-bottom:15px;">
-            <label style="display:block; font-weight:600; margin-bottom:7px; font-size:13px;">Catatan Revisi (Wajib):</label>
-            <textarea name="catatan_validasi" id="catatan_validasi" rows="3" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;" placeholder="Tulis catatan perbaikan untuk guru..."></textarea>
+    <section class="jurnal-section history-section">
+        <div class="history-heading">
+            <i class="bi bi-journal-bookmark-fill"></i>
+            <div>
+                <h3>Riwayat Jurnal</h3>
+                <p>{{ $jurnals->count() }} catatan jurnal tersimpan</p>
+            </div>
         </div>
 
-        <div style="display:flex; gap:12px;">
-            <button type="submit" name="status_validasi" value="valid" onclick="return confirm('Validasi SEMUA jurnal guru ini?')" style="flex:1; padding:12px; background:#166534; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer;">
-                <i class="bi bi-check2-circle"></i> Validasi Semua Jurnal
-            </button>
-            <button type="button" onclick="tampilkanCatatan()" style="flex:1; padding:12px; background:#be123c; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer;">
-                <i class="bi bi-exclamation-triangle"></i> Perlu Revisi
-            </button>
+        <div class="table-responsive">
+            <table class="jurnal-table history-table">
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Kelas/Jam</th>
+                        <th>Pokok Bahasan</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($jurnals as $j)
+                    <tr>
+                        <td>{{ $j->tanggal->translatedFormat('d M Y') }}</td>
+                        <td>
+                            <strong>Kelas {{ $j->kelas->nama_kelas ?? '-' }}</strong>
+                            <small>Jam ke {{ $j->jam_mulai_ke }}-{{ $j->jam_selesai_ke }} {{ $j->jadwal->mataPelajaran->nama_mata_pelajaran ?? '' }}</small>
+                        </td>
+                        <td>{{ $j->pokok_bahasan }}</td>
+                        <td>
+                            @if($j->status_validasi === 'valid')
+                            <span class="history-status" style="background:#dcfce7; color:#166534;">Tervalidasi</span>
+                            @elseif($j->status_validasi === 'menunggu_revisi')
+                            <span class="history-status" style="background:#ffe4e6; color:#be123c;">Perlu Revisi</span>
+                            @elseif($j->status_validasi === 'sudah_revisi')
+                            <span class="history-status" style="background:#e0f2fe; color:#0369a1;">Sudah Direvisi</span>
+                            @else
+                            <span class="history-status">Sedang Berjalan</span>
+                            @endif
+                        </td>
+                        <td>
+                            <div class="history-actions">
+                                <a href="{{ route('guru.lihat-jurnal', $j->id) }}" class="icon-action action-detail" title="Lihat jurnal">
+                                    <i class="bi bi-eye-fill"></i>
+                                </a>
+                                @if($j->status_validasi !== 'valid')
+                                <a href="{{ route('guru.edit-jurnal', $j->id) }}" class="icon-action action-edit" title="Edit jurnal">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" style="text-align:center; padding:40px; color:#888;">Belum ada jurnal. Silakan tambah jurnal.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
-    </form>
+    </section>
 </div>
-@else
-<div style="background:#fff0c9; color:#a86600; padding:15px 20px; border-radius:8px; border:1px solid #ffe4a1; margin-bottom:25px; font-size:13px;">
-    <i class="bi bi-info-circle"></i> Jurnal guru ini belum lengkap ({{ $terisi }} dari {{ $target }}). Validasi hanya bisa dilakukan setelah semua jurnal terisi.
-</div>
-@endif
-@else
-<div style="background:#fff0c9; color:#a86600; padding:15px 20px; border-radius:8px; border:1px solid #ffe4a1; margin-bottom:25px; font-size:13px;">
-    <i class="bi bi-info-circle"></i> Semester ini masih berjalan. Validasi hanya bisa dilakukan setelah semester selesai (sesuai Kalender Akademik).
-</div>
-@endif
 
-{{-- TABEL DAFTAR JURNAL --}}
-<div style="background:#fff; padding:20px; border-radius:10px; border:1px solid #E1ECE6;">
-    <h3 style="margin:0 0 15px; font-size:15px; color:#111;">Daftar Jurnal (Per Tanggal)</h3>
-    <div style="overflow-x:auto;">
-        <table style="width:100%; border-collapse:collapse; font-size:12px;">
-            <thead>
-                <tr style="background:#edf6f0;">
-                    <th style="padding:10px; text-align:left;">No.</th>
-                    <th style="padding:10px; text-align:left;">Tanggal</th>
-                    <th style="padding:10px; text-align:left;">Mata Pelajaran</th>
-                    <th style="padding:10px; text-align:left;">Kelas</th>
-                    <th style="padding:10px; text-align:center;">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($jurnals as $i => $j)
-                <tr>
-                    <td style="padding:10px; border-bottom:1px solid #eee;">{{ $i+1 }}</td>
-                    <td style="padding:10px; border-bottom:1px solid #eee;">{{ $j->tanggal->translatedFormat('d M Y') }}</td>
-                    <td style="padding:10px; border-bottom:1px solid #eee;">{{ $j->jadwal->mataPelajaran->nama_mata_pelajaran ?? '-' }}</td>
-                    <td style="padding:10px; border-bottom:1px solid #eee;">{{ $j->kelas->nama_kelas ?? '-' }}</td>
-                    <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">
-                        <a href="{{ route('kepsek.validasi-jurnal.detail', $j->id) }}" style="display:inline-block; padding:4px 10px; background:#176b48; color:#fff; text-decoration:none; border-radius:4px; font-size:11px; font-weight:600;">
-                            Lihat Isi
-                        </a>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="5" style="text-align:center; padding:40px; color:#888;">Belum ada jurnal.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-</div>
-@endsection
-
-@push('scripts')
-<script>
-    function tampilkanCatatan() {
-        const wrapper = document.getElementById('catatanWrapper');
-        const textarea = document.getElementById('catatan_validasi');
-
-        wrapper.style.display = 'block';
-        textarea.required = true;
-        textarea.focus();
-
-        const btnRevisi = event.target;
-        btnRevisi.innerHTML = '<i class="bi bi-send"></i> Kirim Revisi';
-        btnRevisi.setAttribute('type', 'submit');
-        btnRevisi.setAttribute('name', 'status_validasi');
-        btnRevisi.setAttribute('value', 'menunggu_revisi');
-        btnRevisi.removeAttribute('onclick');
-        btnRevisi.style.background = '#be123c';
+<style>
+    /* Gunakan CSS yang sama dengan desain awal */
+    .jurnal-page {
+        width: 100%;
+        color: #222;
+        font-family: inherit;
     }
-</script>
-@endpush
+
+    .jurnal-page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 18px;
+    }
+
+    .jurnal-page-header h2 {
+        margin: 0 0 5px;
+        font-size: 26px;
+        font-weight: 650;
+        color: #111;
+    }
+
+    .jurnal-page-header p {
+        margin: 0;
+        font-size: 12px;
+        color: #555;
+    }
+
+    .btn-tambah-jurnal {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 8px 12px;
+        border-radius: 5px;
+        background: #39765f;
+        color: #fff;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .btn-tambah-jurnal:hover {
+        background: #2e624e;
+        color: #fff;
+    }
+
+    .jurnal-section {
+        background: #fff;
+        border: 1px solid #b9d0c5;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 3px rgba(0, 0, 0, .12);
+    }
+
+    .history-heading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 17px 7px;
+    }
+
+    .history-heading>i {
+        font-size: 24px;
+        color: #39765f;
+    }
+
+    .history-heading h3 {
+        margin: 0 0 2px;
+        font-size: 18px;
+        font-weight: 650;
+        color: #222;
+    }
+
+    .history-heading p {
+        margin: 0;
+        font-size: 12px;
+        color: #999;
+    }
+
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .jurnal-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .jurnal-table thead {
+        background: #e1eee8;
+    }
+
+    .jurnal-table th {
+        padding: 5px 12px;
+        text-align: left;
+        text-transform: uppercase;
+        color: #7d8581;
+        font-size: 11px;
+        font-weight: 650;
+        white-space: nowrap;
+    }
+
+    .jurnal-table td {
+        padding: 6px 12px;
+        border-bottom: 1px solid #e3e3e3;
+        font-size: 11px;
+        vertical-align: middle;
+    }
+
+    .history-table td:first-child {
+        white-space: nowrap;
+        font-weight: 600;
+    }
+
+    .history-table td:nth-child(2) strong {
+        display: block;
+        font-size: 11px;
+        font-weight: 650;
+    }
+
+    .history-table td:nth-child(2) small {
+        display: block;
+        margin-top: 3px;
+        font-size: 10px;
+        color: #999;
+        white-space: nowrap;
+    }
+
+    .history-status {
+        display: inline-block;
+        min-width: 57px;
+        padding: 5px 9px;
+        border-radius: 6px;
+        background: #96ebc8;
+        color: #267454;
+        font-size: 11px;
+    }
+
+    .history-actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+    }
+
+    .icon-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        padding: 0;
+        border: 1px solid;
+        border-radius: 5px;
+        background: #fff;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .action-detail {
+        border-color: #a9bdb3;
+        color: #39765f;
+    }
+
+    .action-edit {
+        border-color: #d6a06f;
+        color: #c45a09;
+    }
+
+    .icon-action:hover {
+        background: #f5f8f6;
+    }
+</style>
+@endsection
