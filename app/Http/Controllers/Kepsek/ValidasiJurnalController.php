@@ -17,15 +17,15 @@ class ValidasiJurnalController extends Controller
     public function index()
     {
         $covers = CoverJurnal::orderBy('tahun_ajaran', 'desc')
-                             ->orderBy('semester', 'asc')
-                             ->get();
+            ->orderBy('semester', 'asc')
+            ->get();
 
         $hariIni = Carbon::now();
         foreach ($covers as $cover) {
             $kalender = KalenderAkademik::where('tahun_ajaran', $cover->tahun_ajaran)
-                                        ->where('semester', $cover->semester)
-                                        ->first();
-            
+                ->where('semester', $cover->semester)
+                ->first();
+
             if ($kalender && $hariIni->gt(Carbon::parse($kalender->tanggal_selesai))) {
                 $cover->status_berjalan = false; // Selesai
             } else {
@@ -40,32 +40,46 @@ class ValidasiJurnalController extends Controller
     public function show($id)
     {
         $cover = CoverJurnal::findOrFail($id);
-        
+
+        // Cek apakah semester sudah selesai
         $kalender = KalenderAkademik::where('tahun_ajaran', $cover->tahun_ajaran)
-                                    ->where('semester', $cover->semester)
-                                    ->first();
+            ->where('semester', $cover->semester)
+            ->first();
         $hariIni = Carbon::now();
         $isSelesai = false;
         if ($kalender && $hariIni->gt(Carbon::parse($kalender->tanggal_selesai))) {
             $isSelesai = true;
         }
 
+        // Ambil guru yang punya jurnal di semester ini
         $gurus = Guru::with('user', 'mataPelajaran')
-            ->whereHas('journal', function($q) use ($id) {
+            ->whereHas('journal', function ($q) use ($id) {
                 $q->where('cover_jurnal_id', $id);
             })
-            ->withCount(['journal' => function($q) use ($id) {
+            ->withCount(['journal' => function ($q) use ($id) {
                 $q->where('cover_jurnal_id', $id);
             }])
             ->get();
 
-        // Cek kelengkapan per guru
+        // --- HITUNG STATUS KESELURUHAN PER GURU ---
         foreach ($gurus as $guru) {
-            $cek = $this->cekKelengkapanJurnal($cover, $guru);
-            $guru->lengkap = $cek['lengkap'];
-            $guru->target = $cek['target'];
-            $guru->terisi = $cek['terisi'];
+            $jurnals = Journal::where('cover_jurnal_id', $id)
+                ->where('guru_id', $guru->id)
+                ->get();
+
+            if ($jurnals->isEmpty()) {
+                $guru->status_keseluruhan = 'kosong';
+            } elseif ($jurnals->every(fn($j) => $j->status_validasi === 'valid')) {
+                $guru->status_keseluruhan = 'valid';
+            } elseif ($jurnals->contains(fn($j) => $j->status_validasi === 'menunggu_revisi')) {
+                $guru->status_keseluruhan = 'menunggu_revisi';
+            } elseif ($jurnals->contains(fn($j) => $j->status_validasi === 'sudah_revisi')) {
+                $guru->status_keseluruhan = 'sudah_revisi';
+            } else {
+                $guru->status_keseluruhan = 'belum_valid';
+            }
         }
+        // ------------------------------------------
 
         return view('kepsek.detail-validasi', compact('cover', 'gurus', 'isSelesai'));
     }
@@ -76,74 +90,103 @@ class ValidasiJurnalController extends Controller
         $cover = CoverJurnal::findOrFail($cover_id);
         $guru = Guru::with('user', 'mataPelajaran')->findOrFail($guru_id);
 
+        // Cek status semester
         $kalender = KalenderAkademik::where('tahun_ajaran', $cover->tahun_ajaran)
-                                    ->where('semester', $cover->semester)
-                                    ->first();
+            ->where('semester', $cover->semester)
+            ->first();
         $hariIni = Carbon::now();
         $isSelesai = false;
         if ($kalender && $hariIni->gt(Carbon::parse($kalender->tanggal_selesai))) {
             $isSelesai = true;
         }
 
+        // Ambil jurnal
         $jurnals = Journal::with(['kelas', 'jadwal.mataPelajaran'])
-                          ->where('cover_jurnal_id', $cover_id)
-                          ->where('guru_id', $guru_id)
-                          ->orderBy('tanggal', 'asc')
-                          ->get();
+            ->where('cover_jurnal_id', $cover_id)
+            ->where('guru_id', $guru_id)
+            ->orderBy('tanggal', 'asc')
+            ->get();
 
-        // Cek kelengkapan
+        // Cek kelengkapan jurnal
         $cek = $this->cekKelengkapanJurnal($cover, $guru);
         $isLengkap = $cek['lengkap'];
         $target = $cek['target'];
         $terisi = $cek['terisi'];
 
-        return view('kepsek.jurnal-guru', compact('cover', 'guru', 'jurnals', 'isSelesai', 'isLengkap', 'target', 'terisi'));
+        // --- TAMBAHKAN INI: Hitung status keseluruhan untuk badge ---
+        $statusUtama = 'belum_valid';
+        if ($jurnals->isNotEmpty()) {
+            if ($jurnals->every(fn($j) => $j->status_validasi === 'valid')) {
+                $statusUtama = 'valid';
+            } elseif ($jurnals->contains(fn($j) => $j->status_validasi === 'menunggu_revisi')) {
+                $statusUtama = 'menunggu_revisi';
+            } elseif ($jurnals->contains(fn($j) => $j->status_validasi === 'sudah_revisi')) {
+                $statusUtama = 'sudah_revisi';
+            }
+        }
+        // -----------------------------------------------------------
+
+        return view('kepsek.jurnal-guru', compact(
+            'cover',
+            'guru',
+            'jurnals',
+            'isSelesai',
+            'isLengkap',
+            'target',
+            'terisi',
+            'statusUtama'
+        ));
     }
 
-    // 4. Proses Validasi Massal Per Guru
     public function validasiGuru(Request $request, $cover_id, $guru_id)
     {
+        // 1. Cek semester selesai
         $cover = CoverJurnal::findOrFail($cover_id);
-        $guru = Guru::findOrFail($guru_id);
-
         $kalender = KalenderAkademik::where('tahun_ajaran', $cover->tahun_ajaran)
-                                    ->where('semester', $cover->semester)
-                                    ->first();
+            ->where('semester', $cover->semester)
+            ->first();
         $hariIni = Carbon::now();
         if (!$kalender || $hariIni->lte(Carbon::parse($kalender->tanggal_selesai))) {
-            return redirect()->back()->with('error', 'Semester ini masih berjalan. Validasi hanya bisa dilakukan setelah semester selesai.');
+            return redirect()->back()->with('error', 'Semester ini masih berjalan.');
         }
 
-        // Cek kelengkapan
+        // 2. Cek kelengkapan jurnal
+        $guru = Guru::findOrFail($guru_id);
         $cek = $this->cekKelengkapanJurnal($cover, $guru);
         if (!$cek['lengkap']) {
             return redirect()->back()->with('error', 'Jurnal guru ini belum lengkap. Terisi ' . $cek['terisi'] . ' dari target ' . $cek['target'] . '.');
         }
 
+        // 3. Validasi input
         $request->validate([
             'status_validasi' => 'required|in:valid,menunggu_revisi',
             'catatan_validasi' => 'nullable|string'
         ]);
 
+        // 4. Update semua jurnal guru di semester ini
         Journal::where('cover_jurnal_id', $cover_id)
-               ->where('guru_id', $guru_id)
-               ->update([
-                   'status_validasi' => $request->status_validasi,
-                   'catatan_validasi' => $request->catatan_validasi,
-                   'validator_id' => auth()->id(),
-                   'validated_at' => now(),
-               ]);
+            ->where('guru_id', $guru_id)
+            ->update([
+                'status_validasi' => $request->status_validasi,
+                'catatan_validasi' => $request->catatan_validasi,
+                'validator_id' => auth()->id(),
+                'validated_at' => now(),
+            ]);
+
+        $pesan = $request->status_validasi === 'valid'
+            ? 'Semua jurnal ' . $guru->user->name . ' berhasil divalidasi!'
+            : 'Semua jurnal ' . $guru->user->name . ' ditandai untuk revisi.';
 
         return redirect()->route('kepsek.validasi-jurnal.show', $cover_id)
-                         ->with('success', 'Validasi berhasil diproses.');
+            ->with('success', $pesan);
     }
 
     // 5. Detail Per Jurnal (TTD)
     public function detailJurnal($id)
     {
         $jurnal = Journal::with(['guru.user', 'guruPendamping.user', 'kelas', 'jadwal.mataPelajaran'])
-                         ->findOrFail($id);
-        
+            ->findOrFail($id);
+
         return view('kepsek.detail-jurnal', compact('jurnal'));
     }
 
@@ -152,12 +195,12 @@ class ValidasiJurnalController extends Controller
     {
         $mulai = Carbon::parse($cover->tanggal_mulai ?? null);
         $selesai = Carbon::parse($cover->tanggal_selesai ?? null);
-        
+
         // Fallback ke Kalender Akademik jika cover tidak punya tanggal
         if (!$mulai || !$selesai) {
             $kalender = KalenderAkademik::where('tahun_ajaran', $cover->tahun_ajaran)
-                                        ->where('semester', $cover->semester)
-                                        ->first();
+                ->where('semester', $cover->semester)
+                ->first();
             if ($kalender) {
                 $mulai = Carbon::parse($kalender->tanggal_mulai);
                 $selesai = Carbon::parse($kalender->tanggal_selesai);
@@ -171,8 +214,12 @@ class ValidasiJurnalController extends Controller
         $target = 0;
         foreach ($semuaJadwal as $jadwal) {
             $indexHari = [
-                'senin' => 1, 'selasa' => 2, 'rabu' => 3, 
-                'kamis' => 4, 'jumat' => 5, 'sabtu' => 6
+                'senin' => 1,
+                'selasa' => 2,
+                'rabu' => 3,
+                'kamis' => 4,
+                'jumat' => 5,
+                'sabtu' => 6
             ][$jadwal->hari] ?? 1;
 
             $current = $mulai->copy();
@@ -185,8 +232,8 @@ class ValidasiJurnalController extends Controller
         }
 
         $terisi = Journal::where('guru_id', $guru->id)
-                         ->where('cover_jurnal_id', $cover->id)
-                         ->count();
+            ->where('cover_jurnal_id', $cover->id)
+            ->count();
 
         return [
             'lengkap' => $terisi >= $target,
