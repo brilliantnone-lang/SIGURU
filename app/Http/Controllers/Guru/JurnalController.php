@@ -243,4 +243,42 @@ class JurnalController extends Controller
         $murids = Murid::where('kelas_id', $jadwal->kelas_id)->orderBy('nama_siswa', 'asc')->get(['id', 'nama_siswa']);
         return response()->json($murids);
     }
+
+    public function catatanRevisi($id)
+    {
+        $guru = Guru::where('user_id', Auth::id())->firstOrFail();
+        $jurnal = Journal::with(['coverJurnal', 'kelas', 'jadwal.mataPelajaran'])
+            ->where('guru_id', $guru->id)
+            ->findOrFail($id);
+
+        return view('guru.catatan-revisi', compact('jurnal'));
+    }
+
+    public function ajukanUlang($id)
+    {
+        $guru = Guru::where('user_id', Auth::id())->firstOrFail();
+
+        $jurnal = Journal::where(function ($q) use ($guru) {
+            $q->where('guru_id', $guru->id)
+                ->orWhere('guru_pendamping_id', $guru->id);
+        })
+            ->findOrFail($id);
+
+        if ($jurnal->status_validasi !== 'menunggu_revisi') {
+            return redirect()->route('guru.jurnal-harian')
+                ->with('error', 'Jurnal ini tidak dalam status menunggu revisi.');
+        }
+
+        // 🔑 UPDATE SEMUA jurnal menunggu_revisi dalam cover yang sama
+        $jumlah = Journal::where('cover_jurnal_id', $jurnal->cover_jurnal_id)
+            ->where(function ($q) use ($guru) {
+                $q->where('guru_id', $guru->id)
+                    ->orWhere('guru_pendamping_id', $guru->id);
+            })
+            ->where('status_validasi', 'menunggu_revisi')
+            ->update(['status_validasi' => 'sudah_revisi']);
+
+        return redirect()->route('guru.jurnal-harian')
+            ->with('success', "{$jumlah} jurnal berhasil diajukan ulang. Menunggu validasi Kepala Sekolah.");
+    }
 }

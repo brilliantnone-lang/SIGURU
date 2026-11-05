@@ -2,15 +2,34 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+
+// Admin Controllers
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CoverJurnalController;
-use \App\Http\Controllers\Admin\GuruController;
-use \App\Http\Controllers\Admin\MataPelajaranController;
-use \App\Http\Controllers\Admin\KalenderAkademikController;
-use \App\Http\Controllers\Admin\JournalController;
-use \App\Http\Controllers\Admin\BahanAjarController;
-use \App\Http\Controllers\Admin\RekapAbsensiController;
-use \App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GuruController;
+use App\Http\Controllers\Admin\MataPelajaranController;
+use App\Http\Controllers\Admin\KelasController;
+use App\Http\Controllers\Admin\MuridController;
+use App\Http\Controllers\Admin\JadwalController;
+use App\Http\Controllers\Admin\EventSekolahController;
+use App\Http\Controllers\Admin\KalenderAkademikController;
+use App\Http\Controllers\Admin\JournalController;
+use App\Http\Controllers\Admin\BahanAjarController;
+use App\Http\Controllers\Admin\RekapAbsensiController;
+
+// Guru Controllers
 use App\Http\Controllers\Guru\JurnalController;
+use App\Http\Controllers\Guru\AbsensiController;
+use App\Http\Controllers\Guru\BahanAjarController as GuruBahanAjarController;
+use App\Http\Controllers\Guru\ProfilController as GuruProfilController;
+use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
+
+// Kepsek Controllers
+use App\Http\Controllers\Kepsek\DashboardController as KepsekDashboardController;
+use App\Http\Controllers\Kepsek\ValidasiJurnalController;
+use App\Http\Controllers\Kepsek\BahanAjarController as KepsekBahanAjarController;
+use App\Http\Controllers\Kepsek\RekapAbsensiController as KepsekRekapController;
+use App\Http\Controllers\Kepsek\ProfilController as KepsekProfilController;
 
 // ===== AUTH =====
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -23,222 +42,119 @@ Route::get('/', function () {
 
 // ===== ADMIN =====
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-
-    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Data Cover (CRUD Lengkap)
+    // Master Data
     Route::resource('data-cover', CoverJurnalController::class);
-
-    // Data Guru
     Route::resource('data-guru', GuruController::class)->names([
-        'index' => 'guru.index',
-        'create' => 'tambah-guru',
-        'store' => 'guru.store',
-        'edit' => 'guru.edit',
-        'update' => 'guru.update',
-        'destroy' => 'guru.destroy',
+        'index' => 'guru.index', 'create' => 'tambah-guru', 'store' => 'guru.store',
+        'edit' => 'guru.edit', 'update' => 'guru.update', 'destroy' => 'guru.destroy',
     ]);
-
-    // Data Mata Pelajaran
     Route::resource('data-mapel', MataPelajaranController::class)->names([
-        'index' => 'mapel.index',
-        'create' => 'mapel.create',
-        'store' => 'mapel.store',
-        'edit' => 'mapel.edit',
-        'update' => 'mapel.update',
-        'destroy' => 'mapel.destroy',
+        'index' => 'mapel.index', 'create' => 'mapel.create', 'store' => 'mapel.store',
+        'edit' => 'mapel.edit', 'update' => 'mapel.update', 'destroy' => 'mapel.destroy',
     ]);
-
-
-    Route::get('/data-guru/tambah', function () {
-        return view('admin.tambah-guru');
-    })->name('tambah-guru');
-
-
-    // Data Kelas
-    Route::resource('data-kelas', \App\Http\Controllers\Admin\KelasController::class)->names([
-        'index' => 'kelas.index',
-        'create' => 'kelas.create',
-        'store' => 'kelas.store',
-        'edit' => 'kelas.edit',
-        'update' => 'kelas.update',
-        'destroy' => 'kelas.destroy',
+    Route::resource('data-kelas', KelasController::class)->names([
+        'index' => 'kelas.index', 'create' => 'kelas.create', 'store' => 'kelas.store',
+        'edit' => 'kelas.edit', 'update' => 'kelas.update', 'destroy' => 'kelas.destroy',
     ]);
-
-    // Data Murid
-    Route::resource('data-murid', \App\Http\Controllers\Admin\MuridController::class)->names([
-        'index' => 'murid.index',
-        'create' => 'murid.create',
-        'store' => 'murid.store',
-        'edit' => 'murid.edit',
-        'update' => 'murid.update',
-        'destroy' => 'murid.destroy',
+    Route::resource('data-murid', MuridController::class)->names([
+        'index' => 'murid.index', 'create' => 'murid.create', 'store' => 'murid.store',
+        'edit' => 'murid.edit', 'update' => 'murid.update', 'destroy' => 'murid.destroy',
     ]);
-
-    // Data Pengajaran
-    Route::resource('data-pengajaran', \App\Http\Controllers\Admin\JadwalController::class)->names([
-        'index' => 'pengajaran.index',
-        'create' => 'pengajaran.create',
-        'store' => 'pengajaran.store',
-        'edit' => 'pengajaran.edit',
-        'update' => 'pengajaran.update',
-        'destroy' => 'pengajaran.destroy',
+    Route::resource('data-pengajaran', JadwalController::class)->names([
+        'index' => 'pengajaran.index', 'create' => 'pengajaran.create', 'store' => 'pengajaran.store',
+        'edit' => 'pengajaran.edit', 'update' => 'pengajaran.update', 'destroy' => 'pengajaran.destroy',
     ]);
-
-    // Event Sekolah
-    Route::resource('event-sekolah', \App\Http\Controllers\Admin\EventSekolahController::class)->names([
-        'index' => 'event.index',
-        'create' => 'event.create',
-        'store' => 'event.store',
-        'edit' => 'event.edit',
-        'update' => 'event.update',
-        'destroy' => 'event.destroy',
+    Route::resource('event-sekolah', EventSekolahController::class)->names([
+        'index' => 'event.index', 'create' => 'event.create', 'store' => 'event.store',
+        'edit' => 'event.edit', 'update' => 'event.update', 'destroy' => 'event.destroy',
     ]);
-
-    // Panduan Penggunaan
-    Route::get('/panduan', function () {
-        return view('admin.panduan');
-    })->name('panduan');
-
-    // ===== Menu yang belum ada file-nya (sementara redirect ke dashboard) =====
-    Route::get('/rekap-absensi', [RekapAbsensiController::class, 'index'])->name('rekap-absensi.index');
-    Route::get('/rekap-absensi/detail', [RekapAbsensiController::class, 'detail'])->name('rekap-absensi.detail');
-
     Route::resource('kalender', KalenderAkademikController::class)->names([
-        'index' => 'kalender.index',
-        'create' => 'kalender.create',
-        'store' => 'kalender.store',
-        'edit' => 'kalender.edit',
-        'update' => 'kalender.update',
-        'destroy' => 'kalender.destroy',
+        'index' => 'kalender.index', 'create' => 'kalender.create', 'store' => 'kalender.store',
+        'edit' => 'kalender.edit', 'update' => 'kalender.update', 'destroy' => 'kalender.destroy',
     ]);
 
+    // Monitoring
+    Route::get('/rekap-absensi', [RekapAbsensiController::class, 'index'])->name('rekap-absensi.index');
     Route::get('/jurnal', [JournalController::class, 'index'])->name('jurnal.index');
-
     Route::get('/bahan-ajar', [BahanAjarController::class, 'index'])->name('bahan-ajar.index');
+    Route::get('/panduan', fn() => view('admin.panduan'))->name('panduan');
 });
 
 // ===== GURU =====
 Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(function () {
     // Dashboard
-    Route::get('/dashboard', [\App\Http\Controllers\Guru\DashboardController::class, 'index'])->name('dashboard');
-
+    Route::get('/dashboard', [GuruDashboardController::class, 'index'])->name('dashboard');
 
     // Jurnal
-    Route::get('/jurnal-harian', [
-        \App\Http\Controllers\Guru\JurnalController::class,
-        'index'
-    ])->name('jurnal-harian');
+    Route::get('/jurnal-harian', [JurnalController::class, 'index'])->name('jurnal-harian');
+    Route::get('/jurnal-harian/tambah', [JurnalController::class, 'create'])->name('tambah-jurnal');
+    Route::post('/jurnal-harian', [JurnalController::class, 'store'])->name('jurnal.store');
+    Route::get('/jurnal-harian/{id}', [JurnalController::class, 'show'])->name('lihat-jurnal');
+    Route::get('/jurnal-harian/{id}/edit', [JurnalController::class, 'edit'])->name('edit-jurnal');
+    Route::put('/jurnal-harian/{id}', [JurnalController::class, 'update'])->name('jurnal.update');
+    Route::get('/jurnal-harian/{id}/revisi', [JurnalController::class, 'catatanRevisi'])->name('catatan-revisi');
+    Route::post('/jurnal-harian/{id}/ajukan-ulang', [JurnalController::class, 'ajukanUlang'])->name('ajukan-ulang');
 
-    Route::get('/jurnal-harian/tambah', [
-        \App\Http\Controllers\Guru\JurnalController::class,
-        'create'
-    ])->name('tambah-jurnal');
+    // AJAX get murid
+    Route::get('/get-murid/{jadwal_id}', [JurnalController::class, 'getMurid'])->name('get-murid');
 
-    Route::post('/jurnal-harian', [
-        \App\Http\Controllers\Guru\JurnalController::class,
-        'store'
-    ])->name('jurnal.store');
-
-    Route::get('/jurnal-harian/{id}', [
-        \App\Http\Controllers\Guru\JurnalController::class,
-        'show'
-    ])->name('lihat-jurnal');
-
-    Route::get('/jurnal-harian/{id}/edit', [
-        \App\Http\Controllers\Guru\JurnalController::class,
-        'edit'
-    ])->name('edit-jurnal');
-
-    Route::put('/jurnal-harian/{id}', [
-        \App\Http\Controllers\Guru\JurnalController::class,
-        'update'
-    ])->name('jurnal.update');
-
-    // Tambahan: mengambil daftar siswa berdasarkan jadwal
-    Route::get('/jurnal-harian/get-murid/{jadwal_id}', [
-        \App\Http\Controllers\Guru\JurnalController::class,
-        'getMurid'
-    ])->name('jurnal.get-murid');
-
-
-    // Get Murid (AJAX presensi)
-    Route::get('/get-murid/{jadwal_id}', [\App\Http\Controllers\Guru\JurnalController::class, 'getMurid'])->name('get-murid');
-
-    // Presensi Siswa
-    Route::get('/presensi-siswa', [\App\Http\Controllers\Guru\AbsensiController::class, 'index'])->name('presensi-siswa');
-    Route::post('/presensi-siswa', [\App\Http\Controllers\Guru\AbsensiController::class, 'store'])->name('presensi-siswa.store');
+    // Presensi
+    Route::get('/presensi-siswa', [AbsensiController::class, 'index'])->name('presensi-siswa');
+    Route::post('/presensi-siswa', [AbsensiController::class, 'store'])->name('presensi-siswa.store');
 
     // Bahan Ajar
-    Route::get('/bahan-ajar', [\App\Http\Controllers\Guru\BahanAjarController::class, 'index'])->name('bahan-ajar');
-    Route::get('/bahan-ajar/unggah', [\App\Http\Controllers\Guru\BahanAjarController::class, 'create'])->name('unggah-bahan-ajar');
-    Route::post('/bahan-ajar', [\App\Http\Controllers\Guru\BahanAjarController::class, 'store'])->name('bahan-ajar.store');
-    Route::get('/bahan-ajar/{id}/edit', [\App\Http\Controllers\Guru\BahanAjarController::class, 'edit'])->name('edit-bahan-ajar');
-    Route::put('/bahan-ajar/{id}', [\App\Http\Controllers\Guru\BahanAjarController::class, 'update'])->name('bahan-ajar.update');
-    Route::delete('/bahan-ajar/{id}', [\App\Http\Controllers\Guru\BahanAjarController::class, 'destroy'])->name('bahan-ajar.destroy');
+    Route::get('/bahan-ajar', [GuruBahanAjarController::class, 'index'])->name('bahan-ajar');
+    Route::get('/bahan-ajar/unggah', [GuruBahanAjarController::class, 'create'])->name('unggah-bahan-ajar');
+    Route::post('/bahan-ajar', [GuruBahanAjarController::class, 'store'])->name('bahan-ajar.store');
+    Route::get('/bahan-ajar/{id}/edit', [GuruBahanAjarController::class, 'edit'])->name('edit-bahan-ajar');
+    Route::put('/bahan-ajar/{id}', [GuruBahanAjarController::class, 'update'])->name('bahan-ajar.update');
+    Route::delete('/bahan-ajar/{id}', [GuruBahanAjarController::class, 'destroy'])->name('bahan-ajar.destroy');
 
-    // Edit Bahan Ajar
-    Route::get('/bahan-ajar/edit', function () {
-        return view('guru.edit-bahan-ajar');
-    })->name('edit-bahan-ajar');
-
-    // Kalender Akademik
+    // Kalender
     Route::get('/kalender', function () {
         $kalenderAktif = \App\Models\KalenderAkademik::getKalenderAktif();
         return view('guru.kalender', compact('kalenderAktif'));
     })->name('kalender');
 
     // Profil
-    Route::get('/profil-saya', [\App\Http\Controllers\Guru\ProfilController::class, 'index'])->name('profil-saya');
-    Route::get('/profil-saya/edit', [\App\Http\Controllers\Guru\ProfilController::class, 'edit'])->name('edit-profil');
-    Route::put('/profil-saya', [\App\Http\Controllers\Guru\ProfilController::class, 'update'])->name('profil-saya.update');
+    Route::get('/profil-saya', [GuruProfilController::class, 'index'])->name('profil-saya');
+    Route::get('/profil-saya/edit', [GuruProfilController::class, 'edit'])->name('edit-profil');
+    Route::put('/profil-saya', [GuruProfilController::class, 'update'])->name('profil-saya.update');
 
-    // Panduan Penggunaan
-    Route::get('/panduan', function () {
-        return view('guru.panduan');
-    })->name('panduan');
+    // Panduan
+    Route::get('/panduan', fn() => view('guru.panduan'))->name('panduan');
 });
 
 // ===== KEPSEK =====
 Route::middleware(['auth', 'role:kepsek'])->prefix('kepsek')->name('kepsek.')->group(function () {
-
     // Dashboard
-    Route::get('/dashboard', [\App\Http\Controllers\Kepsek\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [KepsekDashboardController::class, 'index'])->name('dashboard');
 
-    // Rekapitulasi Absensi Siswa
-    Route::get('/rekapitulasi-absensi', [\App\Http\Controllers\Kepsek\RekapAbsensiController::class, 'index'])->name('rekapitulasi-absensi.index');
+    // Rekap Absensi
+    Route::get('/rekapitulasi-absensi', [KepsekRekapController::class, 'index'])->name('rekapitulasi-absensi.index');
 
-    // List Semester
-    Route::get('/validasi-jurnal', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'index'])->name('validasi-jurnal.index');
-
-    // List Guru di Semester
-    Route::get('/validasi-jurnal/semester/{id}', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'show'])->name('validasi-jurnal.show');
-
-    // Detail Jurnal Per Guru + Form Validasi
-    Route::get('/validasi-jurnal/semester/{cover_id}/guru/{guru_id}', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'jurnalGuru'])->name('validasi-jurnal.guru');
-
-    // Proses Validasi Massal Per Guru
-    Route::put('/validasi-jurnal/semester/{cover_id}/guru/{guru_id}', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'validasiGuru'])->name('validasi-jurnal.validasi-guru');
-
-    // Detail Per Jurnal (TTD)
-    Route::get('/validasi-jurnal/detail/{id}', [\App\Http\Controllers\Kepsek\ValidasiJurnalController::class, 'detailJurnal'])->name('validasi-jurnal.detail');
+    // Validasi Jurnal
+    Route::get('/validasi-jurnal', [ValidasiJurnalController::class, 'index'])->name('validasi-jurnal.index');
+    Route::get('/validasi-jurnal/semester/{id}', [ValidasiJurnalController::class, 'show'])->name('validasi-jurnal.show');
+    Route::get('/validasi-jurnal/semester/{cover_id}/guru/{guru_id}', [ValidasiJurnalController::class, 'jurnalGuru'])->name('validasi-jurnal.guru');
+    Route::put('/validasi-jurnal/semester/{cover_id}/guru/{guru_id}', [ValidasiJurnalController::class, 'validasiGuru'])->name('validasi-jurnal.validasi-guru');
+    Route::get('/validasi-jurnal/detail/{id}', [ValidasiJurnalController::class, 'detailJurnal'])->name('validasi-jurnal.detail');
 
     // Bahan Ajar
-    Route::get('/bahan-ajar', [\App\Http\Controllers\Kepsek\BahanAjarController::class, 'index'])->name('bahan-ajar.index');
+    Route::get('/bahan-ajar', [KepsekBahanAjarController::class, 'index'])->name('bahan-ajar.index');
 
-    // Kalender Akademik
+    // Kalender
     Route::get('/kalender', function () {
         $kalenderAktif = \App\Models\KalenderAkademik::getKalenderAktif();
         return view('kepsek.kalender', compact('kalenderAktif'));
     })->name('kalender');
 
-    // Panduan Penggunaan
-    Route::get('/panduan', function () {
-        return view('kepsek.panduan');
-    })->name('panduan');
+    // Panduan
+    Route::get('/panduan', fn() => view('kepsek.panduan'))->name('panduan');
 
     // Profil & TTD
-    Route::get('/profil', [\App\Http\Controllers\Kepsek\ProfilController::class, 'index'])->name('profil');
-    Route::post('/profil/ttd', [\App\Http\Controllers\Kepsek\ProfilController::class, 'updateTtd'])->name('profil.ttd');
+    Route::get('/profil', [KepsekProfilController::class, 'index'])->name('profil');
+    Route::post('/profil/ttd', [KepsekProfilController::class, 'updateTtd'])->name('profil.ttd');
 });

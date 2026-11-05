@@ -20,17 +20,17 @@
 
     {{-- NOTIFIKASI --}}
     @if(session('success'))
-        <div class="jurnal-alert alert-success">
-            <i class="bi bi-check-circle-fill"></i>
-            {{ session('success') }}
-        </div>
+    <div class="jurnal-alert alert-success">
+        <i class="bi bi-check-circle-fill"></i>
+        {{ session('success') }}
+    </div>
     @endif
 
     @if(session('error'))
-        <div class="jurnal-alert alert-error">
-            <i class="bi bi-exclamation-circle-fill"></i>
-            {{ session('error') }}
-        </div>
+    <div class="jurnal-alert alert-error">
+        <i class="bi bi-exclamation-circle-fill"></i>
+        {{ session('error') }}
+    </div>
     @endif
 
     {{-- VALIDASI JURNAL --}}
@@ -60,103 +60,81 @@
 
                 <tbody>
                     @php
-                        /*
-                         * Mengelompokkan jurnal berdasarkan cover jurnal
-                         * yang sudah tersedia pada data.
-                         * Tidak menambahkan query atau konfigurasi database.
-                         */
-                        $kelompokValidasi = $jurnals
-                            ->groupBy(function ($jurnal) {
-                                return $jurnal->cover_jurnal_id ?? 'tanpa-cover';
-                            });
+                    $kelompokValidasi = $jurnals->groupBy(function ($jurnal) {
+                    return $jurnal->cover_jurnal_id ?? 'tanpa-cover';
+                    });
                     @endphp
 
                     @forelse($kelompokValidasi as $kelompok)
-                        @php
-                            $jurnalPertama = $kelompok->first();
-                            $cover = $jurnalPertama->coverJurnal;
+                    @php
+                    $jurnalPertama = $kelompok->first();
+                    $cover = $jurnalPertama->coverJurnal;
 
-                            $adaRevisi = $kelompok->contains(
-                                'status_validasi',
-                                'menunggu_revisi'
-                            );
+                    $jurnalRevisi = $kelompok->firstWhere('status_validasi', 'menunggu_revisi');
+                    $adaRevisi = $jurnalRevisi !== null;
+                    $semuaValid = $kelompok->every(fn ($jurnal) => $jurnal->status_validasi === 'valid');
+                    $sudahRevisi = !$adaRevisi && $kelompok->contains('status_validasi', 'sudah_revisi');
+                    @endphp
 
-                            $semuaValid = $kelompok->every(
-                                fn ($jurnal) => $jurnal->status_validasi === 'valid'
-                            );
+                    <tr>
+                        <td>{{ $cover->semester ?? '-' }}</td>
+                        <td>{{ $cover->tahun_ajaran ?? '-' }}</td>
 
-                            $sudahRevisi = !$adaRevisi && $kelompok->contains(
-                                'status_validasi',
-                                'sudah_revisi'
-                            );
-                        @endphp
+                        {{-- KOLOM STATUS JURNAL (badge status saja) --}}
+                        <td>
+                            @if($adaRevisi)
+                            <span class="validation-status status-revision">
+                                Perlu Revisi
+                            </span>
+                            @elseif($semuaValid)
+                            <span class="validation-status status-approved">
+                                Sudah Divalidasi
+                            </span>
+                            @elseif($sudahRevisi)
+                            <span class="validation-status status-revised">
+                                Sudah Direvisi
+                            </span>
+                            @else
+                            <span class="validation-status status-process">
+                                Sedang Berjalan
+                            </span>
+                            @endif
+                        </td>
 
-                        <tr>
-                            <td>
-                                {{ $cover->semester ?? '-' }}
-                            </td>
-
-                            <td>
-                                {{ $cover->tahun_ajaran ?? '-' }}
-                            </td>
-
-                            <td>
+                        {{-- KOLOM AKSI (tombol tindak lanjut) --}}
+                        {{-- KOLOM AKSI --}}
+                        <td>
+                            <div class="validation-actions">
                                 @if($adaRevisi)
-                                    <span class="validation-status status-revision">
-                                        Perlu Perbaikan
-                                    </span>
+                                {{-- Masih perlu revisi → tampilkan tombol catatan perbaikan --}}
+                                <a href="{{ route('guru.catatan-revisi', $jurnalRevisi->id) }}"
+                                    class="validation-action action-revision"
+                                    title="Ikuti catatan perbaikan">
+                                    <i class="bi bi-pencil-square"></i>
+                                    <span>Ikuti Catatan Perbaikan</span>
+                                </a>
                                 @elseif($semuaValid)
-                                    <span class="validation-status status-approved">
-                                        Sudah Divalidasi
-                                    </span>
-                                @elseif($sudahRevisi)
-                                    <span class="validation-status status-revised">
-                                        Sudah Direvisi
-                                    </span>
+                                {{-- Sudah tervalidasi semua → tampilkan Ekspor PDF --}}
+                                <a href="#"
+                                    class="validation-action action-export"
+                                    title="Ekspor PDF (belum tersedia)"
+                                    onclick="alert('Fitur ekspor PDF belum tersedia.'); return false;">
+                                    <i class="bi bi-file-earmark-pdf"></i>
+                                    <span>Ekspor PDF</span>
+                                </a>
                                 @else
-                                    <span class="validation-status status-process">
-                                        Sedang Berjalan
-                                    </span>
+                                {{-- Belum tervalidasi / sudah revisi / proses → strip --}}
+                                <span class="validation-dash">-</span>
                                 @endif
-                            </td>
-
-                            <td>
-                                <div class="validation-actions">
-                                    @if($adaRevisi)
-                                        @php
-                                            $jurnalRevisi = $kelompok->firstWhere(
-                                                'status_validasi',
-                                                'menunggu_revisi'
-                                            );
-                                        @endphp
-
-                                        <a
-                                            href="{{ route('guru.edit-jurnal', $jurnalRevisi->id) }}"
-                                            class="validation-action action-revision"
-                                            title="Perbaiki jurnal"
-                                        >
-                                            <i class="bi bi-pencil-square"></i>
-                                            <span>Ikuti Catatan Perbaikan</span>
-                                        </a>
-                                    @else
-                                        <a
-                                            href="{{ route('guru.lihat-jurnal', $jurnalPertama->id) }}"
-                                            class="validation-action action-view"
-                                            title="Lihat jurnal"
-                                        >
-                                            <i class="bi bi-eye"></i>
-                                            <span>Lihat</span>
-                                        </a>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="4" class="empty-validation">
-                                Belum ada jurnal untuk ditampilkan.
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="4" class="empty-validation">
+                            Belum ada jurnal untuk ditampilkan.
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
@@ -191,80 +169,78 @@
 
                 <tbody>
                     @forelse($jurnals as $j)
-                        <tr>
-                            <td class="date-cell">
-                                {{ $j->tanggal
+                    <tr>
+                        <td class="date-cell">
+                            {{ $j->tanggal
                                     ? \Carbon\Carbon::parse($j->tanggal)->translatedFormat('d M Y')
                                     : '-' }}
-                            </td>
+                        </td>
 
-                            <td class="class-cell">
-                                <strong>
-                                    {{ $j->kelas->nama_kelas ?? '-' }}
-                                </strong>
+                        <td class="class-cell">
+                            <strong>
+                                {{ $j->kelas->nama_kelas ?? '-' }}
+                            </strong>
 
-                                <small>
-                                    Jam ke {{ $j->jam_mulai_ke }}-{{ $j->jam_selesai_ke }}
-                                    {{ $j->jadwal->mataPelajaran->nama_mata_pelajaran ?? '' }}
-                                </small>
-                            </td>
+                            <small>
+                                Jam ke {{ $j->jam_mulai_ke }}-{{ $j->jam_selesai_ke }}
+                                {{ $j->jadwal->mataPelajaran->nama_mata_pelajaran ?? '' }}
+                            </small>
+                        </td>
 
-                            <td class="topic-cell">
-                                {{ $j->pokok_bahasan }}
-                            </td>
+                        <td class="topic-cell">
+                            {{ $j->pokok_bahasan }}
+                        </td>
 
-                            <td>
-                                @if($j->status_validasi === 'valid')
-                                    <span class="history-status status-approved">
-                                        Tuntas
-                                    </span>
-                                @elseif($j->status_validasi === 'menunggu_revisi')
-                                    <span class="history-status status-revision">
-                                        Perlu Revisi
-                                    </span>
-                                @elseif($j->status_validasi === 'sudah_revisi')
-                                    <span class="history-status status-revised">
-                                        Sudah Direvisi
-                                    </span>
-                                @else
-                                    <span class="history-status status-process">
-                                        Sedang Berjalan
-                                    </span>
+                        <td>
+                            @if($j->status_validasi === 'valid')
+                            <span class="history-status status-approved">
+                                Tuntas
+                            </span>
+                            @elseif($j->status_validasi === 'menunggu_revisi')
+                            <span class="history-status status-revision">
+                                Perlu Revisi
+                            </span>
+                            @elseif($j->status_validasi === 'sudah_revisi')
+                            <span class="history-status status-revised">
+                                Sudah Direvisi
+                            </span>
+                            @else
+                            <span class="history-status status-process">
+                                Sedang Berjalan
+                            </span>
+                            @endif
+                        </td>
+
+                        <td>
+                            <div class="history-actions">
+                                <a
+                                    href="{{ route('guru.lihat-jurnal', $j->id) }}"
+                                    class="icon-action action-detail"
+                                    title="Lihat jurnal"
+                                    aria-label="Lihat jurnal">
+                                    <i class="bi bi-eye-fill"></i>
+                                </a>
+
+                                @if($j->status_validasi !== 'valid')
+                                <a
+                                    href="{{ route('guru.edit-jurnal', $j->id) }}"
+                                    class="icon-action action-edit"
+                                    title="Edit jurnal"
+                                    aria-label="Edit jurnal">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
                                 @endif
-                            </td>
-
-                            <td>
-                                <div class="history-actions">
-                                    <a
-                                        href="{{ route('guru.lihat-jurnal', $j->id) }}"
-                                        class="icon-action action-detail"
-                                        title="Lihat jurnal"
-                                        aria-label="Lihat jurnal"
-                                    >
-                                        <i class="bi bi-eye-fill"></i>
-                                    </a>
-
-                                    @if($j->status_validasi !== 'valid')
-                                        <a
-                                            href="{{ route('guru.edit-jurnal', $j->id) }}"
-                                            class="icon-action action-edit"
-                                            title="Edit jurnal"
-                                            aria-label="Edit jurnal"
-                                        >
-                                            <i class="bi bi-pencil-fill"></i>
-                                        </a>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="5" class="empty-history">
-                                <i class="bi bi-journal-x"></i>
-                                <strong>Belum ada jurnal</strong>
-                                <span>Silakan klik Tambah Jurnal untuk membuat catatan baru.</span>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="5" class="empty-history">
+                            <i class="bi bi-journal-x"></i>
+                            <strong>Belum ada jurnal</strong>
+                            <span>Silakan klik Tambah Jurnal untuk membuat catatan baru.</span>
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
@@ -411,6 +387,22 @@
         line-height: 1.3;
     }
 
+    .validation-dash {
+        color: #9aa39d;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .validation-action.action-export {
+        border-color: #b91c1c;
+        color: #b91c1c;
+    }
+
+    .validation-action.action-export:hover {
+        background: #fef2f2;
+        color: #7f1d1d;
+    }
+
     .section-heading p {
         margin: 0;
         color: #929b95;
@@ -505,6 +497,10 @@
     .status-revised {
         background: #e0f2fe;
         color: #0369a1;
+    }
+
+    .validation-table td:nth-child(3) {
+        text-align: left;
     }
 
     .status-process {
