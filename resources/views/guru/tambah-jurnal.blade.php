@@ -112,8 +112,7 @@
     }
 
     .role-option input,
-    .replacement-radio input,
-    .attendance-method input {
+    .replacement-radio input {
         width: 15px;
         height: 15px;
         margin: 0;
@@ -184,8 +183,8 @@
         grid-column: 1 / -1;
     }
 
-    .jurnal-field > label,
-    .jurnal-field > .field-label {
+    .jurnal-field>label,
+    .jurnal-field>.field-label {
         display: block;
         margin-bottom: 6px;
         font-size: 15px;
@@ -231,34 +230,31 @@
         margin-bottom: 20px;
     }
 
-    .attendance-methods {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        margin: 8px 0 14px;
-    }
-
-    .attendance-method {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        margin: 0;
-        color: #222a24;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 400;
-    }
-
-    .attendance-method:has(input:not(:checked)) {
-        color: #c1c7c3;
-    }
-
-    .attendance-details {
+    /* Info Sesi */
+    .sesi-info {
         display: none;
+        margin-bottom: 12px;
+        padding: 10px 14px;
+        background: #e8f5ed;
+        border: 1px solid #b9d9c8;
+        border-radius: 8px;
+        color: #285840;
+        font-size: 12px;
     }
 
-    .attendance-details.active {
-        display: block;
+    .sesi-info i {
+        margin-right: 6px;
+    }
+
+    .sesi-info .sesi-label {
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .sesi-info .sesi-detail {
+        color: #6b7d71;
+        font-size: 11px;
+        margin-left: 8px;
     }
 
     /* Tata letak jumlah dan nama siswa */
@@ -304,44 +300,6 @@
         flex-direction: column;
         gap: 7px;
         margin-top: 7px;
-    }
-
-    .attendance-table-wrap {
-        width: 100%;
-        overflow-x: auto;
-    }
-
-    .attendance-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
-    }
-
-    .attendance-table th,
-    .attendance-table td {
-        padding: 9px;
-        border-bottom: 1px solid #d9e7de;
-        text-align: left;
-    }
-
-    .attendance-table th {
-        color: #285b43;
-        background: #e1f1e8;
-    }
-
-    .attendance-table select {
-        width: 100%;
-        min-width: 100px;
-        padding: 7px;
-        border: 1px solid #c7d6cc;
-        border-radius: 7px;
-        background: white;
-    }
-
-    .attendance-message {
-        padding: 10px 4px;
-        color: #78847b;
-        font-size: 12px;
     }
 
     /* FOTO */
@@ -501,30 +459,29 @@
     </header>
 
     @if (session('success'))
-        <div class="jurnal-alert success">{{ session('success') }}</div>
+    <div class="jurnal-alert success">{{ session('success') }}</div>
     @endif
 
     @if (session('error'))
-        <div class="jurnal-alert error">{{ session('error') }}</div>
+    <div class="jurnal-alert error">{{ session('error') }}</div>
     @endif
 
     @if ($errors->any())
-        <div class="jurnal-alert error">
-            <strong>Periksa kembali data berikut:</strong>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+    <div class="jurnal-alert error">
+        <strong>Periksa kembali data berikut:</strong>
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
     @endif
 
     <form
         action="{{ route('guru.jurnal.store') }}"
         method="POST"
         enctype="multipart/form-data"
-        id="formTambahJurnal"
-    >
+        id="formTambahJurnal">
         @csrf
 
         <div class="jurnal-card">
@@ -550,8 +507,7 @@
                             type="radio"
                             name="status_mengajar"
                             value="pengampu"
-                            {{ old('status_mengajar', 'pengampu') === 'pengampu' ? 'checked' : '' }}
-                        >
+                            {{ old('status_mengajar', 'pengampu') === 'pengampu' ? 'checked' : '' }}>
                         <span>Guru Pengampu</span>
                     </label>
 
@@ -560,8 +516,7 @@
                             type="radio"
                             name="status_mengajar"
                             value="pengganti"
-                            {{ old('status_mengajar') === 'pengganti' ? 'checked' : '' }}
-                        >
+                            {{ old('status_mengajar') === 'pengganti' ? 'checked' : '' }}>
                         <span>Guru Pengganti</span>
                     </label>
                 </div>
@@ -574,8 +529,7 @@
                                 type="radio"
                                 name="jenis_penggantian"
                                 value="saya_digantikan"
-                                {{ old('jenis_penggantian') === 'saya_digantikan' ? 'checked' : '' }}
-                            >
+                                {{ old('jenis_penggantian') === 'saya_digantikan' ? 'checked' : '' }}>
                             <span>Saya yang Digantikan</span>
                         </label>
 
@@ -584,8 +538,7 @@
                                 type="radio"
                                 name="jenis_penggantian"
                                 value="saya_menggantikan"
-                                {{ old('jenis_penggantian', 'saya_menggantikan') === 'saya_menggantikan' ? 'checked' : '' }}
-                            >
+                                {{ old('jenis_penggantian', 'saya_menggantikan') === 'saya_menggantikan' ? 'checked' : '' }}>
                             <span>Saya yang menggantikan</span>
                         </label>
                     </div>
@@ -593,8 +546,7 @@
                     <label
                         for="guru_pendamping_id"
                         class="replacement-label"
-                        id="labelGuruPengganti"
-                    >
+                        id="labelGuruPengganti">
                         Nama Guru Pengampu <span class="required">*</span>
                     </label>
 
@@ -602,17 +554,15 @@
                         name="guru_pendamping_id"
                         id="guru_pendamping_id"
                         class="jurnal-control"
-                        disabled
-                    >
+                        disabled>
                         <option value="">Masukkan nama guru</option>
 
                         @foreach ($gurus as $guruPilihan)
-                            <option
-                                value="{{ $guruPilihan->id }}"
-                                {{ old('guru_pendamping_id') == $guruPilihan->id ? 'selected' : '' }}
-                            >
-                                {{ $guruPilihan->user->name ?? $guruPilihan->nama_guru ?? 'Guru #' . $guruPilihan->id }}
-                            </option>
+                        <option
+                            value="{{ $guruPilihan->id }}"
+                            {{ old('guru_pendamping_id') == $guruPilihan->id ? 'selected' : '' }}>
+                            {{ $guruPilihan->user->name ?? $guruPilihan->nama_guru ?? 'Guru #' . $guruPilihan->id }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
@@ -631,8 +581,7 @@
                         id="tanggal"
                         class="jurnal-control"
                         value="{{ old('tanggal', now()->format('Y-m-d')) }}"
-                        required
-                    >
+                        required>
                 </div>
 
                 <div class="jurnal-field">
@@ -642,12 +591,11 @@
                     <select id="kelas_display" class="jurnal-control" required>
                         <option value="">-- Pilih kelas --</option>
                         @foreach ($jadwalTersedia->unique('kelas_id') as $j)
-                            <option
-                                value="{{ $j->kelas_id }}"
-                                {{ old('jadwal_id') == $j->id ? 'selected' : '' }}
-                            >
-                                {{ $j->kelas->nama_kelas ?? 'Kelas #' . $j->kelas_id }}
-                            </option>
+                        <option
+                            value="{{ $j->kelas_id }}"
+                            {{ old('jadwal_id') == $j->id ? 'selected' : '' }}>
+                            {{ $j->kelas->nama_kelas ?? 'Kelas #' . $j->kelas_id }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
@@ -661,8 +609,7 @@
                         id="mapel_display"
                         class="jurnal-control"
                         placeholder="Terisi otomatis dari jadwal"
-                        readonly
-                    >
+                        readonly>
                 </div>
 
                 <div class="jurnal-field">
@@ -673,18 +620,16 @@
                         name="jadwal_id"
                         id="jadwal_id"
                         class="jurnal-control"
-                        required
-                    >
+                        required>
                         <option value="">-- Pilih jam pelajaran --</option>
                         @foreach ($jadwalTersedia as $j)
-                            <option
-                                value="{{ $j->id }}"
-                                data-kelas-id="{{ $j->kelas_id }}"
-                                data-mapel="{{ $j->mataPelajaran->nama_mata_pelajaran ?? '-' }}"
-                                {{ old('jadwal_id') == $j->id ? 'selected' : '' }}
-                            >
-                                Jam ke-{{ $j->jam_mulai_ke }}-{{ $j->jam_selesai_ke }}
-                            </option>
+                        <option
+                            value="{{ $j->id }}"
+                            data-kelas-id="{{ $j->kelas_id }}"
+                            data-mapel="{{ $j->mataPelajaran->nama_mata_pelajaran ?? '-' }}"
+                            {{ old('jadwal_id') == $j->id ? 'selected' : '' }}>
+                            Jam ke-{{ $j->jam_mulai_ke }}-{{ $j->jam_selesai_ke }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
@@ -698,8 +643,7 @@
                         id="pokok_bahasan"
                         class="jurnal-control"
                         placeholder="Tuliskan pokok bahasan yang diajarkan hari ini"
-                        required
-                    >{{ old('pokok_bahasan') }}</textarea>
+                        required>{{ old('pokok_bahasan') }}</textarea>
                 </div>
 
                 <div class="jurnal-field">
@@ -710,8 +654,7 @@
                         name="status_penyelesaian"
                         id="status_penyelesaian"
                         class="jurnal-control"
-                        required
-                    >
+                        required>
                         <option value="selesai"
                             {{ old('status_penyelesaian', 'selesai') === 'selesai' ? 'selected' : '' }}>
                             Tuntas
@@ -732,78 +675,35 @@
                         id="semester_display"
                         class="jurnal-control"
                         value="{{ $coverAktif ? $coverAktif->tahun_ajaran . ' Semester ' . $coverAktif->semester : 'Cover jurnal belum tersedia' }}"
-                        readonly
-                    >
+                        readonly>
                 </div>
 
                 <div
                     class="jurnal-field full"
                     id="alasanContainer"
-                    style="{{ old('status_penyelesaian') === 'belum_selesai' ? '' : 'display:none;' }}"
-                >
+                    style="{{ old('status_penyelesaian') === 'belum_selesai' ? '' : 'display:none;' }}">
                     <label for="alasan_belum_selesai">Alasan Belum Tuntas</label>
                     <textarea
                         name="alasan_belum_selesai"
                         id="alasan_belum_selesai"
                         class="jurnal-control"
-                        placeholder="Tuliskan alasan materi belum selesai"
-                    >{{ old('alasan_belum_selesai') }}</textarea>
+                        placeholder="Tuliskan alasan materi belum selesai">{{ old('alasan_belum_selesai') }}</textarea>
                 </div>
 
-                {{-- ABSENSI SISWA --}}
+                {{-- ABSENSI SISWA (INPUT MANUAL LANGSUNG) --}}
                 <div class="jurnal-field full">
                     <label class="field-label">
                         Absensi Siswa <span class="required">*</span>
                     </label>
 
-                    <div class="attendance-methods">
-                        <label class="attendance-method">
-                            <input
-                                type="radio"
-                                name="metode_absensi"
-                                value="otomatis"
-                                {{ old('metode_absensi', 'otomatis') === 'otomatis' ? 'checked' : '' }}
-                            >
-                            <span>Ambil Data dari Absensi Siswa</span>
-                        </label>
-
-                        <label class="attendance-method">
-                            <input
-                                type="radio"
-                                name="metode_absensi"
-                                value="manual"
-                                {{ old('metode_absensi') === 'manual' ? 'checked' : '' }}
-                            >
-                            <span>Masukkan Data Absen Sendiri</span>
-                        </label>
+                    {{-- Info Sesi --}}
+                    <div id="sesiInfo" class="sesi-info">
+                        <i class="bi bi-clock-history"></i>
+                        <span class="sesi-label" id="sesiLabel">-</span>
+                        <span class="sesi-detail" id="sesiDetail"></span>
                     </div>
 
-                    {{-- MODE OTOMATIS --}}
-                    <div id="automaticAttendance" class="attendance-details">
-                        <div id="attendanceMessage" class="attendance-message">
-                            Pilih kelas dan jam pelajaran untuk memuat siswa.
-                        </div>
-
-                        <div class="attendance-table-wrap">
-                            <table
-                                id="attendanceTable"
-                                class="attendance-table"
-                                style="display:none;"
-                            >
-                                <thead>
-                                    <tr>
-                                        <th>No.</th>
-                                        <th>Nama Siswa</th>
-                                        <th>Status Kehadiran</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="murid-list"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    {{-- MODE MANUAL --}}
-                    <div id="manualAttendance" class="attendance-details">
+                    <div id="manualAttendance">
                         <div class="manual-attendance-row">
                             <label class="manual-attendance-label" for="jumlah_sakit">
                                 Sakit :
@@ -814,8 +714,7 @@
                                 class="manual-count"
                                 min="0"
                                 max="100"
-                                value="{{ old('jumlah_sakit', 0) }}"
-                            >
+                                value="{{ old('jumlah_sakit', 0) }}">
                             <div id="nama_sakit" class="manual-name-list">
                                 <select class="manual-name-select">
                                     <option value="">-</option>
@@ -833,8 +732,7 @@
                                 class="manual-count"
                                 min="0"
                                 max="100"
-                                value="{{ old('jumlah_izin', 0) }}"
-                            >
+                                value="{{ old('jumlah_izin', 0) }}">
                             <div id="nama_izin" class="manual-name-list">
                                 <select class="manual-name-select">
                                     <option value="">-</option>
@@ -852,8 +750,7 @@
                                 class="manual-count"
                                 min="0"
                                 max="100"
-                                value="{{ old('jumlah_alpa', 0) }}"
-                            >
+                                value="{{ old('jumlah_alpa', 0) }}">
                             <div id="nama_alpa" class="manual-name-list">
                                 <select class="manual-name-select">
                                     <option value="">-</option>
@@ -871,8 +768,7 @@
                         id="keterangan"
                         class="jurnal-control"
                         value="{{ old('keterangan') }}"
-                        placeholder="Catatan atau evaluasi pembelajaran (opsional)"
-                    >
+                        placeholder="Catatan atau evaluasi pembelajaran (opsional)">
                 </div>
 
                 <div class="jurnal-field full">
@@ -890,21 +786,19 @@
                         name="foto_kegiatan"
                         id="foto_kegiatan"
                         accept=".jpg,.jpeg,.png,image/jpeg,image/png"
-                        hidden
-                    >
+                        hidden>
 
                     <img
                         id="photoPreview"
                         class="photo-preview"
-                        alt="Pratinjau foto kegiatan"
-                    >
+                        alt="Pratinjau foto kegiatan">
                 </div>
             </div>
         </div>
 
         <div class="jurnal-actions">
             <a href="{{ route('guru.jurnal-harian') }}"
-               class="jurnal-btn btn-cancel">
+                class="jurnal-btn btn-cancel">
                 Batal
             </a>
 
@@ -912,8 +806,7 @@
                 type="submit"
                 class="jurnal-btn btn-save"
                 id="saveJournalButton"
-                {{ $jadwalTersedia->isEmpty() || !$coverAktif ? 'disabled' : '' }}
-            >
+                {{ $jadwalTersedia->isEmpty() || !$coverAktif ? 'disabled' : '' }}>
                 Simpan Jurnal
             </button>
         </div>
@@ -921,449 +814,460 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('formTambahJurnal');
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('formTambahJurnal');
 
-    const kelasSelect = document.getElementById('kelas_display');
-    const jadwalSelect = document.getElementById('jadwal_id');
-    const mapelInput = document.getElementById('mapel_display');
+        const kelasSelect = document.getElementById('kelas_display');
+        const jadwalSelect = document.getElementById('jadwal_id');
+        const mapelInput = document.getElementById('mapel_display');
 
-    const replacementFields = document.getElementById('replacementFields');
-    const guruSelect = document.getElementById('guru_pendamping_id');
-    const labelGuru = document.getElementById('labelGuruPengganti');
+        const replacementFields = document.getElementById('replacementFields');
+        const guruSelect = document.getElementById('guru_pendamping_id');
+        const labelGuru = document.getElementById('labelGuruPengganti');
 
-    const automaticAttendance = document.getElementById('automaticAttendance');
-    const manualAttendance = document.getElementById('manualAttendance');
+        const sesiInfo = document.getElementById('sesiInfo');
+        const sesiLabel = document.getElementById('sesiLabel');
+        const sesiDetail = document.getElementById('sesiDetail');
 
-    const attendanceMessage = document.getElementById('attendanceMessage');
-    const attendanceTable = document.getElementById('attendanceTable');
-    const muridList = document.getElementById('murid-list');
+        const fotoInput = document.getElementById('foto_kegiatan');
+        const photoLabel = document.getElementById('photoLabel');
+        const photoPreview = document.getElementById('photoPreview');
 
-    const fotoInput = document.getElementById('foto_kegiatan');
-    const photoLabel = document.getElementById('photoLabel');
-    const photoPreview = document.getElementById('photoPreview');
+        let daftarMurid = [];
+        let muridPerStatus = {
+            sakit: [],
+            izin: [],
+            alpa: [],
+            hadir: []
+        };
+        let requestController = null;
+        let photoUrl = null;
 
-    let daftarMurid = [];
-    let requestController = null;
-    let photoUrl = null;
-
-    function selectedValue(name) {
-        const selected = document.querySelector(`input[name="${name}"]:checked`);
-        return selected ? selected.value : '';
-    }
-
-    /* STATUS MENGAJAR */
-    function updateStatusMengajar() {
-        const isPengganti = selectedValue('status_mengajar') === 'pengganti';
-
-        replacementFields.classList.toggle('active', isPengganti);
-        guruSelect.disabled = !isPengganti;
-        guruSelect.required = isPengganti;
-
-        if (!isPengganti) {
-            guruSelect.value = '';
+        function selectedValue(name) {
+            const selected = document.querySelector(`input[name="${name}"]:checked`);
+            return selected ? selected.value : '';
         }
 
-        updateLabelGuru();
-    }
+        /* STATUS MENGAJAR */
+        function updateStatusMengajar() {
+            const isPengganti = selectedValue('status_mengajar') === 'pengganti';
 
-    function updateLabelGuru() {
-        const jenis = selectedValue('jenis_penggantian');
+            replacementFields.classList.toggle('active', isPengganti);
+            guruSelect.disabled = !isPengganti;
+            guruSelect.required = isPengganti;
 
-        labelGuru.textContent = jenis === 'saya_digantikan'
-            ? 'Nama Guru Pengganti *'
-            : 'Nama Guru Pengampu *';
-    }
-
-    document.querySelectorAll('input[name="status_mengajar"]').forEach(input => {
-        input.addEventListener('change', updateStatusMengajar);
-    });
-
-    document.querySelectorAll('input[name="jenis_penggantian"]').forEach(input => {
-        input.addEventListener('change', updateLabelGuru);
-    });
-
-    /* FILTER JADWAL BERDASARKAN KELAS */
-    function filterJadwal() {
-        const kelasId = kelasSelect.value;
-        let firstMatch = '';
-
-        Array.from(jadwalSelect.options).forEach((option, index) => {
-            if (index === 0) return;
-
-            const match = !kelasId || option.dataset.kelasId === kelasId;
-            option.hidden = !match;
-
-            if (match && !firstMatch) {
-                firstMatch = option.value;
+            if (!isPengganti) {
+                guruSelect.value = '';
             }
+
+            updateLabelGuru();
+        }
+
+        function updateLabelGuru() {
+            const jenis = selectedValue('jenis_penggantian');
+
+            labelGuru.textContent = jenis === 'saya_digantikan' ?
+                'Nama Guru Pengganti *' :
+                'Nama Guru Pengampu *';
+        }
+
+        document.querySelectorAll('input[name="status_mengajar"]').forEach(input => {
+            input.addEventListener('change', updateStatusMengajar);
         });
 
-        const selected = jadwalSelect.options[jadwalSelect.selectedIndex];
+        document.querySelectorAll('input[name="jenis_penggantian"]').forEach(input => {
+            input.addEventListener('change', updateLabelGuru);
+        });
 
-        if (selected && selected.hidden) {
-            jadwalSelect.value = '';
-        }
+        /* FILTER JADWAL BERDASARKAN KELAS */
+        function filterJadwal() {
+            const kelasId = kelasSelect.value;
+            let firstMatch = '';
 
-        if (kelasId && !jadwalSelect.value) {
-            jadwalSelect.value = firstMatch;
-        }
+            Array.from(jadwalSelect.options).forEach((option, index) => {
+                if (index === 0) return;
 
-        updateMapel();
-        loadMurid();
-    }
+                const match = !kelasId || option.dataset.kelasId === kelasId;
+                option.hidden = !match;
 
-    function updateKelasFromJadwal() {
-        const option = jadwalSelect.options[jadwalSelect.selectedIndex];
-
-        if (!option || !option.value) {
-            mapelInput.value = '';
-            return;
-        }
-
-        kelasSelect.value = option.dataset.kelasId || '';
-        updateMapel();
-    }
-
-    function updateMapel() {
-        const option = jadwalSelect.options[jadwalSelect.selectedIndex];
-        mapelInput.value = option && option.value ? option.dataset.mapel || '' : '';
-    }
-
-    kelasSelect.addEventListener('change', filterJadwal);
-
-    jadwalSelect.addEventListener('change', function () {
-        updateKelasFromJadwal();
-        loadMurid();
-    });
-
-    /* STATUS PENYELESAIAN */
-    const statusPenyelesaian = document.getElementById('status_penyelesaian');
-    const alasanContainer = document.getElementById('alasanContainer');
-
-    function updateAlasan() {
-        alasanContainer.style.display =
-            statusPenyelesaian.value === 'belum_selesai' ? '' : 'none';
-    }
-
-    statusPenyelesaian.addEventListener('change', updateAlasan);
-
-    /* METODE ABSENSI */
-    function updateMetodeAbsensi() {
-        const manual = selectedValue('metode_absensi') === 'manual';
-
-        automaticAttendance.classList.toggle('active', !manual);
-        manualAttendance.classList.toggle('active', manual);
-
-        if (manual) {
-            renderManualAttendance();
-        } else {
-            renderAutomaticAttendance();
-        }
-    }
-
-    document.querySelectorAll('input[name="metode_absensi"]').forEach(input => {
-        input.addEventListener('change', updateMetodeAbsensi);
-    });
-
-    /* MUAT DATA SISWA DARI SERVER */
-    async function loadMurid() {
-        const jadwalId = jadwalSelect.value;
-
-        daftarMurid = [];
-        muridList.innerHTML = '';
-        attendanceTable.style.display = 'none';
-
-        if (requestController) {
-            requestController.abort();
-        }
-
-        if (!jadwalId) {
-            attendanceMessage.textContent =
-                'Pilih kelas dan jam pelajaran untuk memuat siswa.';
-            attendanceMessage.style.display = 'block';
-            renderManualAttendance();
-            return;
-        }
-
-        requestController = new AbortController();
-
-        attendanceMessage.textContent = 'Memuat daftar siswa...';
-        attendanceMessage.style.display = 'block';
-
-        try {
-            const templateUrl = @json(
-                route('guru.jurnal.get-murid', ['jadwal_id' => '__ID__'])
-            );
-
-            const url = templateUrl.replace(
-                '__ID__',
-                encodeURIComponent(jadwalId)
-            );
-
-            const response = await fetch(url, {
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                signal: requestController.signal
+                if (match && !firstMatch) {
+                    firstMatch = option.value;
+                }
             });
 
-            if (!response.ok) {
-                throw new Error('Gagal mengambil data siswa.');
+            const selected = jadwalSelect.options[jadwalSelect.selectedIndex];
+
+            if (selected && selected.hidden) {
+                jadwalSelect.value = '';
             }
 
-            const data = await response.json();
-
-            if (!Array.isArray(data)) {
-                throw new Error('Format data siswa tidak sesuai.');
+            if (kelasId && !jadwalSelect.value) {
+                jadwalSelect.value = firstMatch;
             }
 
-            daftarMurid = data;
-
-            renderAutomaticAttendance();
-            renderManualAttendance();
-        } catch (error) {
-            if (error.name === 'AbortError') return;
-
-            console.error(error);
-
-            attendanceMessage.textContent =
-                'Daftar siswa gagal dimuat. Periksa route dan data kelas.';
-            attendanceMessage.style.display = 'block';
-
-            renderManualAttendance();
-        }
-    }
-
-    /* PILIHAN STATUS KEHADIRAN */
-    function createStatusSelect(muridId) {
-        const select = document.createElement('select');
-        select.name = `absensi[${muridId}]`;
-
-        [
-            ['hadir', 'Hadir'],
-            ['sakit', 'Sakit'],
-            ['izin', 'Izin'],
-            ['alpa', 'Alpha']
-        ].forEach(([value, text]) => {
-            const option = document.createElement('option');
-            option.value = value;
-            option.textContent = text;
-            select.appendChild(option);
-        });
-
-        return select;
-    }
-
-    /* ABSENSI OTOMATIS */
-    function renderAutomaticAttendance() {
-        if (selectedValue('metode_absensi') !== 'otomatis') return;
-
-        muridList.innerHTML = '';
-
-        if (!jadwalSelect.value || !daftarMurid.length) {
-            attendanceTable.style.display = 'none';
-            attendanceMessage.style.display = 'block';
-
-            attendanceMessage.textContent = !jadwalSelect.value
-                ? 'Pilih kelas dan jam pelajaran untuk memuat siswa.'
-                : 'Belum ada data siswa untuk jadwal ini.';
-
-            return;
+            updateMapel();
+            loadMurid();
         }
 
-        attendanceMessage.style.display = 'none';
-        attendanceTable.style.display = 'table';
+        function updateKelasFromJadwal() {
+            const option = jadwalSelect.options[jadwalSelect.selectedIndex];
 
-        daftarMurid.forEach((murid, index) => {
-            const row = document.createElement('tr');
-            const numberCell = document.createElement('td');
-            const nameCell = document.createElement('td');
-            const statusCell = document.createElement('td');
-
-            numberCell.textContent = index + 1;
-            nameCell.textContent = murid.nama_siswa;
-            statusCell.appendChild(createStatusSelect(murid.id));
-
-            row.append(numberCell, nameCell, statusCell);
-            muridList.appendChild(row);
-        });
-    }
-
-    /* ABSENSI MANUAL: JUMLAH DAN DROPDOWN NAMA */
-    const attendanceCategories = [
-        { status: 'sakit', countId: 'jumlah_sakit', containerId: 'nama_sakit' },
-        { status: 'izin', countId: 'jumlah_izin', containerId: 'nama_izin' },
-        { status: 'alpa', countId: 'jumlah_alpa', containerId: 'nama_alpa' }
-    ];
-
-    function renderManualAttendance() {
-        if (selectedValue('metode_absensi') !== 'manual') return;
-
-        attendanceCategories.forEach(category => {
-            const countInput = document.getElementById(category.countId);
-            const container = document.getElementById(category.containerId);
-
-            const count = Math.max(
-                0,
-                Math.min(100, parseInt(countInput.value, 10) || 0)
-            );
-
-            container.innerHTML = '';
-
-            if (count === 0) {
-                const emptySelect = document.createElement('select');
-                emptySelect.className = 'manual-name-select';
-                emptySelect.disabled = true;
-
-                const option = document.createElement('option');
-                option.value = '';
-                option.textContent = '-';
-
-                emptySelect.appendChild(option);
-                container.appendChild(emptySelect);
+            if (!option || !option.value) {
+                mapelInput.value = '';
                 return;
             }
 
-            if (!jadwalSelect.value || !daftarMurid.length) {
-                const emptySelect = document.createElement('select');
-                emptySelect.className = 'manual-name-select';
-                emptySelect.disabled = true;
+            kelasSelect.value = option.dataset.kelasId || '';
+            updateMapel();
+        }
 
-                const option = document.createElement('option');
-                option.value = '';
-                option.textContent = 'Pilih jadwal terlebih dahulu';
+        function updateMapel() {
+            const option = jadwalSelect.options[jadwalSelect.selectedIndex];
+            mapelInput.value = option && option.value ? option.dataset.mapel || '' : '';
+        }
 
-                emptySelect.appendChild(option);
-                container.appendChild(emptySelect);
+        kelasSelect.addEventListener('change', filterJadwal);
+
+        jadwalSelect.addEventListener('change', function() {
+            updateKelasFromJadwal();
+            loadMurid();
+        });
+
+        /* STATUS PENYELESAIAN */
+        const statusPenyelesaian = document.getElementById('status_penyelesaian');
+        const alasanContainer = document.getElementById('alasanContainer');
+
+        function updateAlasan() {
+            alasanContainer.style.display =
+                statusPenyelesaian.value === 'belum_selesai' ? '' : 'none';
+        }
+
+        statusPenyelesaian.addEventListener('change', updateAlasan);
+
+        /* MUAT DATA SISWA DARI SERVER */
+        async function loadMurid() {
+            const jadwalId = jadwalSelect.value;
+
+            daftarMurid = [];
+            muridPerStatus = {
+                sakit: [],
+                izin: [],
+                alpa: [],
+                hadir: []
+            };
+
+            // Reset flag "userEdited" saat ganti jadwal
+            ['jumlah_sakit', 'jumlah_izin', 'jumlah_alpa'].forEach(id => {
+                delete document.getElementById(id).dataset.userEdited;
+            });
+
+            if (requestController) {
+                requestController.abort();
+            }
+
+            if (!jadwalId) {
+                sesiInfo.style.display = 'none';
+                resetJumlahInput();
+                renderManualAttendance();
                 return;
             }
 
-            for (let i = 0; i < count; i++) {
-                const select = document.createElement('select');
+            requestController = new AbortController();
 
-                select.className = 'manual-name-select';
-                select.dataset.status = category.status;
-                select.required = true;
+            try {
+                const templateUrl = @json(
+                    route('guru.get-murid', ['jadwal_id' => '__ID__'])
+                );
 
-                const placeholder = document.createElement('option');
-                placeholder.value = '';
-                placeholder.textContent = '-- Pilih nama siswa --';
+                const url = templateUrl.replace(
+                    '__ID__',
+                    encodeURIComponent(jadwalId)
+                );
 
-                select.appendChild(placeholder);
-
-                daftarMurid.forEach(murid => {
-                    const option = document.createElement('option');
-                    option.value = murid.id;
-                    option.textContent = murid.nama_siswa;
-                    select.appendChild(option);
+                const response = await fetch(url, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    signal: requestController.signal
                 });
 
-                container.appendChild(select);
+                if (!response.ok) {
+                    throw new Error('Gagal mengambil data siswa.');
+                }
+
+                const data = await response.json();
+
+                // Support dua format: array atau object { murids: [...] }
+                if (Array.isArray(data)) {
+                    daftarMurid = data;
+                    sesiInfo.style.display = 'none';
+                } else if (data && Array.isArray(data.murids)) {
+                    daftarMurid = data.murids;
+
+                    // Tampilkan info sesi dari response
+                    if (data.sesi && data.sesi.label) {
+                        sesiLabel.textContent = data.sesi.label;
+                        let detail = `${data.kelas || '-'} · ${data.mapel || '-'}`;
+                        if (data.ada_absensi_terakhir && data.tanggal_absensi_terakhir) {
+                            const tgl = new Date(data.tanggal_absensi_terakhir);
+                            const tglFormat = tgl.toLocaleDateString('id-ID', {
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric'
+                            });
+                            detail += ` · Absensi terakhir: ${tglFormat}`;
+                        } else {
+                            detail += ' · Belum ada absensi sebelumnya';
+                        }
+                        sesiDetail.textContent = detail;
+                        sesiInfo.style.display = 'block';
+                    } else {
+                        sesiInfo.style.display = 'none';
+                    }
+                } else {
+                    throw new Error('Format data siswa tidak sesuai.');
+                }
+
+                // 🔑 Kelompokkan murid berdasarkan status_terakhir
+                muridPerStatus = {
+                    sakit: [],
+                    izin: [],
+                    alpa: [],
+                    hadir: []
+                };
+                daftarMurid.forEach(murid => {
+                    const status = murid.status_terakhir || 'hadir';
+                    if (muridPerStatus[status]) {
+                        muridPerStatus[status].push(murid);
+                    }
+                });
+
+                // 🔑 Auto-set jumlah input dari patokan (kalau guru belum ubah manual)
+                setJumlahDariPatokan();
+
+                renderManualAttendance();
+            } catch (error) {
+                if (error.name === 'AbortError') return;
+
+                console.error(error);
+                sesiInfo.style.display = 'none';
+                resetJumlahInput();
+                renderManualAttendance();
             }
-        });
+        }
 
-        updateManualOptions();
-    }
+        function setJumlahDariPatokan() {
+            attendanceCategories.forEach(category => {
+                const input = document.getElementById(category.countId);
+                const jumlah = muridPerStatus[category.status].length;
 
-    function updateManualOptions() {
-        const selects = Array.from(
-            document.querySelectorAll('.manual-name-select[data-status]')
-        );
-
-        const selectedIds = selects
-            .map(select => select.value)
-            .filter(Boolean);
-
-        selects.forEach(select => {
-            Array.from(select.options).forEach(option => {
-                if (!option.value) return;
-
-                option.disabled =
-                    selectedIds.includes(option.value) &&
-                    select.value !== option.value;
+                if (!input.dataset.userEdited) {
+                    input.value = jumlah;
+                }
             });
-        });
-    }
+        }
 
-    attendanceCategories.forEach(category => {
-        document.getElementById(category.countId).addEventListener(
-            'input',
-            renderManualAttendance
-        );
-    });
+        function resetJumlahInput() {
+            ['jumlah_sakit', 'jumlah_izin', 'jumlah_alpa'].forEach(id => {
+                const input = document.getElementById(id);
+                input.value = 0;
+                delete input.dataset.userEdited;
+            });
+        }
 
-    manualAttendance.addEventListener('change', function (event) {
-        if (event.target.classList.contains('manual-name-select')) {
+        /* ABSENSI MANUAL: JUMLAH DAN DROPDOWN NAMA */
+        const attendanceCategories = [{
+                status: 'sakit',
+                countId: 'jumlah_sakit',
+                containerId: 'nama_sakit'
+            },
+            {
+                status: 'izin',
+                countId: 'jumlah_izin',
+                containerId: 'nama_izin'
+            },
+            {
+                status: 'alpa',
+                countId: 'jumlah_alpa',
+                containerId: 'nama_alpa'
+            }
+        ];
+
+        function renderManualAttendance() {
+            attendanceCategories.forEach(category => {
+                const countInput = document.getElementById(category.countId);
+                const container = document.getElementById(category.containerId);
+
+                const count = Math.max(
+                    0,
+                    Math.min(100, parseInt(countInput.value, 10) || 0)
+                );
+
+                container.innerHTML = '';
+
+                if (count === 0) {
+                    const emptySelect = document.createElement('select');
+                    emptySelect.className = 'manual-name-select';
+                    emptySelect.disabled = true;
+
+                    const option = document.createElement('option');
+                    option.value = '';
+                    option.textContent = '-';
+
+                    emptySelect.appendChild(option);
+                    container.appendChild(emptySelect);
+                    return;
+                }
+
+                if (!jadwalSelect.value || !daftarMurid.length) {
+                    const emptySelect = document.createElement('select');
+                    emptySelect.className = 'manual-name-select';
+                    emptySelect.disabled = true;
+
+                    const option = document.createElement('option');
+                    option.value = '';
+                    option.textContent = 'Pilih jadwal terlebih dahulu';
+
+                    emptySelect.appendChild(option);
+                    container.appendChild(emptySelect);
+                    return;
+                }
+
+                // 🔑 Murid yang cocok dengan status_terakhir → auto-select
+                const muridCocok = muridPerStatus[category.status] || [];
+
+                for (let i = 0; i < count; i++) {
+                    const select = document.createElement('select');
+
+                    select.className = 'manual-name-select';
+                    select.dataset.status = category.status;
+                    select.required = true;
+
+                    const placeholder = document.createElement('option');
+                    placeholder.value = '';
+                    placeholder.textContent = '-- Pilih nama siswa --';
+
+                    select.appendChild(placeholder);
+
+                    daftarMurid.forEach(murid => {
+                        const option = document.createElement('option');
+                        option.value = murid.id;
+                        option.textContent = murid.nama_siswa;
+                        select.appendChild(option);
+                    });
+
+                    // 🔑 Auto-select dari patokan kalau ada
+                    if (muridCocok[i]) {
+                        select.value = muridCocok[i].id;
+                    }
+
+                    container.appendChild(select);
+                }
+            });
+
             updateManualOptions();
         }
-    });
 
-    /* UNGGAH FOTO */
-    fotoInput.addEventListener('change', function () {
-        const file = this.files[0];
+        function updateManualOptions() {
+            const selects = Array.from(
+                document.querySelectorAll('.manual-name-select[data-status]')
+            );
 
-        if (photoUrl) {
-            URL.revokeObjectURL(photoUrl);
-            photoUrl = null;
+            const selectedIds = selects
+                .map(select => select.value)
+                .filter(Boolean);
+
+            selects.forEach(select => {
+                Array.from(select.options).forEach(option => {
+                    if (!option.value) return;
+
+                    option.disabled =
+                        selectedIds.includes(option.value) &&
+                        select.value !== option.value;
+                });
+            });
         }
 
-        photoPreview.style.display = 'none';
-        photoPreview.removeAttribute('src');
+        attendanceCategories.forEach(category => {
+            const input = document.getElementById(category.countId);
 
-        if (!file) {
-            photoLabel.textContent =
-                'Klik untuk pilih foto kegiatan pembelajaran';
-            return;
-        }
+            input.addEventListener('input', function() {
+                // 🔑 Tandai guru sudah ubah manual → auto-set tidak menimpa lagi
+                input.dataset.userEdited = 'true';
+                renderManualAttendance();
+            });
+        });
 
-        if (!['image/jpeg', 'image/png'].includes(file.type)) {
-            alert('Foto harus berformat JPG atau PNG.');
-            this.value = '';
-            return;
-        }
+        document.getElementById('manualAttendance').addEventListener('change', function(event) {
+            if (event.target.classList.contains('manual-name-select')) {
+                updateManualOptions();
+            }
+        });
 
-        if (file.size > 3 * 1024 * 1024) {
-            alert('Ukuran foto maksimal 3 MB.');
-            this.value = '';
-            return;
-        }
+        /* UNGGAH FOTO */
+        fotoInput.addEventListener('change', function() {
+            const file = this.files[0];
 
-        photoLabel.textContent = file.name;
+            if (photoUrl) {
+                URL.revokeObjectURL(photoUrl);
+                photoUrl = null;
+            }
 
-        photoUrl = URL.createObjectURL(file);
-        photoPreview.src = photoUrl;
-        photoPreview.style.display = 'block';
-    });
+            photoPreview.style.display = 'none';
+            photoPreview.removeAttribute('src');
 
-    /* VALIDASI DAN PEMBENTUKAN DATA ABSENSI */
-    form.addEventListener('submit', function (event) {
-        form.querySelectorAll('.manual-generated-input').forEach(input => input.remove());
-
-        if (!jadwalSelect.value) {
-            event.preventDefault();
-            alert('Pilih kelas dan jam pelajaran terlebih dahulu.');
-            jadwalSelect.focus();
-            return;
-        }
-
-        if (selectedValue('status_mengajar') === 'pengganti') {
-            if (!selectedValue('jenis_penggantian')) {
-                event.preventDefault();
-                alert('Pilih apakah Anda yang digantikan atau yang menggantikan.');
+            if (!file) {
+                photoLabel.textContent =
+                    'Klik untuk pilih foto kegiatan pembelajaran';
                 return;
             }
 
-            if (!guruSelect.value) {
-                event.preventDefault();
-                alert('Pilih nama guru yang berkaitan dengan sesi penggantian.');
-                guruSelect.focus();
+            if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                alert('Foto harus berformat JPG atau PNG.');
+                this.value = '';
                 return;
             }
-        }
 
-        if (selectedValue('metode_absensi') === 'manual') {
+            if (file.size > 3 * 1024 * 1024) {
+                alert('Ukuran foto maksimal 3 MB.');
+                this.value = '';
+                return;
+            }
+
+            photoLabel.textContent = file.name;
+
+            photoUrl = URL.createObjectURL(file);
+            photoPreview.src = photoUrl;
+            photoPreview.style.display = 'block';
+        });
+
+        /* VALIDASI DAN PEMBENTUKAN DATA ABSENSI */
+        form.addEventListener('submit', function(event) {
+            form.querySelectorAll('.manual-generated-input').forEach(input => input.remove());
+
+            if (!jadwalSelect.value) {
+                event.preventDefault();
+                alert('Pilih kelas dan jam pelajaran terlebih dahulu.');
+                jadwalSelect.focus();
+                return;
+            }
+
+            if (selectedValue('status_mengajar') === 'pengganti') {
+                if (!selectedValue('jenis_penggantian')) {
+                    event.preventDefault();
+                    alert('Pilih apakah Anda yang digantikan atau yang menggantikan.');
+                    return;
+                }
+
+                if (!guruSelect.value) {
+                    event.preventDefault();
+                    alert('Pilih nama guru yang berkaitan dengan sesi penggantian.');
+                    guruSelect.focus();
+                    return;
+                }
+            }
+
             const selects = Array.from(
                 document.querySelectorAll('.manual-name-select[data-status]')
             );
@@ -1392,19 +1296,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 form.appendChild(input);
             });
+        });
+
+        /* INISIALISASI */
+        updateStatusMengajar();
+        updateLabelGuru();
+        updateAlasan();
+
+        if (jadwalSelect.value) {
+            updateKelasFromJadwal();
+            loadMurid();
         }
     });
-
-    /* INISIALISASI */
-    updateStatusMengajar();
-    updateLabelGuru();
-    updateAlasan();
-    updateMetodeAbsensi();
-
-    if (jadwalSelect.value) {
-        updateKelasFromJadwal();
-        loadMurid();
-    }
-});
 </script>
 @endsection

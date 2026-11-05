@@ -144,6 +144,7 @@ class JurnalController extends Controller
     public function show($id)
     {
         $guru = Guru::where('user_id', Auth::id())->firstOrFail();
+
         $jurnal = Journal::with([
             'kelas',
             'jadwal.mataPelajaran',
@@ -151,11 +152,12 @@ class JurnalController extends Controller
             'coverJurnal',
             'guruPendamping.user'
         ])
-            ->where('guru_id', $guru->id)
-            ->orWhere('guru_pendamping_id', $guru->id)
+            ->where(function ($q) use ($guru) {
+                $q->where('guru_id', $guru->id)
+                    ->orWhere('guru_pendamping_id', $guru->id);
+            })
             ->findOrFail($id);
 
-        // Ambil data murid berdasarkan kelas jurnal
         $murids = Murid::where('kelas_id', $jurnal->kelas_id)
             ->orderBy('nama_siswa', 'asc')
             ->get(['id', 'nama_siswa']);
@@ -166,7 +168,7 @@ class JurnalController extends Controller
     public function edit($id)
     {
         $guru = Guru::where('user_id', Auth::id())->firstOrFail();
-        $jurnal = Journal::with(['attendances'])
+        $jurnal = Journal::with(['attendances'])  // ← perlu attendances
             ->where(function ($q) use ($guru) {
                 $q->where('guru_id', $guru->id)
                     ->orWhere('guru_pendamping_id', $guru->id);
@@ -174,11 +176,13 @@ class JurnalController extends Controller
             ->findOrFail($id);
 
         if ($jurnal->status_validasi === 'valid') {
-            return redirect()->route('guru.jurnal-harian')->with('error', 'Jurnal yang sudah tervalidasi tidak bisa diedit.');
+            return redirect()->route('guru.jurnal-harian')
+                ->with('error', 'Jurnal yang sudah tervalidasi tidak bisa diedit.');
         }
 
         $jadwal = $jurnal->jadwal;
-        $murids = Murid::where('kelas_id', $jurnal->kelas_id)->orderBy('nama_siswa', 'asc')->get();
+        $murids = Murid::where('kelas_id', $jurnal->kelas_id)
+            ->orderBy('nama_siswa', 'asc')->get();
         $gurus = Guru::with('user')->where('id', '!=', $guru->id)->get();
         $coverAktif = CoverJurnal::find($jurnal->cover_jurnal_id);
 
@@ -239,9 +243,51 @@ class JurnalController extends Controller
     public function getMurid($jadwal_id)
     {
         $guru = Guru::where('user_id', Auth::id())->firstOrFail();
-        $jadwal = Jadwal::where('guru_id', $guru->id)->findOrFail($jadwal_id);
-        $murids = Murid::where('kelas_id', $jadwal->kelas_id)->orderBy('nama_siswa', 'asc')->get(['id', 'nama_siswa']);
-        return response()->json($murids);
+        $jadwal = Jadwal::where('guru_id', $guru->id)
+            ->with(['kelas', 'mataPelajaran'])
+            ->findOrFail($jadwal_id);
+
+        $murids = Murid::where('kelas_id', $jadwal->kelas_id)
+            ->orderBy('nama_siswa', 'asc')
+            ->get(['id', 'nama_siswa']);
+
+        // 🔑 Ambil absensi terakhir di kelas yang sama (milik guru login)
+        $lastJurnal = Journal::where('kelas_id', $jadwal->kelas_id)
+            ->where('guru_id', $guru->id)
+            ->where('tanggal', Carbon::now()->format('Y-m-d'))   // 🔑 HANYA HARI INI
+            ->whereHas('attendances')
+            ->orderBy('id', 'desc')
+            ->first();
+
+        $lastAttendance = [];
+        if ($lastJurnal) {
+            $lastAttendance = $lastJurnal->attendances
+                ->pluck('status_kehadiran', 'murid_id')
+                ->toArray();
+        }
+
+        // Gabungkan: setiap murid dapat field "status_terakhir"
+        $result = $murids->map(function ($murid) use ($lastAttendance) {
+            return [
+                'id' => $murid->id,
+                'nama_siswa' => $murid->nama_siswa,
+                'status_terakhir' => $lastAttendance[$murid->id] ?? 'hadir',
+            ];
+        });
+
+        // 🔑 Info sesi dari jam pelajaran
+        return response()->json([
+            'murids' => $result,
+            'sesi' => [
+                'mulai' => $jadwal->jam_mulai_ke,
+                'selesai' => $jadwal->jam_selesai_ke,
+                'label' => "Sesi {$jadwal->jam_mulai_ke}–{$jadwal->jam_selesai_ke}",
+            ],
+            'kelas' => $jadwal->kelas->nama_kelas ?? '-',
+            'mapel' => $jadwal->mataPelajaran->nama_mata_pelajaran ?? '-',
+            'ada_absensi_terakhir' => $lastJurnal !== null,
+            'tanggal_absensi_terakhir' => $lastJurnal?->tanggal,
+        ]);
     }
 
     public function catatanRevisi($id)

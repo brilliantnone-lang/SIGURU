@@ -101,8 +101,8 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     Route::get('/get-murid/{jadwal_id}', [JurnalController::class, 'getMurid'])->name('get-murid');
 
     // Presensi
-    Route::get('/presensi-siswa', [AbsensiController::class, 'index'])->name('presensi-siswa');
-    Route::post('/presensi-siswa', [AbsensiController::class, 'store'])->name('presensi-siswa.store');
+    //Route::get('/presensi-siswa', [AbsensiController::class, 'index'])->name('presensi-siswa');
+    //Route::post('/presensi-siswa', [AbsensiController::class, 'store'])->name('presensi-siswa.store');
 
     // Bahan Ajar
     Route::get('/bahan-ajar', [GuruBahanAjarController::class, 'index'])->name('bahan-ajar');

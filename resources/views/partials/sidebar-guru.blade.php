@@ -11,11 +11,6 @@
             Jurnal Mengajar
         </a>
 
-        <a class="nav-item {{ request()->routeIs('guru.presensi.*') ? 'active' : '' }}"
-           href="{{ route('guru.presensi-siswa') }}">
-            Presensi Siswa
-        </a>
-
         <a class="nav-item {{ request()->routeIs('guru.bahan-ajar.*') ? 'active' : '' }}"
            href="{{ route('guru.bahan-ajar') }}">
             Bahan Ajar
