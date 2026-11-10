@@ -115,10 +115,10 @@
                                 </a>
                                 @elseif($semuaValid)
                                 {{-- Sudah tervalidasi semua → tampilkan Ekspor PDF --}}
-                                <a href="#"
+                                <a href="{{ route('guru.export-jurnal-pdf', ['cover_id' => $jurnalPertama->cover_jurnal_id]) }}"
                                     class="validation-action action-export"
-                                    title="Ekspor PDF (belum tersedia)"
-                                    onclick="alert('Fitur ekspor PDF belum tersedia.'); return false;">
+                                    target="_blank"
+                                    title="Ekspor PDF">
                                     <i class="bi bi-file-earmark-pdf"></i>
                                     <span>Ekspor PDF</span>
                                 </a>

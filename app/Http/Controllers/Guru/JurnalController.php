@@ -345,4 +345,65 @@ class JurnalController extends Controller
         return redirect()->route('guru.jurnal-harian')
             ->with('success', "{$jumlah} jurnal berhasil diajukan ulang. Menunggu validasi Kepala Sekolah.");
     }
+
+    public function exportPdf($cover_id)
+    {
+        $guru = Guru::where('user_id', Auth::id())->firstOrFail();
+        $cover = CoverJurnal::findOrFail($cover_id);
+
+        // Ambil semua jurnal VALID milik guru di cover ini
+        $jurnals = Journal::with([
+            'kelas',
+            'jadwal.mataPelajaran',
+            'attendances.murid',
+        ])
+            ->where('cover_jurnal_id', $cover_id)
+            ->where(function ($q) use ($guru) {
+                $q->where('guru_id', $guru->id)
+                    ->orWhere('guru_pendamping_id', $guru->id);
+            })
+            ->where('status_validasi', 'valid')
+            ->orderBy('tanggal', 'asc')
+            ->orderBy('jam_mulai_ke', 'asc')
+            ->get();
+
+        if ($jurnals->isEmpty()) {
+            return redirect()->route('guru.jurnal-harian')
+                ->with('error', 'Belum ada jurnal tervalidasi untuk diekspor di semester ini.');
+        }
+
+        // Data untuk kop
+        $namaGuru = $guru->user->name ?? $guru->nama_guru ?? 'Guru';
+        $nipGuru = $guru->nip_guru ?? '-';
+
+        // Logo sekolah (base64)
+        $logoSekolah = null;
+        if ($cover->logo && Storage::disk('public')->exists($cover->logo)) {
+            $logoPath = Storage::disk('public')->path($cover->logo);
+            $logoMime = mime_content_type($logoPath);
+            $logoData = base64_encode(file_get_contents($logoPath));
+            $logoSekolah = "data:{$logoMime};base64,{$logoData}";
+        }
+
+        // TTD Kepsek (base64) — dari user kepsek
+        $ttdKepsek = null;
+        $kepsekUser = \App\Models\User::where('role', 'kepsek')->whereNotNull('ttd_kepsek')->first();
+        if ($kepsekUser && $kepsekUser->ttd_kepsek) {
+            $ttdPath = storage_path('app/public/' . $kepsekUser->ttd_kepsek);
+            if (file_exists($ttdPath)) {
+                $ttdMime = mime_content_type($ttdPath);
+                $ttdData = base64_encode(file_get_contents($ttdPath));
+                $ttdKepsek = "data:{$ttdMime};base64,{$ttdData}";
+            }
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView(
+            'guru.pdf.jurnal',
+            compact('jurnals', 'cover', 'namaGuru', 'nipGuru', 'logoSekolah', 'ttdKepsek')
+        )->setPaper('A4', 'portrait');
+
+        $namaFile = 'Jurnal-' . $namaGuru . '-' . $cover->semester . '-' . str_replace('/', '-', $cover->tahun_ajaran) . '.pdf';
+
+        return $pdf->download($namaFile);
+    }
 }

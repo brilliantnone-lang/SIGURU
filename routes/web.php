@@ -125,6 +125,9 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
 
     // Panduan
     Route::get('/panduan', fn() => view('guru.panduan'))->name('panduan');
+
+    // Ekspor PDF 
+    Route::get('/jurnal-harian/cover/{cover_id}/export-pdf', [JurnalController::class, 'exportPdf'])->name('export-jurnal-pdf');
 });
 
 // ===== KEPSEK =====
