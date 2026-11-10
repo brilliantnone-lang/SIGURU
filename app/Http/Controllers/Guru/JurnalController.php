@@ -27,25 +27,37 @@ class JurnalController extends Controller
         return view('guru.jurnal-harian', compact('jurnals'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $guru = Guru::where('user_id', Auth::id())->firstOrFail();
-        $hariIni = Carbon::now();
-        $namaHari = strtolower($hariIni->locale('id')->translatedFormat('l'));
-        $tanggalHariIni = $hariIni->format('Y-m-d');
 
-        $jadwalHariIni = Jadwal::with(['kelas', 'mataPelajaran'])
+        // 🔑 Tanggal dari query string, default hari ini
+        $tanggalDipilih = $request->filled('tanggal')
+            ? Carbon::parse($request->tanggal)->format('Y-m-d')
+            : Carbon::now()->format('Y-m-d');
+
+        $hariDariTanggal = strtolower(Carbon::parse($tanggalDipilih)->locale('id')->translatedFormat('l'));
+
+        // Ambil jadwal guru pada hari dari tanggal yang dipilih
+        $jadwalHariItu = Jadwal::with(['kelas', 'mataPelajaran'])
             ->where('guru_id', $guru->id)
-            ->where('hari', $namaHari)
+            ->where('hari', $hariDariTanggal)
+            ->orderBy('jam_mulai_ke')
             ->get();
 
-        // Filter jadwal yang belum ada jurnalnya hari ini
-        $jadwalTersedia = $jadwalHariIni->filter(function ($jadwal) use ($guru, $tanggalHariIni) {
+        // Filter jadwal yang belum ada jurnalnya di tanggal itu
+        $jadwalTersedia = $jadwalHariItu->filter(function ($jadwal) use ($guru, $tanggalDipilih) {
             return !Journal::where('guru_id', $guru->id)
                 ->where('jadwal_id', $jadwal->id)
-                ->where('tanggal', $tanggalHariIni)
+                ->where('tanggal', $tanggalDipilih)
                 ->exists();
         })->values();
+
+        // 🔑 Jadwal yang dipilih dari dashboard
+        $jadwalDipilih = null;
+        if ($request->filled('jadwal_id')) {
+            $jadwalDipilih = $jadwalTersedia->firstWhere('id', $request->jadwal_id);
+        }
 
         $kalenderAktif = KalenderAkademik::getKalenderAktif();
         $coverAktif = null;
@@ -57,7 +69,13 @@ class JurnalController extends Controller
 
         $gurus = Guru::with('user')->where('id', '!=', $guru->id)->get();
 
-        return view('guru.tambah-jurnal', compact('jadwalTersedia', 'coverAktif', 'gurus'));
+        return view('guru.tambah-jurnal', compact(
+            'jadwalTersedia',
+            'coverAktif',
+            'gurus',
+            'jadwalDipilih',
+            'tanggalDipilih'
+        ));
     }
 
     public function store(Request $request)

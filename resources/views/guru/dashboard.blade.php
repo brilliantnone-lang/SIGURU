@@ -94,7 +94,10 @@
                             @if($sudahIsi)
                             <a href="{{ route('guru.jurnal-harian') }}" class="schedule-action action-view">Lihat Jurnal <i class="bi bi-arrow-right"></i></a>
                             @else
-                            <a href="{{ route('guru.jurnal-harian') }}" class="schedule-action action-fill">Isi Jurnal <i class="bi bi-arrow-right"></i></a>
+                            <a href="{{ route('guru.tambah-jurnal', ['jadwal_id' => $j->id, 'tanggal' => now()->format('Y-m-d')]) }}"
+                                class="schedule-action action-fill">
+                                Isi Jurnal <i class="bi bi-arrow-right"></i>
+                            </a>
                             @endif
                         </td>
                     </tr>
@@ -108,21 +111,207 @@
         </div>
     </div>
 
-    {{-- Pengingat --}}
+    {{-- Pengingat Jurnal — Daftar Jurnal Terlewat --}}
     @if($pengingat->count() > 0)
-    <div class="journal-reminder">
-        <div class="reminder-icon"><i class="bi bi-bell"></i></div>
-        <div class="reminder-text">
-            <h3>Pengingat Jurnal Mengajar</h3>
-            <p>Anda memiliki {{ $pengingat->count() }} jurnal minggu lalu yang belum diisi. Yuk, lengkapi sekarang!</p>
+    <div class="reminder-card">
+        <div class="reminder-header">
+            <div class="reminder-header-icon">
+                <i class="bi bi-bell-fill"></i>
+            </div>
+            <div class="reminder-header-text">
+                <h3>Pengingat Jurnal Mengajar</h3>
+                <p>Anda memiliki <strong>{{ $pengingat->count() }}</strong> jurnal yang belum diisi. Yuk, lengkapi sekarang!</p>
+            </div>
         </div>
-        <a href="{{ route('guru.jurnal-harian') }}" class="reminder-action">Isi Jurnal <i class="bi bi-arrow-right"></i></a>
+
+        <div class="table-responsive">
+            <table class="reminder-table">
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Kelas</th>
+                        <th>Jam</th>
+                        <th>Mata Pelajaran</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($pengingat as $p)
+                    <tr>
+                        <td class="reminder-date">
+                            <strong>{{ \Carbon\Carbon::parse($p->tanggal)->translatedFormat('d M Y') }}</strong>
+                            <small>{{ \Carbon\Carbon::parse($p->tanggal)->translatedFormat('l') }}</small>
+                        </td>
+                        <td>
+                            <strong>{{ $p->kelas }}</strong>
+                        </td>
+                        <td>
+                            Jam ke-{{ $p->jam_mulai_ke }}-{{ $p->jam_selesai_ke }}
+                        </td>
+                        <td>{{ $p->mapel }}</td>
+                        <td>
+                            <a href="{{ route('guru.tambah-jurnal', ['jadwal_id' => $p->jadwal_id, 'tanggal' => $p->tanggal]) }}"
+                                class="reminder-fill-btn">
+                                Isi Jurnal <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
     @endif
 
 </div>
 
 <style>
+    /* ============================
+   PENGINGAT JURNAL (TABEL)
+============================ */
+
+    .reminder-card {
+        background: #fff;
+        border: 1px solid #ffdcac;
+        border-radius: 11px;
+        overflow: hidden;
+        box-shadow: 0 2px 3px rgba(0, 0, 0, .15);
+        margin-bottom: 17px;
+    }
+
+    .reminder-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 22px;
+        background: #fff8ef;
+        border-bottom: 1px solid #ffdcac;
+    }
+
+    .reminder-header-icon {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 9px;
+        background: #ffbf66;
+        color: #9c5a00;
+        font-size: 21px;
+    }
+
+    .reminder-header-text h3 {
+        margin: 0 0 3px;
+        font-size: 18px;
+        font-weight: 650;
+        color: #b65300;
+    }
+
+    .reminder-header-text p {
+        margin: 0;
+        font-size: 11px;
+        color: #c88b55;
+    }
+
+    .reminder-header-text p strong {
+        color: #b65300;
+        font-weight: 700;
+    }
+
+    .reminder-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .reminder-table thead {
+        background: #fff8ef;
+    }
+
+    .reminder-table th {
+        padding: 8px 15px;
+        color: #a0683a;
+        text-align: left;
+        text-transform: uppercase;
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+        border-bottom: 1px solid #ffdcac;
+    }
+
+    .reminder-table td {
+        padding: 10px 15px;
+        border-bottom: 1px solid #ffe8cc;
+        font-size: 12px;
+        vertical-align: middle;
+    }
+
+    .reminder-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .reminder-table tbody tr:hover {
+        background: #fffbf5;
+    }
+
+    .reminder-date strong {
+        display: block;
+        font-size: 12px;
+        font-weight: 650;
+        color: #b65300;
+    }
+
+    .reminder-date small {
+        display: block;
+        margin-top: 2px;
+        font-size: 10px;
+        color: #c88b55;
+    }
+
+    .reminder-fill-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 7px 12px;
+        border: 1px solid #cf6e2c;
+        border-radius: 7px;
+        background: #f0d5c0;
+        color: #b64d00;
+        font-size: 11px;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background .15s ease;
+    }
+
+    .reminder-fill-btn:hover {
+        background: #e6c1a3;
+        color: #8f3d00;
+    }
+
+    /* Responsive */
+    @media (max-width: 760px) {
+        .reminder-header {
+            align-items: flex-start;
+            flex-wrap: wrap;
+            padding: 12px 14px;
+        }
+
+        .reminder-header-text {
+            flex-basis: calc(100% - 55px);
+        }
+
+        .reminder-table {
+            min-width: 600px;
+        }
+
+        .reminder-table th,
+        .reminder-table td {
+            padding: 8px 10px;
+        }
+    }
+
     .guru-dashboard {
         width: 100%;
         color: #222;

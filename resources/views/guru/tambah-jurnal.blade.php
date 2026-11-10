@@ -580,7 +580,7 @@
                         name="tanggal"
                         id="tanggal"
                         class="jurnal-control"
-                        value="{{ old('tanggal', now()->format('Y-m-d')) }}"
+                        value="{{ old('tanggal', $tanggalDipilih ?? now()->format('Y-m-d')) }}"
                         required>
                 </div>
 
@@ -593,7 +593,7 @@
                         @foreach ($jadwalTersedia->unique('kelas_id') as $j)
                         <option
                             value="{{ $j->kelas_id }}"
-                            {{ old('jadwal_id') == $j->id ? 'selected' : '' }}>
+                            {{ old('jadwal_id', $jadwalDipilih->id ?? null) == $j->id ? 'selected' : '' }}>
                             {{ $j->kelas->nama_kelas ?? 'Kelas #' . $j->kelas_id }}
                         </option>
                         @endforeach
@@ -627,7 +627,7 @@
                             value="{{ $j->id }}"
                             data-kelas-id="{{ $j->kelas_id }}"
                             data-mapel="{{ $j->mataPelajaran->nama_mata_pelajaran ?? '-' }}"
-                            {{ old('jadwal_id') == $j->id ? 'selected' : '' }}>
+                            {{ old('jadwal_id', $jadwalDipilih->id ?? null) == $j->id ? 'selected' : '' }}>
                             Jam ke-{{ $j->jam_mulai_ke }}-{{ $j->jam_selesai_ke }}
                         </option>
                         @endforeach
@@ -1303,10 +1303,17 @@
         updateLabelGuru();
         updateAlasan();
 
+        @if($jadwalDipilih ?? null)
+        kelasSelect.value = '{{ $jadwalDipilih->kelas_id }}';
+        jadwalSelect.value = '{{ $jadwalDipilih->id }}';
+        updateMapel();
+        loadMurid();
+        @else
         if (jadwalSelect.value) {
             updateKelasFromJadwal();
             loadMurid();
         }
+        @endif
     });
 </script>
 @endsection
