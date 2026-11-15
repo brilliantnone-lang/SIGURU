@@ -72,8 +72,10 @@
             </div>
 
             <div style="display:flex; justify-content:flex-end; gap:12px; border-top:1px solid #E1ECE6; padding-top:20px;">
-                <a href="{{ route('admin.murid.index') }}"
-                    style="padding:12px 20px; border-radius:6px; background:#f3f4f6; color:#111; text-decoration:none; font-weight:600;">Batal</a>
+                <a href="{{ route('admin.murid.index', ['kelas_id' => $selectedKelas]) }}"
+                    style="padding:12px 20px; border-radius:6px; background:#f3f4f6; color:#111; text-decoration:none; font-weight:600;">
+                    Batal
+                </a>
                 <button type="submit"
                     style="padding:12px 20px; border-radius:6px; background:#0A4C2E; color:#fff; border:none; font-weight:600; cursor:pointer;">Simpan
                     Siswa</button>

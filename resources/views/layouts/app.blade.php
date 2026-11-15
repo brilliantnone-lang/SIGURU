@@ -163,10 +163,11 @@
             background: var(--green-sidebar);
             overflow-y: auto;
             height: 100%;
+            scrollbar-width: none;
         }
 
         .sidebar::-webkit-scrollbar {
-            width: 5px;
+            display: none;
         }
 
         .sidebar::-webkit-scrollbar-thumb {
@@ -219,6 +220,7 @@
         .nav-item.active:hover {
             color: #000000;
         }
+
 
         /* ===== CONTENT ===== */
         .content {

@@ -5,7 +5,7 @@
             href="{{ route('admin.dashboard') }}">
             Dashboard
         </a>
-        <a class="nav-item {{ request()->routeIs('admin.rekap-absensi.*') ? 'active' : '' }}"
+        <a class="nav-item rekap-absensi {{ request()->routeIs('admin.rekap-absensi.*') ? 'active' : '' }}"
             href="{{ route('admin.rekap-absensi.index') }}">
             Rekapitulasi Absensi Siswa
         </a>
@@ -35,11 +35,11 @@
             Data Mata Pelajaran
         </a>
 
-        <a class="nav-item {{ request()->routeIs('admin.guru.*') ? 'active' : '' }}"
+        <a class="nav-item {{ request()->routeIs('admin.guru.*', 'admin.tambah-guru', 'admin.data-guru.show') ? 'active' : '' }}"
             href="{{ route('admin.guru.index') }}">
             Data Guru
         </a>
-        <a class="nav-item {{ request()->routeIs('admin.kelas.*') ? 'active' : '' }}"
+        <a class="nav-item {{ request()->routeIs('admin.kelas.*', 'admin.murid.*') ? 'active' : '' }}"
             href="{{ route('admin.kelas.index') }}">
             Data Kelas
         </a>

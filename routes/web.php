@@ -47,39 +47,72 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Master Data
     Route::resource('data-cover', CoverJurnalController::class);
     Route::resource('data-guru', GuruController::class)->names([
-        'index' => 'guru.index', 'create' => 'tambah-guru', 'store' => 'guru.store',
-        'edit' => 'guru.edit', 'update' => 'guru.update', 'destroy' => 'guru.destroy',
+        'index' => 'guru.index',
+        'create' => 'tambah-guru',
+        'store' => 'guru.store',
+        'edit' => 'guru.edit',
+        'update' => 'guru.update',
+        'destroy' => 'guru.destroy',
     ]);
     Route::resource('data-mapel', MataPelajaranController::class)->names([
-        'index' => 'mapel.index', 'create' => 'mapel.create', 'store' => 'mapel.store',
-        'edit' => 'mapel.edit', 'update' => 'mapel.update', 'destroy' => 'mapel.destroy',
+        'index' => 'mapel.index',
+        'create' => 'mapel.create',
+        'store' => 'mapel.store',
+        'edit' => 'mapel.edit',
+        'update' => 'mapel.update',
+        'destroy' => 'mapel.destroy',
     ]);
     Route::resource('data-kelas', KelasController::class)->names([
-        'index' => 'kelas.index', 'create' => 'kelas.create', 'store' => 'kelas.store',
-        'edit' => 'kelas.edit', 'update' => 'kelas.update', 'destroy' => 'kelas.destroy',
+        'index' => 'kelas.index',
+        'create' => 'kelas.create',
+        'store' => 'kelas.store',
+        'edit' => 'kelas.edit',
+        'update' => 'kelas.update',
+        'destroy' => 'kelas.destroy',
     ]);
     Route::resource('data-murid', MuridController::class)->names([
-        'index' => 'murid.index', 'create' => 'murid.create', 'store' => 'murid.store',
-        'edit' => 'murid.edit', 'update' => 'murid.update', 'destroy' => 'murid.destroy',
+        'index' => 'murid.index',
+        'create' => 'murid.create',
+        'store' => 'murid.store',
+        'edit' => 'murid.edit',
+        'update' => 'murid.update',
+        'destroy' => 'murid.destroy',
     ]);
     Route::resource('data-pengajaran', JadwalController::class)->names([
-        'index' => 'pengajaran.index', 'create' => 'pengajaran.create', 'store' => 'pengajaran.store',
-        'edit' => 'pengajaran.edit', 'update' => 'pengajaran.update', 'destroy' => 'pengajaran.destroy',
+        'index' => 'pengajaran.index',
+        'create' => 'pengajaran.create',
+        'store' => 'pengajaran.store',
+        'edit' => 'pengajaran.edit',
+        'update' => 'pengajaran.update',
+        'destroy' => 'pengajaran.destroy',
     ]);
     Route::resource('event-sekolah', EventSekolahController::class)->names([
-        'index' => 'event.index', 'create' => 'event.create', 'store' => 'event.store',
-        'edit' => 'event.edit', 'update' => 'event.update', 'destroy' => 'event.destroy',
+        'index' => 'event.index',
+        'create' => 'event.create',
+        'store' => 'event.store',
+        'edit' => 'event.edit',
+        'update' => 'event.update',
+        'destroy' => 'event.destroy',
     ]);
     Route::resource('kalender', KalenderAkademikController::class)->names([
-        'index' => 'kalender.index', 'create' => 'kalender.create', 'store' => 'kalender.store',
-        'edit' => 'kalender.edit', 'update' => 'kalender.update', 'destroy' => 'kalender.destroy',
+        'index' => 'kalender.index',
+        'create' => 'kalender.create',
+        'store' => 'kalender.store',
+        'edit' => 'kalender.edit',
+        'update' => 'kalender.update',
+        'destroy' => 'kalender.destroy',
     ]);
 
     // Monitoring
-    Route::get('/rekap-absensi', [RekapAbsensiController::class, 'index'])->name('rekap-absensi.index');
     Route::get('/jurnal', [JournalController::class, 'index'])->name('jurnal.index');
     Route::get('/bahan-ajar', [BahanAjarController::class, 'index'])->name('bahan-ajar.index');
     Route::get('/panduan', fn() => view('admin.panduan'))->name('panduan');
+});
+
+// Rekap Absensi - Admin dan Kepala Sekolah
+Route::middleware(['auth', 'role:admin,kepsek'])->group(function () {
+    Route::get('/admin/rekap-absensi', [RekapAbsensiController::class, 'index'])
+        ->name('admin.rekap-absensi.index');
 });
 
 // ===== GURU =====

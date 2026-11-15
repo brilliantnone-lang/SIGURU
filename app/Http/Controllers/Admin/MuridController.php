@@ -11,29 +11,40 @@ class MuridController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Murid::with('kelas');
-
-        if ($request->has('kelas_id')) {
-            $query->where('kelas_id', $request->kelas_id);
+        // Daftar siswa hanya dapat dibuka melalui kelas tertentu.
+        if (!$request->filled('kelas_id')) {
+            return redirect()->route('admin.kelas.index');
         }
 
-        $murid = $query->orderBy('nama_siswa', 'asc')->get();
+        $kelasAktif = Kelas::findOrFail($request->kelas_id);
+
+        $murid = Murid::with('kelas')
+            ->where('kelas_id', $kelasAktif->id)
+            ->orderBy('nama_siswa', 'asc')
+            ->get();
+
         $kelas = Kelas::orderBy('nama_kelas', 'asc')->get();
 
-        $kelasAktif = null;
-        if ($request->has('kelas_id')) {
-            $kelasAktif = Kelas::find($request->kelas_id);
-        }
-
-        return view('admin.data-murid', compact('murid', 'kelas', 'kelasAktif'));
+        return view('admin.data-murid', compact(
+            'murid',
+            'kelas',
+            'kelasAktif'
+        ));
     }
 
     public function create(Request $request)
     {
-        $kelas = Kelas::orderBy('nama_kelas', 'asc')->get();
-        $selectedKelas = $request->query('kelas_id');
+        if (!$request->filled('kelas_id')) {
+            return redirect()->route('admin.kelas.index');
+        }
 
-        return view('admin.tambah-murid', compact('kelas', 'selectedKelas'));
+        $selectedKelas = Kelas::findOrFail($request->kelas_id)->id;
+        $kelas = Kelas::orderBy('nama_kelas', 'asc')->get();
+
+        return view('admin.tambah-murid', compact(
+            'kelas',
+            'selectedKelas'
+        ));
     }
 
     public function store(Request $request)
@@ -47,23 +58,39 @@ class MuridController extends Controller
             'nomor_telepon' => 'nullable|string|max:20',
         ]);
 
-        Murid::create($request->all());
+        Murid::create($request->only([
+            'nis',
+            'nama_siswa',
+            'kelas_id',
+            'jenis_kelamin',
+            'tanggal_lahir',
+            'nomor_telepon',
+        ]));
 
-        // Jika sebelumnya dari halaman kelas, kembalikan ke daftar kelas tersebut
-        if ($request->filled('kelas_id')) {
-            return redirect()->route('admin.murid.index', ['kelas_id' => $request->kelas_id])
-                ->with('success', 'Data Siswa berhasil ditambahkan!');
-        }
-
-        return redirect()->route('admin.murid.create')
-            ->with('success', 'Data siswa berhasil ditambahkan.');
+        return redirect()
+            ->route('admin.murid.index', [
+                'kelas_id' => $request->kelas_id
+            ])
+            ->with('success', 'Data siswa berhasil ditambahkan!');
     }
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         $murid = Murid::findOrFail($id);
+
+        // Kelas asal digunakan untuk tombol Batal.
+        $returnKelasId = $request->query(
+            'return_kelas_id',
+            $murid->kelas_id
+        );
+
         $kelas = Kelas::orderBy('nama_kelas', 'asc')->get();
-        return view('admin.edit-murid', compact('murid', 'kelas'));
+
+        return view('admin.edit-murid', compact(
+            'murid',
+            'kelas',
+            'returnKelasId'
+        ));
     }
 
     public function update(Request $request, $id)
@@ -79,19 +106,34 @@ class MuridController extends Controller
             'nomor_telepon' => 'nullable|string|max:20',
         ]);
 
-        $murid->update($request->all());
+        $murid->update($request->only([
+            'nis',
+            'nama_siswa',
+            'kelas_id',
+            'jenis_kelamin',
+            'tanggal_lahir',
+            'nomor_telepon',
+        ]));
 
-        return redirect()->route('admin.murid.edit', $murid->id)
-            ->with('success', 'Data siswa berhasil diperbarui.');
+        // Setelah disimpan, arahkan ke kelas terbaru siswa.
+        return redirect()
+            ->route('admin.murid.index', [
+                'kelas_id' => $murid->kelas_id
+            ])
+            ->with('success', 'Data siswa berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
         $murid = Murid::findOrFail($id);
-        $kelas_id = $murid->kelas_id;
+        $kelasId = $murid->kelas_id;
+
         $murid->delete();
 
-        return redirect()->route('admin.murid.index', ['kelas_id' => $kelas_id])
-            ->with('success', 'Data Siswa berhasil dihapus!');
+        return redirect()
+            ->route('admin.murid.index', [
+                'kelas_id' => $kelasId
+            ])
+            ->with('success', 'Data siswa berhasil dihapus!');
     }
 }

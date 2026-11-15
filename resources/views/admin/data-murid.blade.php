@@ -2,32 +2,27 @@
 
 @section('title', 'Data Siswa - Jurnal Mengajar Guru')
 
+
 @section('content')
     <div class="kelas-heading-row">
         <div>
-            @if($kelasAktif)
-                <h1>Daftar Siswa Kelas {{ $kelasAktif->nama_kelas }}</h1>
-                <p class="subtitle">Kelola data siswa untuk kelas ini.</p>
-            @else
-                <h1>Semua Data Siswa</h1>
-                <p class="subtitle">Kelola profil dan data seluruh siswa.</p>
-            @endif
+            <h1>Daftar Siswa Kelas {{ $kelasAktif->nama_kelas }}</h1>
+            <p class="subtitle">Kelola data siswa untuk kelas ini.</p>
         </div>
 
         <div style="display:flex; gap:10px;">
-            @if($kelasAktif)
-                <a href="{{ route('admin.kelas.index') }}"
-                    style="padding:10px 16px; border-radius:6px; background:#f3f4f6; color:#111; text-decoration:none; font-weight:600; font-size:12px;">
-                    <i class="bi bi-arrow-left"></i> Kembali ke Kelas
-                </a>
-            @endif
+            <a href="{{ route('admin.kelas.index') }}"
+                style="padding:10px 16px; border-radius:6px; background:#f3f4f6; color:#111; text-decoration:none; font-weight:600; font-size:12px;">
+                <i class="bi bi-arrow-left"></i> Kembali ke Kelas
+            </a>
 
-            <a href="{{ route('admin.murid.create', $kelasAktif ? ['kelas_id' => $kelasAktif->id] : []) }}"
-                class="add-kelas-button" style="text-decoration:none;">
+            <a href="{{ route('admin.murid.create', ['kelas_id' => $kelasAktif->id]) }}" class="add-kelas-button"
+                style="text-decoration:none;">
                 <span aria-hidden="true">＋</span> Tambah Siswa
             </a>
         </div>
     </div>
+
 
     @if(session('success'))
         <div
@@ -51,34 +46,38 @@
                 </thead>
                 <tbody>
                     @forelse($murid as $i => $m)
-                        <tr>
-                            <td>{{ $i + 1 }}</td>
-                            <td>{{ $m->nis }}</td>
-                            <td>{{ $m->nama_siswa }}</td>
-                            <td>{{ $m->kelas->nama_kelas ?? '-' }}</td>
-                            <td>{{ $m->jenis_kelamin }}</td>
-                            <td>
-                                <div class="kelas-actions">
-                                    <a href="{{ route('admin.murid.edit', $m->id) }}" class="table-action edit" title="Edit">
-                                        <i class="bi bi-pencil-fill"></i>
-                                    </a>
-                                    {{-- Hapus Siswa --}}
-                                    <form action="{{ route('admin.murid.destroy', $m->id) }}" method="POST" class="delete-form"
-                                        style="display:inline; margin:0; padding:0;">
-                                        @csrf
-                                        @method('DELETE')
+                                    <tr>
+                                        <td>{{ $i + 1 }}</td>
+                                        <td>{{ $m->nis }}</td>
+                                        <td>{{ $m->nama_siswa }}</td>
+                                        <td>{{ $m->kelas->nama_kelas ?? '-' }}</td>
+                                        <td>{{ $m->jenis_kelamin }}</td>
+                                        <td>
+                                            <div class="kelas-actions">
+                                                <a href="{{ route('admin.murid.edit', [
+                            'data_murid' => $m->id,
+                            'return_kelas_id' => $kelasAktif->id
+                        ]) }}" class="table-action edit" title="Edit">
+                                                    <i class="bi bi-pencil-fill"></i>
+                                                </a>
+                                                {{-- Hapus Siswa --}}
+                                                <form action="{{ route('admin.murid.destroy', $m->id) }}" method="POST" class="delete-form"
+                                                    style="display:inline; margin:0; padding:0;">
+                                                    @csrf
+                                                    @method('DELETE')
 
-                                        <button type="button" class="table-action delete" title="Hapus"
-                                            onclick="showDeleteModal(this)">
-                                            <i class="bi bi-trash3"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
+                                                    <button type="button" class="table-action delete" title="Hapus"
+                                                        onclick="showDeleteModal(this)">
+                                                        <i class="bi bi-trash3"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
                     @empty
                         <tr>
-                            <td colspan="6" style="text-align:center; padding:40px; color:#888;">Belum ada data siswa di sini.
+                            <td colspan="6" style="text-align:center; padding:40px; color:#888;">Belum ada data siswa di
+                                sini.
                             </td>
                         </tr>
                     @endforelse
@@ -131,6 +130,8 @@
         .kelas-heading-row h1 {
             margin: 0 0 5px;
             font-size: 26px;
+            font-weight: 700;
+            color: #111;
         }
 
         .kelas-heading-row .subtitle {
