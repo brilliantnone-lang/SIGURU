@@ -69,8 +69,9 @@ class GuruController extends Controller
             'nomor_telepon' => $request->nomor_telepon,
         ]);
 
-        return redirect()->route('admin.guru.index')
-            ->with('success', 'Data Guru berhasil ditambahkan!');
+        return redirect()
+            ->route('admin.guru.create')
+            ->with('success', 'Data guru berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -113,8 +114,9 @@ class GuruController extends Controller
             'nomor_telepon' => $request->nomor_telepon,
         ]);
 
-        return redirect()->route('admin.guru.index')
-            ->with('success', 'Data Guru berhasil diperbarui!');
+        return redirect()
+            ->route('admin.guru.edit', $guru->id)
+            ->with('success', 'Data guru berhasil diperbarui.');
     }
 
     public function destroy($id)

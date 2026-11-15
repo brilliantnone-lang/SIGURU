@@ -52,8 +52,8 @@ class EventSekolahController extends Controller
             'admin_id' => $admin->id ?? 1,
         ]);
 
-        return redirect()->route('admin.event.index')
-            ->with('success', 'Event Sekolah berhasil ditambahkan!');
+        return redirect()->route('admin.event.create')
+            ->with('success', 'Event sekolah berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -93,7 +93,7 @@ class EventSekolahController extends Controller
         ]);
 
         return redirect()->route('admin.event.index')
-            ->with('success', 'Event Sekolah berhasil diperbarui!');
+            ->with('success', 'Event sekolah berhasil diperbarui.');
     }
 
     public function destroy($id)

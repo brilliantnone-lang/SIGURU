@@ -33,6 +33,9 @@ class ProfilController extends Controller
             $user->update(['ttd_kepsek' => $path]);
         }
 
-        return redirect()->route('kepsek.profil')->with('success', 'Tanda tangan berhasil diperbarui!');
+        return redirect()->back()->with(
+            'success',
+            'Tanda tangan digital berhasil disimpan.'
+        );
     }
 }

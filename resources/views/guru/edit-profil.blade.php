@@ -3,113 +3,420 @@
 @section('title', 'Edit Profil')
 
 @section('content')
-<div class="edit-profil-page">
+    <div class="edit-profil-page">
 
-    <div class="page-heading">
-        <h2>Edit Profil</h2>
-        <p>Perbarui informasi pribadi dan identitas akun Anda.</p>
-    </div>
-
-    <div class="edit-profil-card">
-        <div class="card-heading">
-            <div class="heading-icon">
-                <i class="bi bi-person-fill-gear"></i>
-            </div>
-            <div>
-                <h3>Informasi Profil</h3>
-                <p>Pastikan informasi profil Anda sudah benar.</p>
-            </div>
+        <div class="page-heading">
+            <h2>Edit Profil</h2>
+            <p>Perbarui informasi pribadi dan identitas akun Anda.</p>
         </div>
 
-        @if($errors->any())
-            <div style="background:#fee2e2;color:#991b1b;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #fecaca;">
-                <ul style="margin:0; padding-left:20px;">
-                    @foreach($errors->all() as $error) <li>{{ $error }}</li> @endforeach
-                </ul>
+        <div class="edit-profil-card">
+            <div class="card-heading">
+                <div class="heading-icon">
+                    <i class="bi bi-person-fill-gear"></i>
+                </div>
+                <div>
+                    <h3>Informasi Profil</h3>
+                    <p>Pastikan informasi profil Anda sudah benar.</p>
+                </div>
+            </div>
+
+            @if($errors->any())
+                <div
+                    style="background:#fee2e2;color:#991b1b;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #fecaca;">
+                    <ul style="margin:0; padding-left:20px;">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form action="{{ route('guru.profil-saya.update') }}" method="POST">
+                @csrf
+                @method('PUT')
+
+                <div class="form-group">
+                    <label for="nama">Nama Lengkap <span>*</span></label>
+                    <input type="text" id="nama" name="name" value="{{ old('name', $user->name) }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username <span>*</span></label>
+                    <input type="text" id="username" name="username" value="{{ old('username', $user->username) }}"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="nip_guru">NIP</label>
+                    <input type="text" id="nip_guru" name="nip_guru" value="{{ old('nip_guru', $guru->nip_guru) }}">
+                    <small>Isi jika Anda memiliki NIP.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="nomor_telepon">Nomor Telepon</label>
+                    <input type="tel" id="nomor_telepon" name="nomor_telepon"
+                        value="{{ old('nomor_telepon', $guru->nomor_telepon) }}" placeholder="Contoh: 081234567890">
+                </div>
+
+                <div class="form-group">
+                    <label for="mata_pelajaran_id">Mata Pelajaran *</label>
+                    <select id="mata_pelajaran_id" name="mata_pelajaran_id" required
+                        style="width:100%; min-height:46px; padding:11px 13px; border:1px solid #c8c8c8; border-radius:8px; background:#fff; color:#333; font-family:inherit; font-size:14px; outline:none;">
+                        @foreach($mataPelajarans as $mapel)
+                            <option value="{{ $mapel->id }}" {{ old('mata_pelajaran_id', $guru->mata_pelajaran_id) == $mapel->id ? 'selected' : '' }}>
+                                {{ $mapel->nama_mata_pelajaran }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password Baru</label>
+                    <input type="password" id="password" name="password"
+                        placeholder="Kosongkan jika tidak ingin mengganti password">
+                    <small>Isi hanya jika ingin mengganti password.</small>
+                </div>
+
+                <div class="form-actions">
+                    <a href="{{ route('guru.profil-saya') }}" class="btn-cancel">Batal</a>
+                    <button type="submit" class="btn-save">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+
+        {{-- POP-UP PROFIL BERHASIL DIPERBAHARUI --}}
+        @if(session('profil_updated'))
+            <div class="success-modal-overlay" id="successModal">
+                <div class="success-modal">
+
+                    <div class="success-modal-header"></div>
+
+                    <div class="success-modal-content">
+                        <div class="success-icon">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+
+                        <h3>Profil Telah Diperbaharui</h3>
+
+                        <button type="button" class="success-modal-button" onclick="closeSuccessModal()">
+                            Oke
+                        </button>
+                    </div>
+
+                </div>
             </div>
         @endif
 
-        <form action="{{ route('guru.profil-saya.update') }}" method="POST">
-            @csrf
-            @method('PUT')
-
-            <div class="form-group">
-                <label for="nama">Nama Lengkap <span>*</span></label>
-                <input type="text" id="nama" name="name" value="{{ old('name', $user->name) }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="username">Username <span>*</span></label>
-                <input type="text" id="username" name="username" value="{{ old('username', $user->username) }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="nip_guru">NIP</label>
-                <input type="text" id="nip_guru" name="nip_guru" value="{{ old('nip_guru', $guru->nip_guru) }}">
-                <small>Isi jika Anda memiliki NIP.</small>
-            </div>
-
-            <div class="form-group">
-                <label for="nomor_telepon">Nomor Telepon</label>
-                <input type="tel" id="nomor_telepon" name="nomor_telepon" value="{{ old('nomor_telepon', $guru->nomor_telepon) }}" placeholder="Contoh: 081234567890">
-            </div>
-
-            <div class="form-group">
-                <label for="mata_pelajaran_id">Mata Pelajaran *</label>
-                <select id="mata_pelajaran_id" name="mata_pelajaran_id" required style="width:100%; min-height:46px; padding:11px 13px; border:1px solid #c8c8c8; border-radius:8px; background:#fff; color:#333; font-family:inherit; font-size:14px; outline:none;">
-                    @foreach($mataPelajarans as $mapel)
-                        <option value="{{ $mapel->id }}" {{ old('mata_pelajaran_id', $guru->mata_pelajaran_id) == $mapel->id ? 'selected' : '' }}>{{ $mapel->nama_mata_pelajaran }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password Baru</label>
-                <input type="password" id="password" name="password" placeholder="Kosongkan jika tidak ingin mengganti password">
-                <small>Isi hanya jika ingin mengganti password.</small>
-            </div>
-
-            <div class="form-actions">
-                <a href="{{ route('guru.profil-saya') }}" class="btn-cancel">Batal</a>
-                <button type="submit" class="btn-save">Simpan Perubahan</button>
-            </div>
-        </form>
     </div>
-</div>
 
-<style>
-    /* CSS sama persis dengan desain awal */
-    .edit-profil-page { width: 100%; padding-bottom: 20px; color: #26332F; font-family: inherit; }
-    .page-heading { margin-bottom: 22px; }
-    .page-heading h2 { margin: 0 0 5px; color: #111; font-size: 30px; line-height: 1.3; font-weight: 500; }
-    .page-heading p { margin: 0; color: #999; font-size: 14px; font-weight: 300; }
-    .edit-profil-card { box-sizing: border-box; width: 100%; padding: 24px; background: #fff; border: 1px solid #B9D0C5; border-radius: 10px; box-shadow: 0 2px 3px rgba(0, 0, 0, .08); }
-    .card-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 25px; padding-bottom: 18px; border-bottom: 1px solid #E1ECE6; }
-    .heading-icon { display: flex; align-items: center; justify-content: center; width: 43px; height: 43px; flex-shrink: 0; border-radius: 10px; background: #E0F0E7; color: #39765f; font-size: 22px; }
-    .card-heading h3 { margin: 0 0 5px; color: #244c39; font-size: 18px; font-weight: 700; }
-    .card-heading p { margin: 0; color: #999; font-size: 12px; }
-    .form-group { display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px; }
-    .form-group label { color: #111; font-size: 15px; font-weight: 650; }
-    .form-group label span { color: #ef4444; }
-    .form-group input { box-sizing: border-box; width: 100%; min-height: 46px; padding: 11px 13px; border: 1px solid #c8c8c8; border-radius: 8px; background: #fff; color: #333; font-family: inherit; font-size: 14px; outline: none; transition: border-color .2s, box-shadow .2s; }
-    .form-group input::placeholder { color: #aaa; }
-    .form-group input:focus { border-color: #39765f; box-shadow: 0 0 0 3px rgba(57, 118, 95, .12); }
-    .form-group small { color: #89938d; font-size: 11px; }
-    .form-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 12px; margin-top: 28px; padding-top: 20px; border-top: 1px solid #E1ECE6; }
-    .btn-cancel, .btn-save { display: inline-flex; align-items: center; justify-content: center; gap: 7px; box-sizing: border-box; min-height: 43px; padding: 10px 20px; border-radius: 9px; font-family: inherit; font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer; transition: background .2s, color .2s; }
-    .btn-cancel { border: 1px solid #c8c8c8; background: #fff; color: #555; }
-    .btn-cancel:hover { background: #f5f5f5; color: #333; }
-    .btn-save { border: 1px solid #39765f; background: #39765f; color: #fff; }
-    .btn-save:hover { border-color: #2e624e; background: #2e624e; color: #fff; }
-    @media (max-width: 576px) {
-        .page-heading h2 { font-size: 25px; }
-        .page-heading p { font-size: 12px; }
-        .edit-profil-card { padding: 16px; }
-        .card-heading h3 { font-size: 16px; }
-        .form-group label { font-size: 14px; }
-        .form-group input { min-height: 43px; font-size: 13px; }
-        .form-actions { justify-content: stretch; }
-        .btn-cancel, .btn-save { flex: 1; padding: 10px 12px; font-size: 12px; }
-    }
-</style>
+    <style>
+        /* CSS DESAIN AWAL */
+        .edit-profil-page {
+            width: 100%;
+            padding-bottom: 20px;
+            color: #26332F;
+            font-family: inherit;
+        }
+
+        .page-heading {
+            margin-bottom: 22px;
+        }
+
+        .page-heading h2 {
+            margin: 0 0 5px;
+            color: #111;
+            font-size: 30px;
+            line-height: 1.3;
+            font-weight: 500;
+        }
+
+        .page-heading p {
+            margin: 0;
+            color: #999;
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+        .edit-profil-card {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 24px;
+            background: #fff;
+            border: 1px solid #B9D0C5;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, .08);
+        }
+
+        .card-heading {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #E1ECE6;
+        }
+
+        .heading-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 43px;
+            height: 43px;
+            flex-shrink: 0;
+            border-radius: 10px;
+            background: #E0F0E7;
+            color: #39765f;
+            font-size: 22px;
+        }
+
+        .card-heading h3 {
+            margin: 0 0 5px;
+            color: #244c39;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .card-heading p {
+            margin: 0;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            color: #111;
+            font-size: 15px;
+            font-weight: 650;
+        }
+
+        .form-group label span {
+            color: #ef4444;
+        }
+
+        .form-group input {
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 46px;
+            padding: 11px 13px;
+            border: 1px solid #c8c8c8;
+            border-radius: 8px;
+            background: #fff;
+            color: #333;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+        }
+
+        .form-group input:focus {
+            border-color: #39765f;
+            box-shadow: 0 0 0 3px rgba(57, 118, 95, .12);
+        }
+
+        .form-group small {
+            color: #89938d;
+            font-size: 11px;
+        }
+
+        .form-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid #E1ECE6;
+        }
+
+        .btn-cancel,
+        .btn-save {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            box-sizing: border-box;
+            min-height: 43px;
+            padding: 10px 20px;
+            border-radius: 9px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background .2s, color .2s;
+        }
+
+        .btn-cancel {
+            border: 1px solid #c8c8c8;
+            background: #fff;
+            color: #555;
+        }
+
+        .btn-cancel:hover {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .btn-save {
+            border: 1px solid #39765f;
+            background: #39765f;
+            color: #fff;
+        }
+
+        .btn-save:hover {
+            border-color: #2e624e;
+            background: #2e624e;
+            color: #fff;
+        }
+
+        /* POP-UP PROFIL BERHASIL DIPERBAHARUI */
+        .success-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .success-modal {
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 470px;
+            overflow: hidden;
+            background: #fff;
+            border-radius: 22px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            animation: modalAppear .25s ease;
+        }
+
+        .success-modal-header {
+            width: 100%;
+            height: 30px;
+            background: #39765f;
+        }
+
+        .success-modal-content {
+            padding: 10px 20px 16px;
+        }
+
+        .success-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 10px;
+            color: #39765f;
+            font-size: 75px;
+        }
+
+        .success-icon i {
+            line-height: 1;
+        }
+
+        .success-modal-content h3 {
+            margin: 5px 0 16px;
+            color: #39765f;
+            font-size: 27px;
+            font-weight: 700;
+        }
+
+        .success-modal-button {
+            width: 130px;
+            min-height: 48px;
+            border: none;
+            border-radius: 16px;
+            background: #96E8C5;
+            color: #39765f;
+            font-family: inherit;
+            font-size: 19px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background .2s ease;
+        }
+
+        .success-modal-button:hover {
+            background: #7DDDB5;
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(.92);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .page-heading h2 {
+                font-size: 25px;
+            }
+
+            .page-heading p {
+                font-size: 12px;
+            }
+
+            .edit-profil-card {
+                padding: 16px;
+            }
+
+            .card-heading h3 {
+                font-size: 16px;
+            }
+
+            .form-group label {
+                font-size: 14px;
+            }
+
+            .form-group input {
+                min-height: 43px;
+                font-size: 13px;
+            }
+
+            .form-actions {
+                justify-content: stretch;
+            }
+
+            .btn-cancel,
+            .btn-save {
+                flex: 1;
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+
+            .success-modal {
+                max-width: 360px;
+            }
+
+            .success-modal-content h3 {
+                font-size: 21px;
+            }
+        }
+    </style>
+
+    <script>
+        function closeSuccessModal() {
+            window.location.href = "{{ route('guru.profil-saya') }}";
+        }
+    </script>
 @endsection

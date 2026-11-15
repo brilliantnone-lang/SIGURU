@@ -8,10 +8,14 @@
             <h1 style="margin:0 0 5px; font-size:26px; font-weight:650; color:#111;">Detail Jurnal Mengajar</h1>
             <p style="margin:0; font-size:12px; color:#555;">Informasi lengkap jurnal yang diisi oleh guru.</p>
         </div>
-        <a href="{{ url()->previous() }}" style="color:#40574F; text-decoration:none; font-size:13px;"><i class="bi bi-arrow-left"></i> Kembali</a>
+        <a href="{{ url()->previous() }}" class="back-button">
+            <i class="bi bi-arrow-left"></i>
+            <span>Kembali</span>
+        </a>
     </div>
 
-    <div style="background:#fff; padding:24px; border-radius:12px; border:1px solid #E1ECE6; box-shadow:0 2px 4px rgba(0,0,0,0.02);">
+    <div
+        style="background:#fff; padding:24px; border-radius:12px; border:1px solid #E1ECE6; box-shadow:0 2px 4px rgba(0,0,0,0.02);">
         <table style="width:100%; font-size:14px;">
             <tr>
                 <td style="width:150px; padding:8px 0; color:#555;">Tanggal</td>
@@ -22,10 +26,10 @@
                 <td style="padding:8px 0;">: {{ $jurnal->guru->user->name ?? '-' }}</td>
             </tr>
             @if($jurnal->guruPendamping)
-            <tr>
-                <td style="padding:8px 0; color:#555;">Guru Pendamping</td>
-                <td style="padding:8px 0;">: {{ $jurnal->guruPendamping->user->name ?? '-' }}</td>
-            </tr>
+                <tr>
+                    <td style="padding:8px 0; color:#555;">Guru Pendamping</td>
+                    <td style="padding:8px 0;">: {{ $jurnal->guruPendamping->user->name ?? '-' }}</td>
+                </tr>
             @endif
             <tr>
                 <td style="padding:8px 0; color:#555;">Mata Pelajaran</td>
@@ -53,7 +57,7 @@
             </tr>
             <tr>
                 <td style="padding:8px 0; color:#555;">Status Validasi</td>
-                <td style="padding:8px 0;">: 
+                <td style="padding:8px 0;">:
                     @if($jurnal->status_validasi === 'valid')
                         <span style="color:#166534; font-weight:600;">Tervalidasi</span>
                     @elseif($jurnal->status_validasi === 'menunggu_revisi')
@@ -66,10 +70,10 @@
                 </td>
             </tr>
             @if($jurnal->catatan_validasi)
-            <tr>
-                <td style="padding:8px 0; color:#555;">Catatan Validasi</td>
-                <td style="padding:8px 0;">: <em>{{ $jurnal->catatan_validasi }}</em></td>
-            </tr>
+                <tr>
+                    <td style="padding:8px 0; color:#555;">Catatan Validasi</td>
+                    <td style="padding:8px 0;">: <em>{{ $jurnal->catatan_validasi }}</em></td>
+                </tr>
             @endif
         </table>
 
@@ -77,7 +81,8 @@
         @if($jurnal->foto_kegiatan)
             <div style="margin-top:20px;">
                 <p style="margin:0 0 5px; font-size:13px; color:#555;">Foto Kegiatan:</p>
-                <img src="{{ asset('storage/' . $jurnal->foto_kegiatan) }}" alt="Foto Kegiatan" style="max-height:200px; border-radius:8px; border:1px solid #ddd;">
+                <img src="{{ asset('storage/' . $jurnal->foto_kegiatan) }}" alt="Foto Kegiatan"
+                    style="max-height:200px; border-radius:8px; border:1px solid #ddd;">
             </div>
         @endif
 
@@ -95,4 +100,30 @@
             @endif
         @endif
     </div>
+    <style>
+        .back-button {
+            display: inline-flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 38px;
+            padding: 8px 15px;
+            color: #fff;
+            background: #39765f;
+            border: 1px solid #39765f;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background .2s ease, transform .2s ease;
+        }
+
+        .back-button:hover {
+            color: #fff;
+            background: #285b46;
+            border-color: #285b46;
+            transform: translateY(-1px);
+        }
+    </style>
 @endsection

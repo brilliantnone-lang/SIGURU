@@ -96,6 +96,7 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     Route::put('/jurnal-harian/{id}', [JurnalController::class, 'update'])->name('jurnal.update');
     Route::get('/jurnal-harian/{id}/revisi', [JurnalController::class, 'catatanRevisi'])->name('catatan-revisi');
     Route::post('/jurnal-harian/{id}/ajukan-ulang', [JurnalController::class, 'ajukanUlang'])->name('ajukan-ulang');
+    Route::delete('/jurnal-harian/{id}', [JurnalController::class, 'destroy'])->name('jurnal.destroy');
 
     // AJAX get murid
     Route::get('/get-murid/{jadwal_id}', [JurnalController::class, 'getMurid'])->name('get-murid');

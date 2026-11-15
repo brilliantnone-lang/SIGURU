@@ -156,7 +156,8 @@ class JurnalController extends Controller
             }
         }
 
-        return redirect()->route('guru.jurnal-harian')->with('success', 'Jurnal berhasil disimpan!');
+        return redirect()->route('guru.tambah-jurnal')
+            ->with('jurnal_created', true);
     }
 
     public function show($id)
@@ -255,7 +256,9 @@ class JurnalController extends Controller
             }
         }
 
-        return redirect()->route('guru.jurnal-harian')->with('success', 'Jurnal berhasil diperbarui!');
+        return redirect()
+            ->route('guru.edit-jurnal', $jurnal->id)
+            ->with('jurnal_updated', true);
     }
 
     public function getMurid($jadwal_id)
@@ -342,8 +345,9 @@ class JurnalController extends Controller
             ->where('status_validasi', 'menunggu_revisi')
             ->update(['status_validasi' => 'sudah_revisi']);
 
-        return redirect()->route('guru.jurnal-harian')
-            ->with('success', "{$jumlah} jurnal berhasil diajukan ulang. Menunggu validasi Kepala Sekolah.");
+        return redirect()
+            ->back()
+            ->with('jurnal_diajukan_ulang', true);
     }
 
     public function exportPdf($cover_id)
@@ -405,5 +409,34 @@ class JurnalController extends Controller
         $namaFile = 'Jurnal-' . $namaGuru . '-' . $cover->semester . '-' . str_replace('/', '-', $cover->tahun_ajaran) . '.pdf';
 
         return $pdf->download($namaFile);
+    }
+
+    public function destroy($id)
+    {
+        $guru = auth()->user()->guru;
+
+        // Cari jurnal milik guru yang sedang login
+        $jurnal = Journal::where('id', $id)
+            ->where('guru_id', $guru->id)
+            ->firstOrFail();
+
+        // Jurnal yang sudah divalidasi tidak boleh dihapus
+        if ($jurnal->status_validasi === 'valid') {
+            return redirect()
+                ->route('guru.jurnal-harian')
+                ->with('error', 'Jurnal yang sudah divalidasi tidak dapat dihapus.');
+        }
+
+        // Hapus foto kegiatan dari penyimpanan
+        if ($jurnal->foto_kegiatan) {
+            Storage::disk('public')->delete($jurnal->foto_kegiatan);
+        }
+
+        // Hapus jurnal
+        $jurnal->delete();
+
+        return redirect()
+            ->route('guru.jurnal-harian')
+            ->with('success', 'Jurnal berhasil dihapus.');
     }
 }

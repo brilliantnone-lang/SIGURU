@@ -7,11 +7,15 @@
         <div>
             <h1 style="margin:0 0 5px; font-size:26px; font-weight:650; color:#111;">Detail Absensi Kelas</h1>
             <p style="margin:0; font-size:12px; color:#555;">
-                Kelas: <strong>{{ $kelas->nama_kelas }}</strong> | 
+                Kelas: <strong>{{ $kelas->nama_kelas }}</strong> |
                 Tanggal: <strong>{{ \Carbon\Carbon::parse($tanggal)->translatedFormat('d F Y') }}</strong>
             </p>
         </div>
-        <a href="{{ url()->previous() }}" style="color:#40574F; text-decoration:none; font-size:13px;"><i class="bi bi-arrow-left"></i> Kembali</a>
+        <a href="{{ route('admin.kelas.index') }}"
+            style="display:inline-flex; align-items:center; gap:7px; padding:9px 14px; background:#0A4C2E; color:#fff; border-radius:6px; text-decoration:none; font-size:12px; font-weight:600; white-space:nowrap;">
+            <i class="bi bi-arrow-left"></i>
+            Kembali ke Kelas
+        </a>
     </div>
 
     <div style="background:#fff; padding:20px; border-radius:10px; border:1px solid #E1ECE6;">
@@ -35,13 +39,17 @@
                                 $status = $statusMap[$m->id] ?? '-';
                             @endphp
                             @if($status === 'hadir')
-                                <span style="background:#d8f2e2; color:#247448; padding:3px 8px; border-radius:4px; font-weight:600; font-size:11px;">Hadir</span>
+                                <span
+                                    style="background:#d8f2e2; color:#247448; padding:3px 8px; border-radius:4px; font-weight:600; font-size:11px;">Hadir</span>
                             @elseif($status === 'izin')
-                                <span style="background:#fff0c9; color:#946800; padding:3px 8px; border-radius:4px; font-weight:600; font-size:11px;">Izin</span>
+                                <span
+                                    style="background:#fff0c9; color:#946800; padding:3px 8px; border-radius:4px; font-weight:600; font-size:11px;">Izin</span>
                             @elseif($status === 'sakit')
-                                <span style="background:#ffe0e1; color:#b83e48; padding:3px 8px; border-radius:4px; font-weight:600; font-size:11px;">Sakit</span>
+                                <span
+                                    style="background:#ffe0e1; color:#b83e48; padding:3px 8px; border-radius:4px; font-weight:600; font-size:11px;">Sakit</span>
                             @elseif($status === 'alpa')
-                                <span style="background:#edf1ef; color:#475b52; padding:3px 8px; border-radius:4px; font-weight:600; font-size:11px;">Alpa</span>
+                                <span
+                                    style="background:#edf1ef; color:#475b52; padding:3px 8px; border-radius:4px; font-weight:600; font-size:11px;">Alpa</span>
                             @else
                                 <span style="color:#888;">-</span>
                             @endif

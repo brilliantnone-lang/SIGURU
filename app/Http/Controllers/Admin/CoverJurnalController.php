@@ -46,7 +46,9 @@ class CoverJurnalController extends Controller
 
         CoverJurnal::create($data);
 
-        return redirect()->route('admin.data-cover.index')->with('success', 'Cover Jurnal berhasil ditambahkan!');
+        return redirect()
+            ->route('admin.data-cover.create')
+            ->with('success', 'Cover jurnal berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -81,8 +83,9 @@ class CoverJurnalController extends Controller
 
         $cover->update($data);
 
-        return redirect()->route('admin.data-cover.index')
-            ->with('success', 'Cover Jurnal berhasil diperbarui!');
+        return redirect()
+            ->route('admin.data-cover.edit', ['data_cover' => $cover->id])
+            ->with('success', 'Cover jurnal berhasil diperbarui.');
     }
 
     public function destroy($id)

@@ -28,8 +28,9 @@ class KelasController extends Controller
 
         Kelas::create($request->all());
 
-        return redirect()->route('admin.kelas.index')
-                         ->with('success', 'Data Kelas berhasil ditambahkan!');
+        return redirect()
+            ->route('admin.kelas.create')
+            ->with('success', 'Data kelas berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -49,23 +50,24 @@ class KelasController extends Controller
 
         $kelas->update($request->all());
 
-        return redirect()->route('admin.kelas.index')
-                         ->with('success', 'Data Kelas berhasil diperbarui!');
+        return redirect()
+            ->route('admin.kelas.edit', $kelas->id)
+            ->with('success', 'Data kelas berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         $kelas = Kelas::findOrFail($id);
-        
+
         // Opsional: Cek apakah ada murid di kelas ini sebelum dihapus
         if ($kelas->murid()->count() > 0) {
             return redirect()->route('admin.kelas.index')
-                             ->with('error', 'Gagal menghapus! Kelas ini masih memiliki siswa.');
+                ->with('error', 'Gagal menghapus! Kelas ini masih memiliki siswa.');
         }
 
         $kelas->delete();
 
         return redirect()->route('admin.kelas.index')
-                         ->with('success', 'Data Kelas berhasil dihapus!');
+            ->with('success', 'Data Kelas berhasil dihapus!');
     }
 }

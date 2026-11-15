@@ -15,12 +15,14 @@
     </div>
 
     @if(session('success'))
-        <div style="background:#dcfce7;color:#166534;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #bbf7d0;">
+        <div
+            style="background:#dcfce7;color:#166534;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #bbf7d0;">
             {{ session('success') }}
         </div>
     @endif
     @if(session('error'))
-        <div style="background:#fee2e2;color:#991b1b;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #fecaca;">
+        <div
+            style="background:#fee2e2;color:#991b1b;padding:12px 16px;border-radius:8px;margin-bottom:20px;border:1px solid #fecaca;">
             {{ session('error') }}
         </div>
     @endif
@@ -51,14 +53,19 @@
                             </td>
                             <td>
                                 <div class="pengajaran-actions">
-                                    <a href="{{ route('admin.pengajaran.edit', $j->id) }}" class="table-action edit" title="Edit data">
+                                    <a href="{{ route('admin.pengajaran.edit', $j->id) }}" class="table-action edit"
+                                        title="Edit data">
                                         <i class="bi bi-pencil-fill"></i>
                                     </a>
 
-                                    <form action="{{ route('admin.pengajaran.destroy', $j->id) }}" method="POST" onsubmit="return confirm('Hapus jadwal ini?');" style="display:inline; margin:0; padding:0;">
+                                    {{-- Hapus Jadwal Pengajaran --}}
+                                    <form action="{{ route('admin.pengajaran.destroy', $j->id) }}" method="POST"
+                                        class="delete-form" style="display:inline; margin:0; padding:0;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="table-action delete" title="Hapus data">
+
+                                        <button type="button" class="table-action delete" title="Hapus data"
+                                            onclick="showDeleteModal(this)">
                                             <i class="bi bi-trash3"></i>
                                         </button>
                                     </form>
@@ -67,7 +74,8 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" style="text-align:center; padding:40px; color:#888;">Belum ada data pengajaran. Silakan tambah baru.</td>
+                            <td colspan="6" style="text-align:center; padding:40px; color:#888;">Belum ada data pengajaran.
+                                Silakan tambah baru.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -79,46 +87,83 @@
         </div>
     </div>
 
+    {{-- POPUP KONFIRMASI HAPUS PENGAJARAN --}}
+    <div class="delete-modal-overlay" id="deleteModal" style="display: none;">
+        <div class="delete-modal">
+            <div class="delete-modal-header"></div>
+
+            <div class="delete-modal-content">
+                <div class="delete-icon">
+                    <i class="bi bi-trash"></i>
+                </div>
+
+                <h3>Hapus Jadwal?</h3>
+                <p>Apakah kamu yakin ingin menghapus jadwal pengajaran ini?</p>
+
+                <div class="delete-modal-actions">
+                    <button type="button" class="delete-cancel-button" onclick="closeDeleteModal()">
+                        Batal
+                    </button>
+
+                    <button type="button" class="delete-confirm-button" onclick="confirmDelete()">
+                        Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('styles')
     <style>
         /* ====== CSS khusus halaman Data Pengajaran ====== */
+
+        /* HEADER - MENGIKUTI STANDAR DATA COVER */
         .pengajaran-heading-row {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 16px;
+            gap: 15px;
+            margin-bottom: 18px;
         }
 
         .pengajaran-heading-row h1 {
-            margin: 0 0 4px;
+            margin: 0 0 5px;
             font-size: 26px;
+            font-weight: 650;
+            color: #111111;
         }
 
         .pengajaran-heading-row .subtitle {
             margin: 0;
-            font-size: 14px;
+            font-size: 12px;
+            color: #555555;
         }
 
         .add-pengajaran-button {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
             gap: 7px;
-            min-height: 34px;
-            padding: 0 13px;
+            padding: 8px 12px;
             border: 0;
-            border-radius: 6px;
-            background: #0A4C2E;
+            border-radius: 5px;
+            background: #39765f;
             color: #FFFFFF;
-            font: inherit;
-            font-size: 11px;
-            font-weight: 600;
+            text-decoration: none;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 500;
             white-space: nowrap;
             cursor: pointer;
+            transition: background .15s ease;
         }
+
+        .add-pengajaran-button:hover {
+            background: #285b46;
+            color: #FFFFFF;
+        }
+
 
         .pengajaran-table-card {
             width: 100%;
@@ -248,10 +293,122 @@
             font-size: 10px;
         }
 
+        /* POPUP KONFIRMASI HAPUS */
+        .delete-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .delete-modal {
+            width: 90%;
+            max-width: 470px;
+            background: #fff;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            animation: modalAppear 0.25s ease;
+        }
+
+        .delete-modal-header {
+            height: 30px;
+            background: #FF0000;
+        }
+
+        .delete-modal-content {
+            padding: 10px 20px 20px;
+            text-align: center;
+        }
+
+        .delete-icon {
+            font-size: 65px;
+            color: #FF0000;
+            margin-bottom: 8px;
+        }
+
+        .delete-modal-content h3 {
+            color: #FF0000;
+            font-size: 27px;
+            font-weight: bold;
+            margin: 0 0 10px;
+        }
+
+        .delete-modal-content p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .delete-modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .delete-cancel-button,
+        .delete-confirm-button {
+            width: 120px;
+            height: 48px;
+            border: none;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .delete-cancel-button {
+            background: #eee;
+            color: #555;
+        }
+
+        .delete-cancel-button:hover {
+            background: #ddd;
+        }
+
+        .delete-confirm-button {
+            background: #FF0000;
+            color: #fff;
+        }
+
+        .delete-confirm-button:hover {
+            background: #cc0000;
+        }
+
+        @keyframes modalAppear {
+            from {
+                transform: scale(0.92);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+
         @media (max-width: 700px) {
             .pengajaran-heading-row {
                 align-items: flex-start;
-                flex-direction: column;
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 10px;
+            }
+
+            .pengajaran-heading-row>div {
+                min-width: 0;
+            }
+
+            .pengajaran-heading-row h1 {
+                font-size: 22px;
+            }
+
+            .add-pengajaran-button {
+                flex-shrink: 0;
             }
 
             .pengajaran-table-card {
@@ -268,4 +425,32 @@
             }
         }
     </style>
+@endpush
+
+@push('scripts')
+    <script>
+        let selectedDeleteForm = null;
+
+        function showDeleteModal(button) {
+            selectedDeleteForm = button.closest('form');
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+            selectedDeleteForm = null;
+        }
+
+        function confirmDelete() {
+            if (selectedDeleteForm) {
+                selectedDeleteForm.submit();
+            }
+        }
+
+        document.getElementById('deleteModal').addEventListener('click', function (event) {
+            if (event.target === this) {
+                closeDeleteModal();
+            }
+        });
+    </script>
 @endpush

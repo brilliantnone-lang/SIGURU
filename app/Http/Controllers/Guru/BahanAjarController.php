@@ -15,7 +15,8 @@ class BahanAjarController extends Controller
     public function index()
     {
         $guru = Guru::where('user_id', Auth::id())->first();
-        if (!$guru) return redirect()->route('guru.dashboard')->with('error', 'Data guru tidak ditemukan.');
+        if (!$guru)
+            return redirect()->route('guru.dashboard')->with('error', 'Data guru tidak ditemukan.');
 
         $bahanAjar = ModulAjar::with('kelas')
             ->where('guru_id', $guru->id)
@@ -40,7 +41,8 @@ class BahanAjarController extends Controller
         ]);
 
         $guru = Guru::where('user_id', Auth::id())->first();
-        if (!$guru) return redirect()->back()->with('error', 'Data guru tidak ditemukan.');
+        if (!$guru)
+            return redirect()->back()->with('error', 'Data guru tidak ditemukan.');
 
         if ($request->hasFile('file_bahan_ajar')) {
             $file = $request->file('file_bahan_ajar');
@@ -56,15 +58,17 @@ class BahanAjarController extends Controller
             ]);
         }
 
-        return redirect()->route('guru.bahan-ajar')
-            ->with('success', 'Bahan ajar berhasil diunggah!');
+        return redirect()
+            ->route('guru.bahan-ajar')
+            ->with('bahan_ajar_uploaded', true);
     }
 
     public function edit($id)
     {
         $bahanAjar = ModulAjar::findOrFail($id);
         $guru = Guru::where('user_id', Auth::id())->first();
-        if ($bahanAjar->guru_id !== $guru->id) abort(403, 'Anda tidak berhak mengedit bahan ajar ini.');
+        if ($bahanAjar->guru_id !== $guru->id)
+            abort(403, 'Anda tidak berhak mengedit bahan ajar ini.');
 
         $kelas = Kelas::orderBy('nama_kelas', 'asc')->get();
         return view('guru.edit-bahan-ajar', compact('bahanAjar', 'kelas'));
@@ -74,7 +78,8 @@ class BahanAjarController extends Controller
     {
         $bahanAjar = ModulAjar::findOrFail($id);
         $guru = Guru::where('user_id', Auth::id())->first();
-        if ($bahanAjar->guru_id !== $guru->id) abort(403);
+        if ($bahanAjar->guru_id !== $guru->id)
+            abort(403);
 
         $request->validate([
             'judul_materi' => 'required|string|max:255',
@@ -109,15 +114,17 @@ class BahanAjarController extends Controller
             'catatan' => $request->catatan,
         ]);
 
-        return redirect()->route('guru.bahan-ajar')
-            ->with('success', 'Bahan ajar berhasil diperbarui!');
+        return redirect()
+            ->route('guru.edit-bahan-ajar', $bahanAjar->id)
+            ->with('bahan_ajar_updated', true);
     }
 
     public function destroy($id)
     {
         $bahanAjar = ModulAjar::findOrFail($id);
         $guru = Guru::where('user_id', Auth::id())->first();
-        if ($bahanAjar->guru_id !== $guru->id) abort(403);
+        if ($bahanAjar->guru_id !== $guru->id)
+            abort(403);
 
         if ($bahanAjar->path_file && Storage::disk('public')->exists($bahanAjar->path_file)) {
             Storage::disk('public')->delete($bahanAjar->path_file);

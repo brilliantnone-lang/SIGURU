@@ -44,8 +44,8 @@ class JadwalController extends Controller
 
         Jadwal::create($request->all());
 
-        return redirect()->route('admin.pengajaran.index')
-            ->with('success', 'Data Pengajaran berhasil ditambahkan!');
+        return redirect()->route('admin.pengajaran.create')
+            ->with('success', 'Jadwal pengajaran berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -73,8 +73,8 @@ class JadwalController extends Controller
 
         $jadwal->update($request->all());
 
-        return redirect()->route('admin.pengajaran.index')
-            ->with('success', 'Data Pengajaran berhasil diperbarui!');
+        return redirect()->route('admin.pengajaran.edit', $jadwal->id)
+            ->with('success', 'Jadwal pengajaran berhasil diperbarui.');
     }
 
     public function destroy($id)

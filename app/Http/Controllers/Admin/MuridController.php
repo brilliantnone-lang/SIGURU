@@ -19,7 +19,7 @@ class MuridController extends Controller
 
         $murid = $query->orderBy('nama_siswa', 'asc')->get();
         $kelas = Kelas::orderBy('nama_kelas', 'asc')->get();
-        
+
         $kelasAktif = null;
         if ($request->has('kelas_id')) {
             $kelasAktif = Kelas::find($request->kelas_id);
@@ -32,7 +32,7 @@ class MuridController extends Controller
     {
         $kelas = Kelas::orderBy('nama_kelas', 'asc')->get();
         $selectedKelas = $request->query('kelas_id');
-        
+
         return view('admin.tambah-murid', compact('kelas', 'selectedKelas'));
     }
 
@@ -52,11 +52,11 @@ class MuridController extends Controller
         // Jika sebelumnya dari halaman kelas, kembalikan ke daftar kelas tersebut
         if ($request->filled('kelas_id')) {
             return redirect()->route('admin.murid.index', ['kelas_id' => $request->kelas_id])
-                             ->with('success', 'Data Siswa berhasil ditambahkan!');
+                ->with('success', 'Data Siswa berhasil ditambahkan!');
         }
 
-        return redirect()->route('admin.murid.index')
-                         ->with('success', 'Data Siswa berhasil ditambahkan!');
+        return redirect()->route('admin.murid.create')
+            ->with('success', 'Data siswa berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -81,8 +81,8 @@ class MuridController extends Controller
 
         $murid->update($request->all());
 
-        return redirect()->route('admin.murid.index', ['kelas_id' => $murid->kelas_id])
-                         ->with('success', 'Data Siswa berhasil diperbarui!');
+        return redirect()->route('admin.murid.edit', $murid->id)
+            ->with('success', 'Data siswa berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -92,6 +92,6 @@ class MuridController extends Controller
         $murid->delete();
 
         return redirect()->route('admin.murid.index', ['kelas_id' => $kelas_id])
-                         ->with('success', 'Data Siswa berhasil dihapus!');
+            ->with('success', 'Data Siswa berhasil dihapus!');
     }
 }

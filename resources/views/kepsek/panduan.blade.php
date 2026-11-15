@@ -24,7 +24,7 @@
 
     .panduan-heading h3 {
         margin: 0;
-        color: #204b36;
+        color: #000;
         font-size: 25px;
         font-weight: 700;
     }

@@ -50,8 +50,9 @@ class KalenderAkademikController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.kalender.index')
-                         ->with('success', 'Kalender Akademik berhasil diunggah!');
+        return redirect()
+            ->route('admin.kalender.create')
+            ->with('success', 'Kalender akademik berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -83,7 +84,7 @@ class KalenderAkademikController extends Controller
             if ($kalender->path_file && Storage::disk('public')->exists($kalender->path_file)) {
                 Storage::disk('public')->delete($kalender->path_file);
             }
-            
+
             $file = $request->file('file_kalender');
             $data['nama_file'] = $file->getClientOriginalName();
             $data['path_file'] = $file->store('kalender', 'public');
@@ -91,14 +92,15 @@ class KalenderAkademikController extends Controller
 
         $kalender->update($data);
 
-        return redirect()->route('admin.kalender.index')
-                         ->with('success', 'Kalender Akademik berhasil diperbarui!');
+        return redirect()
+            ->route('admin.kalender.edit', $kalender->id)
+            ->with('success', 'Kalender akademik berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         $kalender = KalenderAkademik::findOrFail($id);
-        
+
         if ($kalender->path_file && Storage::disk('public')->exists($kalender->path_file)) {
             Storage::disk('public')->delete($kalender->path_file);
         }
@@ -106,6 +108,6 @@ class KalenderAkademikController extends Controller
         $kalender->delete();
 
         return redirect()->route('admin.kalender.index')
-                         ->with('success', 'Kalender Akademik berhasil dihapus!');
+            ->with('success', 'Kalender Akademik berhasil dihapus!');
     }
 }

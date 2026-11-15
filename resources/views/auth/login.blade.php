@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
     <style>
         :root {
@@ -24,10 +26,15 @@
             --white: #FFFFFF;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         /* Lock layar agar tidak ada scroll di desktop */
-        html, body {
+        html,
+        body {
             height: 100vh;
             width: 100vw;
             overflow: hidden;
@@ -47,12 +54,13 @@
             flex: 1.85;
             min-width: 0;
             position: relative;
-            background-image: url('/images/sekolah.jpg');
+            background-image: url('{{ asset('images/sekolah.jpg') }}');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             display: flex;
-            align-items: flex-end; /* Galeri menempel ke bawah */
+            align-items: flex-end;
+            /* Galeri menempel ke bawah */
             padding: 30px;
         }
 
@@ -81,7 +89,7 @@
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 5px 18px rgba(12, 28, 22, 0.28);
-            border: 2px solid rgba(255,255,255,0.68);
+            border: 2px solid rgba(255, 255, 255, 0.68);
         }
 
         .gallery-item img {
@@ -226,7 +234,9 @@
             cursor: pointer;
         }
 
-        .btn-submit:hover { background-color: var(--green-dark); }
+        .btn-submit:hover {
+            background-color: var(--green-dark);
+        }
 
         /* Info Box */
         .info-box {
@@ -240,17 +250,38 @@
             border: 1px solid var(--border);
         }
 
-        .info-box i { font-size: 18px; color: var(--green-sidebar); margin-top: 2px; }
-        .info-box p { font-size: 11px; color: var(--text-muted); line-height: 1.5; margin: 0; }
+        .info-box i {
+            font-size: 18px;
+            color: var(--green-sidebar);
+            margin-top: 2px;
+        }
+
+        .info-box p {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin: 0;
+        }
 
         /* --- RESPONSIVE MOBILE --- */
         @media (max-width: 992px) {
-            html, body { overflow-y: auto; height: auto; }
-            .split-layout { flex-direction: column; height: auto; min-height: 100vh; }
+
+            html,
+            body {
+                overflow-y: auto;
+                height: auto;
+            }
+
+            .split-layout {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+            }
 
             .left-panel {
                 min-height: 300px;
-                align-items: center; /* Galeri ke tengah di HP */
+                align-items: center;
+                /* Galeri ke tengah di HP */
                 padding: 20px;
             }
 
@@ -266,8 +297,135 @@
                 padding: 40px 20px;
             }
         }
+
+        /* =========================================
+   SIGURU - RESPONSIVE LOGIN
+   Khusus tablet dan mobile
+========================================= */
+
+        @media (max-width: 992px) {
+
+            html,
+            body {
+                width: 100%;
+                height: auto;
+                min-height: 100%;
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+
+            .split-layout {
+                width: 100%;
+                min-height: 100vh;
+                height: auto;
+                flex-direction: column;
+            }
+
+            /* Foto sekolah dibuat lebih pendek */
+            .left-panel {
+                width: 100%;
+                height: 220px;
+                min-height: 220px;
+                flex: none;
+                padding: 12px;
+                align-items: flex-end;
+                background-position: center;
+            }
+
+            /* Galeri tetap terlihat di bagian bawah */
+            .gallery-overlay {
+                width: 100%;
+                max-width: 460px;
+                gap: 8px;
+            }
+
+            .gallery-item {
+                border-radius: 9px;
+            }
+
+            .gallery-item img {
+                height: 65px;
+            }
+
+            /* Area form login */
+            .right-panel {
+                width: 100%;
+                min-height: auto;
+                flex: none;
+                padding: 28px 22px 35px;
+                overflow: visible;
+            }
+
+            .login-container {
+                width: 100%;
+                max-width: 430px;
+                margin: 0 auto;
+            }
+
+            .login-header {
+                margin-bottom: 12px;
+            }
+
+            .login-header img {
+                width: 58px;
+                height: 58px;
+                margin-bottom: 5px;
+            }
+
+            .login-header h2 {
+                font-size: 22px;
+            }
+
+            .divider {
+                margin: 15px 0;
+            }
+
+            .welcome-title {
+                font-size: 19px;
+            }
+
+            .welcome-subtitle {
+                margin-bottom: 15px;
+            }
+        }
+
+        /* Penyesuaian khusus HP kecil */
+        @media (max-width: 480px) {
+
+            .left-panel {
+                height: 185px;
+                min-height: 185px;
+                padding: 10px;
+            }
+
+            .gallery-overlay {
+                gap: 6px;
+            }
+
+            .gallery-item img {
+                height: 55px;
+            }
+
+            .right-panel {
+                padding: 24px 18px 30px;
+            }
+
+            .login-header img {
+                width: 54px;
+                height: 54px;
+            }
+
+            .input-group-custom {
+                height: 46px;
+            }
+
+            .btn-submit {
+                height: 46px;
+            }
+        }
     </style>
 </head>
+
 <body>
 
     <div class="split-layout">
@@ -302,7 +460,8 @@
                 <p class="welcome-subtitle">Silakan masuk menggunakan akun yang telah terdaftar.</p>
 
                 @if ($errors->any())
-                    <div class="alert alert-danger py-2 px-3 mb-3" role="alert" style="font-size: 12px; border-radius: 8px;">
+                    <div class="alert alert-danger py-2 px-3 mb-3" role="alert"
+                        style="font-size: 12px; border-radius: 8px;">
                         {{ $errors->first() }}
                     </div>
                 @endif
@@ -313,17 +472,17 @@
                     <label class="form-label">Username</label>
                     <div class="input-group-custom">
                         <i class="bi bi-person" aria-hidden="true"></i>
-                        <input type="text" name="username" placeholder="Masukkan username"
-                               value="{{ old('username') }}" autocomplete="username" required autofocus>
+                        <input type="text" name="username" placeholder="Masukkan username" value="{{ old('username') }}"
+                            autocomplete="username" required autofocus>
                     </div>
 
                     <label class="form-label">Password</label>
                     <div class="input-group-custom">
                         <i class="bi bi-lock" aria-hidden="true"></i>
                         <input id="login-password" type="password" name="password" placeholder="Masukkan password"
-                               autocomplete="current-password" required>
+                            autocomplete="current-password" required>
                         <button class="password-toggle" type="button" id="toggle-password"
-                                aria-label="Tampilkan password" title="Tampilkan/sembunyikan password">
+                            aria-label="Tampilkan password" title="Tampilkan/sembunyikan password">
                             <i class="bi bi-eye-slash" aria-hidden="true"></i>
                         </button>
                     </div>
@@ -335,7 +494,8 @@
 
                 <div class="info-box">
                     <i class="bi bi-shield-check"></i>
-                    <p>Gunakan akun yang diberikan oleh administrator.<br>Jaga kerahasiaan username dan password Anda.</p>
+                    <p>Gunakan akun yang diberikan oleh administrator.<br>Jaga kerahasiaan username dan password Anda.
+                    </p>
                 </div>
             </div>
         </div>
@@ -356,4 +516,5 @@
         });
     </script>
 </body>
+
 </html>

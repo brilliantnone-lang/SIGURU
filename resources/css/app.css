@@ -9,3 +9,201 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* =========================================
+   SIGURU - RESPONSIVE GLOBAL
+   Tahap 1: Layout dasar
+========================================= */
+
+/* Mencegah elemen melebar keluar layar */
+html,
+body {
+    max-width: 100%;
+}
+
+/* Memastikan konten dapat mengecil */
+.app,
+.app-body,
+.content {
+    min-width: 0;
+}
+
+/* Gambar tidak melebihi area konten */
+.content img {
+    max-width: 100%;
+    height: auto;
+}
+
+
+/* =========================================
+   SIGURU - MOBILE HAMBURGER MENU
+========================================= */
+
+/* Default: hamburger tidak tampil di desktop */
+.mobile-menu-toggle {
+    display: none;
+}
+
+/* Mobile dan tablet */
+@media (max-width: 992px) {
+
+    .mobile-menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        flex-shrink: 0;
+        padding: 0;
+        border: none;
+        border-radius: 8px;
+        background: transparent;
+        color: #FFFFFF;
+        font-size: 30px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .mobile-menu-toggle:hover,
+    .mobile-menu-toggle:focus {
+        background: rgba(255, 255, 255, 0.15);
+        color: #FFFFFF;
+        outline: none;
+    }
+
+    /* Sidebar menjadi drawer */
+    .sidebar {
+        position: fixed;
+        top: 68px;
+        bottom: 44px;
+        left: 0;
+        width: 260px !important;
+        flex: 0 0 260px !important;
+        height: auto;
+        z-index: 1001;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Sidebar ketika dibuka */
+    body.mobile-menu-open .sidebar {
+        transform: translateX(0);
+    }
+
+    /* Overlay belakang sidebar */
+    .app-body::before {
+        content: "";
+        display: none;
+        position: fixed;
+        inset: 68px 0 44px;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+    }
+
+    body.mobile-menu-open .app-body::before {
+        display: block;
+    }
+
+    /* Konten menggunakan seluruh lebar layar */
+    .content {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+
+/* =========================================
+   SIGURU - RAPAPIKAN HEADER MOBILE
+========================================= */
+
+@media (max-width: 992px) {
+
+    /* Susun header dari kiri ke kanan */
+    .topbar {
+        justify-content: flex-start;
+        gap: 0;
+    }
+
+    /* Dekatkan hamburger dengan judul */
+    .mobile-menu-toggle {
+        margin-right: 10px;
+        flex-shrink: 0;
+    }
+
+    /* Atur posisi logo dan tulisan */
+    .topbar-brand {
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    /* Profil dan tombol keluar tetap di kanan */
+    .topbar-right {
+        margin-left: auto;
+        flex-shrink: 0;
+        gap: 8px;
+    }
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+    .content {
+        padding: 24px 18px;
+    }
+
+    .card-custom {
+        max-width: 100%;
+    }
+}
+
+/* HP */
+@media (max-width: 600px) {
+    .content {
+        padding: 16px 12px;
+    }
+
+    .card-custom {
+        padding: 14px;
+    }
+
+    .main-footer {
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 10px 12px;
+    }
+}
+
+@media (max-width: 992px) {
+
+    .profile {
+        width: auto;
+        min-width: 150px;
+        max-width: 190px;
+        height: 44px;
+        padding: 4px 9px;
+        gap: 8px;
+        flex-shrink: 1;
+    }
+
+    .avatar {
+        width: 34px;
+        height: 34px;
+        flex-shrink: 0;
+    }
+
+    .profile-name {
+        min-width: 0;
+        font-size: 11px;
+        line-height: 1.25;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+
+    .topbar-right {
+        min-width: 0;
+    }
+
+    .logout {
+        flex-shrink: 0;
+    }
+}

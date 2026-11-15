@@ -67,7 +67,8 @@ class ProfilController extends Controller
             'mata_pelajaran_id' => $request->mata_pelajaran_id,
         ]);
 
-        return redirect()->route('guru.profil-saya')
-                         ->with('success', 'Profil berhasil diperbarui!');
+        return redirect()
+            ->route('guru.edit-profil')
+            ->with('profil_updated', true);
     }
 }

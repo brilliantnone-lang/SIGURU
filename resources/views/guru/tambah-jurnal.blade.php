@@ -301,33 +301,69 @@
         gap: 7px;
         margin-top: 7px;
     }
-
-    /* FOTO */
-    .photo-upload {
+    /* UPLOAD FOTO KEGIATAN */
+    .upload-box {
         display: flex;
+        width: 100%;
         min-height: 125px;
         padding: 18px;
         align-items: center;
         justify-content: center;
         flex-direction: column;
         gap: 7px;
-        color: #39745b;
+        color: #39765f;
         background: #eff9f4;
-        border: 2px solid #d0e5d9;
-        border-radius: 13px;
+        border: 2px dashed #b9d9c8;
+        border-radius: 10px;
         cursor: pointer;
         text-align: center;
+        transition: background .2s ease, border-color .2s ease;
     }
 
-    .photo-upload i {
+    .upload-box:hover {
+        background: #e5f4eb;
+        border-color: #75b99a;
+    }
+
+    .upload-box input[type="file"] {
+        display: none;
+    }
+
+    .upload-content,
+    .selected-file {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .upload-content i,
+    .selected-file i {
         font-size: 34px;
     }
 
-    .photo-upload strong {
+    .upload-content strong,
+    .selected-file strong {
         font-size: 14px;
+        overflow-wrap: anywhere;
     }
 
-    .photo-upload small {
+    .upload-content span,
+    .selected-file span {
+        color: #78847b;
+        font-size: 11px;
+    }
+
+    .selected-file small {
+        color: #39765f;
+        font-size: 11px;
+    }
+
+    .file-error {
+        display: block;
+        margin-top: 5px;
+        color: #dc2626;
         font-size: 11px;
     }
 
@@ -337,6 +373,7 @@
         max-height: 250px;
         margin: 10px auto 0;
         border-radius: 8px;
+        object-fit: contain;
     }
 
     /* TOMBOL */
@@ -395,6 +432,99 @@
         background: #d1e7dd;
     }
 
+    /* POPUP SUKSES TAMBAH JURNAL */
+    .success-modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: rgba(0, 0, 0, .25);
+    }
+
+    .success-modal {
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 470px;
+        overflow: hidden;
+        background: #fff;
+        border-radius: 22px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, .15);
+        text-align: center;
+        animation: modalAppear .25s ease;
+    }
+
+    .success-modal-header {
+        width: 100%;
+        height: 30px;
+        background: #39765f;
+    }
+
+    .success-modal-content {
+        padding: 10px 20px 20px;
+    }
+
+    .success-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 65px;
+        height: 65px;
+        margin: 0 auto 10px;
+        color: #39765f;
+        font-size: 75px;
+    }
+
+    .success-icon i {
+        line-height: 1;
+    }
+
+    .success-modal-content h3 {
+        margin: 5px 0 10px;
+        color: #39765f;
+        font-size: 25px;
+        font-weight: 700;
+    }
+
+    .success-modal-content p {
+        margin: 0 0 18px;
+        color: #555;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .success-modal-button {
+        width: 130px;
+        min-height: 48px;
+        border: none;
+        border-radius: 16px;
+        background: #96E8C5;
+        color: #39765f;
+        font-family: inherit;
+        font-size: 19px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .success-modal-button:hover {
+        background: #7DDDB5;
+    }
+
+    @keyframes modalAppear {
+        from {
+            opacity: 0;
+            transform: scale(.92);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+
     @media (max-width: 760px) {
         .jurnal-card {
             padding: 16px;
@@ -448,19 +578,48 @@
         .manual-name-select {
             font-size: 12px;
         }
+
+        .success-modal {
+            max-width: 360px;
+        }
+
+        .success-modal-content h3 {
+            font-size: 21px;
+        }
     }
 </style>
 
 <div class="jurnal-page">
+        @if(session('jurnal_created'))
+        <div class="success-modal-overlay" id="successModal">
+            <div class="success-modal">
+                <div class="success-modal-header"></div>
+
+                <div class="success-modal-content">
+                    <div class="success-icon">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+
+                    <h3>Jurnal Berhasil Ditambahkan</h3>
+
+                    <p>
+                        Jurnal harian berhasil disimpan dan tercatat dalam sistem.
+                    </p>
+
+                    <button type="button"
+                            class="success-modal-button"
+                            onclick="closeSuccessModal()">
+                        Oke
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
 
     <header class="jurnal-header">
         <h2>Jurnal Harian Guru</h2>
         <p>Dokumentasikan setiap kegiatan pembelajaran dengan mudah dan rapi.</p>
     </header>
-
-    @if (session('success'))
-    <div class="jurnal-alert success">{{ session('success') }}</div>
-    @endif
 
     @if (session('error'))
     <div class="jurnal-alert error">{{ session('error') }}</div>
@@ -773,20 +932,29 @@
 
                 <div class="jurnal-field full">
                     <label for="foto_kegiatan">Foto Kegiatan</label>
-                    <label for="foto_kegiatan" class="photo-upload">
-                        <i class="bi bi-images"></i>
-                        <strong id="photoLabel">
-                            Klik untuk pilih foto kegiatan pembelajaran
-                        </strong>
-                        <small>JPG atau PNG - Batas Ukuran 3 MB</small>
+
+                    <label for="foto_kegiatan" class="upload-box">
+                        <input
+                            type="file"
+                            id="foto_kegiatan"
+                            name="foto_kegiatan"
+                            accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+
+                        <div class="upload-content" id="uploadContent">
+                            <i class="bi bi-cloud-arrow-up"></i>
+                            <strong>Klik untuk memilih foto</strong>
+                            <span>JPG atau PNG - Batas Ukuran 3 MB</span>
+                        </div>
+
+                        <div class="selected-file" id="selectedFile" hidden>
+                            <i class="bi bi-file-earmark-image"></i>
+                            <strong id="fileName"></strong>
+                            <span id="fileSize"></span>
+                            <small>Klik area ini untuk mengganti foto</small>
+                        </div>
                     </label>
 
-                    <input
-                        type="file"
-                        name="foto_kegiatan"
-                        id="foto_kegiatan"
-                        accept=".jpg,.jpeg,.png,image/jpeg,image/png"
-                        hidden>
+                    <small id="fileError" class="file-error"></small>
 
                     <img
                         id="photoPreview"
@@ -830,7 +998,11 @@
         const sesiDetail = document.getElementById('sesiDetail');
 
         const fotoInput = document.getElementById('foto_kegiatan');
-        const photoLabel = document.getElementById('photoLabel');
+        const uploadContent = document.getElementById('uploadContent');
+        const selectedFile = document.getElementById('selectedFile');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const fileError = document.getElementById('fileError');
         const photoPreview = document.getElementById('photoPreview');
 
         let daftarMurid = [];
@@ -1205,40 +1377,47 @@
             }
         });
 
-        /* UNGGAH FOTO */
+        /* UNGGAH FOTO KEGIATAN */
         fotoInput.addEventListener('change', function() {
             const file = this.files[0];
 
-            if (photoUrl) {
-                URL.revokeObjectURL(photoUrl);
-                photoUrl = null;
-            }
-
+            fileError.textContent = '';
             photoPreview.style.display = 'none';
             photoPreview.removeAttribute('src');
 
             if (!file) {
-                photoLabel.textContent =
-                    'Klik untuk pilih foto kegiatan pembelajaran';
+                uploadContent.hidden = false;
+                selectedFile.hidden = true;
                 return;
             }
 
+            // Validasi format gambar
             if (!['image/jpeg', 'image/png'].includes(file.type)) {
-                alert('Foto harus berformat JPG atau PNG.');
+                fileError.textContent = 'Foto harus berformat JPG atau PNG.';
                 this.value = '';
+                uploadContent.hidden = false;
+                selectedFile.hidden = true;
                 return;
             }
 
+            // Validasi ukuran maksimal 3 MB
             if (file.size > 3 * 1024 * 1024) {
-                alert('Ukuran foto maksimal 3 MB.');
+                fileError.textContent = 'Ukuran foto maksimal 3 MB.';
                 this.value = '';
+                uploadContent.hidden = false;
+                selectedFile.hidden = true;
                 return;
             }
 
-            photoLabel.textContent = file.name;
+            // Tampilkan informasi file
+            uploadContent.hidden = true;
+            selectedFile.hidden = false;
 
-            photoUrl = URL.createObjectURL(file);
-            photoPreview.src = photoUrl;
+            fileName.textContent = file.name;
+            fileSize.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+
+            // Tampilkan pratinjau gambar
+            photoPreview.src = URL.createObjectURL(file);
             photoPreview.style.display = 'block';
         });
 
@@ -1315,5 +1494,10 @@
         }
         @endif
     });
+</script>
+<script>
+    window.closeSuccessModal = function () {
+        window.location.href = "{{ route('guru.jurnal-harian') }}";
+    };
 </script>
 @endsection

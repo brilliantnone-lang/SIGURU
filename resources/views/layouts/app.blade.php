@@ -251,6 +251,111 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
         }
 
+
+
+        /* ===== POPUP KONFIRMASI LOGOUT ===== */
+        .logout-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .logout-modal {
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 470px;
+            overflow: hidden;
+            background: #fff;
+            border-radius: 22px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            animation: modalAppear 0.25s ease;
+        }
+
+        .logout-modal-header {
+            width: 100%;
+            height: 30px;
+            background: #FF0000;
+        }
+
+        .logout-modal-content {
+            padding: 10px 20px 20px;
+        }
+
+        .logout-modal-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 10px;
+            color: #FF0000;
+            font-size: 65px;
+        }
+
+        .logout-modal-content h3 {
+            margin: 5px 0 10px;
+            color: #FF0000;
+            font-size: 27px;
+            font-weight: 700;
+        }
+
+        .logout-modal-content p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .logout-modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .logout-cancel-button,
+        .logout-confirm-button {
+            width: 120px;
+            min-height: 48px;
+            border: none;
+            border-radius: 16px;
+            font-family: inherit;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .logout-cancel-button {
+            background: #eee;
+            color: #555;
+        }
+
+        .logout-confirm-button {
+            background: #FF0000;
+            color: #fff;
+        }
+
+        .logout-confirm-button:hover {
+            background: #cc0000;
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(.92);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+
+
         /* ===== RESPONSIF ===== */
         @media (max-width: 900px) {
             .sidebar {
@@ -301,6 +406,8 @@
             }
         }
     </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
 
     @stack('styles')
 </head>
@@ -311,6 +418,9 @@
 
         {{-- HEADER (2 sisi: brand kiri, profil+logout kanan) --}}
         <header class="topbar">
+            <button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Buka menu navigasi">
+                <i class="bi bi-list"></i>
+            </button>
 
             {{-- KIRI: Brand --}}
             <div class="topbar-brand">
@@ -334,9 +444,9 @@
                         @endif
                     </div>
                 </div>
-                <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                <form method="POST" action="{{ route('logout') }}" id="logoutForm" style="margin:0;">
                     @csrf
-                    <button type="submit" class="logout">
+                    <button type="button" class="logout" onclick="showLogoutModal()">
                         <span class="logout-icon">⇥</span>
                         Keluar
                     </button>
@@ -366,7 +476,62 @@
 
     </div>
 
+
+
+    <!-- POPUP KONFIRMASI LOGOUT -->
+    <div class="logout-modal-overlay" id="logoutModal">
+        <div class="logout-modal">
+            <div class="logout-modal-header"></div>
+
+            <div class="logout-modal-content">
+                <div class="logout-modal-icon">
+                    <i class="bi bi-box-arrow-right"></i>
+                </div>
+                <h3>Yakin Ingin Keluar?</h3>
+
+                <p>
+                    Apakah kamu yakin ingin mengakhiri sesi
+                    dan keluar dari sistem SIGURU?
+                </p>
+
+                <div class="logout-modal-actions">
+                    <button type="button" class="logout-cancel-button" onclick="closeLogoutModal()">
+                        Batal
+                    </button>
+
+                    <button type="button" class="logout-confirm-button" onclick="confirmLogout()">
+                        Ya, Keluar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        function showLogoutModal() {
+            document.getElementById('logoutModal').style.display = 'flex';
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').style.display = 'none';
+        }
+
+        function confirmLogout() {
+            document.getElementById('logoutForm').submit();
+        }
+
+        // Tutup popup jika pengguna mengeklik area luar modal
+        document.getElementById('logoutModal').addEventListener('click', function (event) {
+            if (event.target === this) {
+                closeLogoutModal();
+            }
+        });
+    </script>
+
     @stack('scripts')
+
 </body>
 
 </html>

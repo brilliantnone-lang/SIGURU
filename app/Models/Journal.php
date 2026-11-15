@@ -10,6 +10,7 @@ class Journal extends Model
 
     protected $fillable = [
         'guru_id',
+        'cover_jurnal_id',
         'guru_pendamping_id',
         'kelas_id',
         'jam_mulai_ke',

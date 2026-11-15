@@ -27,8 +27,9 @@ class MataPelajaranController extends Controller
 
         MataPelajaran::create($request->all());
 
-        return redirect()->route('admin.mapel.index')
-                         ->with('success', 'Mata Pelajaran berhasil ditambahkan!');
+        return redirect()
+            ->route('admin.mapel.create')
+            ->with('success', 'Mata pelajaran berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -47,23 +48,24 @@ class MataPelajaranController extends Controller
 
         $mapel->update($request->all());
 
-        return redirect()->route('admin.mapel.index')
-                         ->with('success', 'Mata Pelajaran berhasil diperbarui!');
+        return redirect()
+            ->route('admin.mapel.edit', $mapel->id)
+            ->with('success', 'Mata pelajaran berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         $mapel = MataPelajaran::findOrFail($id);
-        
+
         // Cek apakah mapel dipakai di tabel guru
         if ($mapel->guru()->count() > 0) {
             return redirect()->route('admin.mapel.index')
-                             ->with('error', 'Gagal menghapus! Mapel ini sedang dipakai oleh Guru.');
+                ->with('error', 'Gagal menghapus! Mapel ini sedang dipakai oleh Guru.');
         }
 
         $mapel->delete();
 
         return redirect()->route('admin.mapel.index')
-                         ->with('success', 'Mata Pelajaran berhasil dihapus!');
+            ->with('success', 'Mata Pelajaran berhasil dihapus!');
     }
 }
