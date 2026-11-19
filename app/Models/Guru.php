@@ -43,4 +43,20 @@ class Guru extends Model
     {
         return $this->hasMany(Journal::class, 'guru_pendamping_id');
     }
+
+    public function eventSekolah()
+    {
+        return $this->belongsToMany(
+            EventSekolah::class,
+            'event_sekolah_guru',
+            'guru_id',
+            'event_sekolah_id'
+        )->withTimestamps();
+    }
+
+    // Di Guru.php
+    public function getNamaAttribute()
+    {
+        return $this->user->name ?? '-';
+    }
 }
