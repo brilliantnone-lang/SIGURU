@@ -124,6 +124,15 @@
         border-color: #75c4a0;
     }
 
+    .role-option input:disabled,
+    .replacement-radio input:disabled {
+        cursor: not-allowed;
+    }
+
+    .role-option:has(input:disabled) {
+        cursor: not-allowed;
+    }
+
     .replacement-fields {
         display: none;
         margin-top: 14px;
@@ -208,9 +217,11 @@
         box-shadow: 0 0 0 2px rgba(57, 116, 91, .10);
     }
 
-    .jurnal-control[readonly] {
+    .jurnal-control[readonly],
+    .jurnal-control:disabled {
         background: #f4f7f5;
         color: #6b7d71;
+        cursor: not-allowed;
     }
 
     textarea.jurnal-control {
@@ -297,7 +308,6 @@
         margin-top: 7px;
     }
 
-    /* UPLOAD FOTO KEGIATAN */
     .upload-box {
         display: flex;
         width: 100%;
@@ -448,9 +458,45 @@
         border: 1px solid #ffeeba;
     }
 
-        /* ============================
-    POPUP BERHASIL DIPERBAHARUI
-    ============================ */
+    .info-digantikan {
+        display: none;
+        margin-bottom: 20px;
+        padding: 12px 16px;
+        background: #fef3c7;
+        border: 1px solid #fde68a;
+        border-radius: 10px;
+        color: #92400e;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .info-digantikan i {
+        margin-right: 6px;
+    }
+
+    .badge-penggantian {
+        margin-top: 12px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .badge-penggantian.menunggu {
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fde68a;
+    }
+
+    .badge-penggantian.selesai {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+    }
+
+    .badge-penggantian i {
+        margin-right: 6px;
+    }
 
     .success-modal-overlay {
         position: fixed;
@@ -494,6 +540,12 @@
         margin: 0 auto 10px;
         color: #39765f;
         font-size: 75px;
+    }
+
+    .badge-penggantian.revisi {
+        background: #dbeafe;
+        color: #1d4ed8;
+        border: 1px solid #93c5fd;
     }
 
     .success-icon i {
@@ -608,45 +660,26 @@
         <p>Perbarui informasi pembelajaran di bawah ini.</p>
     </header>
 
-        {{-- POPUP BERHASIL MEMPERBARUI JURNAL --}}
     @if(session('jurnal_updated'))
-        <div class="success-modal-overlay" id="successModal">
-            <div class="success-modal">
-                <div class="success-modal-header"></div>
-
-                <div class="success-modal-content">
-                    <div class="success-icon">
-                        <i class="bi bi-check-lg"></i>
-                    </div>
-
-                    <h3>Jurnal Berhasil Diperbaharui</h3>
-
-                    <button type="button"
-                            class="success-modal-button"
-                            onclick="closeSuccessModal()">
-                        Oke
-                    </button>
-                </div>
+    <div class="success-modal-overlay" id="successModal">
+        <div class="success-modal">
+            <div class="success-modal-header"></div>
+            <div class="success-modal-content">
+                <div class="success-icon"><i class="bi bi-check-lg"></i></div>
+                <h3>Jurnal Berhasil Diperbaharui</h3>
+                <button type="button" class="success-modal-button" onclick="closeSuccessModal()">Oke</button>
             </div>
         </div>
+    </div>
     @endif
 
-    @if (session('success'))
-    <div class="jurnal-alert success">{{ session('success') }}</div>
-    @endif
-
-    @if (session('error'))
-    <div class="jurnal-alert error">{{ session('error') }}</div>
-    @endif
+    @if (session('success')) <div class="jurnal-alert success">{{ session('success') }}</div> @endif
+    @if (session('error')) <div class="jurnal-alert error">{{ session('error') }}</div> @endif
 
     @if ($errors->any())
     <div class="jurnal-alert error">
         <strong>Periksa kembali data berikut:</strong>
-        <ul>
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+        <ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
     </div>
     @endif
 
@@ -654,9 +687,47 @@
     <div class="jurnal-alert warning">
         <i class="bi bi-exclamation-triangle-fill"></i>
         <strong>Jurnal ini sedang menunggu revisi.</strong>
-        Setelah disimpan, status akan berubah menjadi <strong>Sudah Direvisi</strong> dan menunggu validasi Kepala Sekolah.
+        Setelah disimpan, status akan berubah menjadi <strong>Sudah Direvisi</strong>.
     </div>
     @endif
+
+    @php
+    $statusMengajarAwal = $jurnal->jenis_pengajar
+    ?? ($jurnal->guru_pengganti_id ? 'pengganti' : 'pengampu');
+
+    $jenisPenggantianAwal = $jurnal->jenis_penggantian
+    ?? ($statusMengajarAwal === 'pengganti' ? 'saya_menggantikan' : null);
+
+    $guruLoginId = auth()->user()->guru->id ?? null;
+    $isGuruPemilik = $jurnal->guru_id === $guruLoginId;
+    $isGuruPengganti = $jurnal->guru_pengganti_id === $guruLoginId;
+
+    $isJurnalPenggantian = $jurnal->status_penggantian
+    && $jurnal->status_penggantian !== 'tidak_ada';
+
+    $tampilkanInfoDigantikan = $isGuruPemilik
+    && $isJurnalPenggantian
+    && $jurnal->jenis_penggantian === 'saya_digantikan';
+
+    // 🔧 Tentukan apakah field materi/absensi/foto/catatan ditampilkan
+    // - Siti (pemilik jurnal penggantian) → TIDAK tampil (tugas Budi)
+    // - Budi (pengganti) → tampil
+    // - Jurnal biasa → tampil
+    $tampilkanMateriDll = !($isGuruPemilik && $isJurnalPenggantian);
+
+    $namaGuruTerkait = null;
+    if ($isJurnalPenggantian) {
+    if ($jurnal->jenis_penggantian === 'saya_digantikan') {
+    $namaGuruTerkait = $jurnal->guruPengganti->user->name
+    ?? $jurnal->guruPengganti->nama_guru
+    ?? 'Guru Pengganti';
+    } elseif ($jurnal->jenis_penggantian === 'saya_menggantikan') {
+    $namaGuruTerkait = $jurnal->guruDigantikan->user->name
+    ?? $jurnal->guruDigantikan->nama_guru
+    ?? 'Guru Pengampu';
+    }
+    }
+    @endphp
 
     <form
         action="{{ route('guru.jurnal.update', $jurnal->id) }}"
@@ -676,77 +747,51 @@
                 </div>
             </div>
 
-            {{-- STATUS MENGAJAR --}}
+            {{-- ============================================================
+                 STATUS MENGAJAR
+            ============================================================ --}}
+            @if(! $isJurnalPenggantian)
             <section class="jurnal-panel">
                 <h4 class="jurnal-panel-title">Status Mengajar</h4>
-                <p class="jurnal-panel-description">
-                    Pilih peran Anda pada sesi pembelajaran ini.
-                </p>
-
-                @php
-                    $statusMengajarAwal = $jurnal->guru_pendamping_id ? 'pengganti' : 'pengampu';
-                @endphp
+                <p class="jurnal-panel-description">Pilih peran Anda pada sesi pembelajaran ini.</p>
 
                 <div class="role-options">
                     <label class="role-option">
-                        <input
-                            type="radio"
-                            name="status_mengajar"
-                            value="pengampu"
+                        <input type="radio" name="status_mengajar" value="pengampu"
                             {{ old('status_mengajar', $statusMengajarAwal) === 'pengampu' ? 'checked' : '' }}>
                         <span>Guru Pengampu</span>
                     </label>
-
                     <label class="role-option">
-                        <input
-                            type="radio"
-                            name="status_mengajar"
-                            value="pengganti"
+                        <input type="radio" name="status_mengajar" value="pengganti"
                             {{ old('status_mengajar', $statusMengajarAwal) === 'pengganti' ? 'checked' : '' }}>
                         <span>Guru Pengganti</span>
                     </label>
                 </div>
 
                 <div class="replacement-fields {{ old('status_mengajar', $statusMengajarAwal) === 'pengganti' ? 'active' : '' }}" id="replacementFields">
-
                     <div class="replacement-options">
                         <label class="replacement-radio">
-                            <input
-                                type="radio"
-                                name="jenis_penggantian"
-                                value="saya_digantikan"
-                                {{ old('jenis_penggantian') === 'saya_digantikan' ? 'checked' : '' }}>
+                            <input type="radio" name="jenis_penggantian" value="saya_digantikan"
+                                {{ old('jenis_penggantian', $jenisPenggantianAwal) === 'saya_digantikan' ? 'checked' : '' }}>
                             <span>Saya yang Digantikan</span>
                         </label>
-
                         <label class="replacement-radio">
-                            <input
-                                type="radio"
-                                name="jenis_penggantian"
-                                value="saya_menggantikan"
-                                {{ old('jenis_penggantian', 'saya_menggantikan') === 'saya_menggantikan' ? 'checked' : '' }}>
+                            <input type="radio" name="jenis_penggantian" value="saya_menggantikan"
+                                {{ old('jenis_penggantian', $jenisPenggantianAwal) === 'saya_menggantikan' ? 'checked' : '' }}>
                             <span>Saya yang menggantikan</span>
                         </label>
                     </div>
 
-                    <label
-                        for="guru_pendamping_id"
-                        class="replacement-label"
-                        id="labelGuruPengganti">
+                    <label for="guru_pendamping_id" class="replacement-label" id="labelGuruPengganti">
                         Nama Guru Pengampu <span class="required">*</span>
                     </label>
 
-                    <select
-                        name="guru_pendamping_id"
-                        id="guru_pendamping_id"
-                        class="jurnal-control"
+                    <select name="guru_pendamping_id" id="guru_pendamping_id" class="jurnal-control"
                         {{ old('status_mengajar', $statusMengajarAwal) === 'pengganti' ? '' : 'disabled' }}>
                         <option value="">Masukkan nama guru</option>
-
                         @foreach ($gurus as $guruPilihan)
-                        <option
-                            value="{{ $guruPilihan->id }}"
-                            {{ old('guru_pendamping_id', $jurnal->guru_pendamping_id) == $guruPilihan->id ? 'selected' : '' }}>
+                        <option value="{{ $guruPilihan->id }}"
+                            {{ old('guru_pendamping_id', $jurnal->guru_pengganti_id ?? $jurnal->guru_pendamping_id) == $guruPilihan->id ? 'selected' : '' }}>
                             {{ $guruPilihan->user->name ?? $guruPilihan->nama_guru ?? 'Guru #' . $guruPilihan->id }}
                         </option>
                         @endforeach
@@ -754,81 +799,127 @@
                 </div>
             </section>
 
+            @else
+            {{-- Jurnal penggantian: ringkasan --}}
+            <section class="jurnal-panel">
+                <h4 class="jurnal-panel-title">Status Mengajar</h4>
+                <p class="jurnal-panel-description">Jurnal ini adalah jurnal penggantian.</p>
+
+                <div class="role-options">
+                    <label class="role-option">
+                        <input type="radio" checked disabled>
+                        <span>Guru Pengganti</span>
+                    </label>
+                </div>
+
+                <div class="replacement-fields active">
+                    <label class="replacement-label">
+                        @if($jurnal->jenis_penggantian === 'saya_digantikan')
+                        Nama Guru Pengganti
+                        @elseif($jurnal->jenis_penggantian === 'saya_menggantikan')
+                        Nama Guru Pengampu (yang digantikan)
+                        @else
+                        Nama Guru Terkait
+                        @endif
+                        @if($isGuruPemilik) <span class="required">*</span> @endif
+                    </label>
+
+                    @if($isGuruPemilik)
+                    {{-- SITI: select BISA DIUBAH --}}
+                    <select name="guru_pendamping_id" id="guru_pendamping_id" class="jurnal-control">
+                        <option value="">-- Pilih guru --</option>
+                        @foreach ($gurus as $guruPilihan)
+                        <option value="{{ $guruPilihan->id }}"
+                            {{ ($jurnal->guru_pengganti_id ?? $jurnal->guru_digantikan_id) == $guruPilihan->id ? 'selected' : '' }}>
+                            {{ $guruPilihan->user->name ?? $guruPilihan->nama_guru ?? 'Guru #' . $guruPilihan->id }}
+                        </option>
+                        @endforeach
+                    </select>
+                    <small class="field-help">
+                        Anda bisa mengoreksi nama guru pengganti jika salah input.
+                    </small>
+                    @else
+                    {{-- BUDI: readonly --}}
+                    <select class="jurnal-control" disabled>
+                        <option value="">{{ $namaGuruTerkait ?? '-' }}</option>
+                    </select>
+                    <small class="field-help">
+                        Status mengajar dan guru pengganti tidak bisa diubah.
+                    </small>
+                    @endif
+                </div>
+
+                @if($jurnal->status_penggantian)
+                <div class="badge-penggantian
+        {{ $jurnal->status_penggantian === 'menunggu_diisi' ? 'menunggu' : '' }}
+        {{ $jurnal->status_penggantian === 'belum_direvisi' ? 'revisi' : '' }}
+        {{ $jurnal->status_penggantian === 'selesai_diisi' ? 'selesai' : '' }}">
+                    @if($jurnal->status_penggantian === 'menunggu_diisi')
+                    <i class="bi bi-hourglass-split"></i>
+                    <strong>Menunggu diisi</strong> oleh {{ $namaGuruTerkait ?? 'guru pengganti' }}.
+                    @elseif($jurnal->status_penggantian === 'belum_direvisi')
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <strong>Perlu direvisi</strong> — data sudah diisi sebelumnya.
+                    @else
+                    <i class="bi bi-check-circle-fill"></i>
+                    <strong>Sudah diisi</strong> oleh {{ $namaGuruTerkait ?? 'guru pengganti' }}.
+                    @endif
+                </div>
+                @endif
+            </section>
+            @endif
+
+            {{-- Info panel khusus Siti --}}
+            @if($tampilkanInfoDigantikan)
+            <div class="info-digantikan" style="display:block;">
+                <i class="bi bi-info-circle-fill"></i>
+                <strong>Mode "Saya yang Digantikan".</strong><br>
+                Tanggal, kelas, mapel, jam, dan nama guru pengganti tidak bisa diubah.
+                Materi, absensi, catatan, dan foto akan diisi oleh guru pengganti.
+            </div>
+            @endif
+
             {{-- DATA JURNAL --}}
             <div class="jurnal-grid">
 
+                {{-- TANGGAL --}}
                 <div class="jurnal-field">
                     <label for="tanggal">
                         Tanggal Mengajar <span class="required">*</span>
                     </label>
-                    <input
-                        type="date"
-                        name="tanggal"
-                        id="tanggal"
-                        class="jurnal-control"
+                    <input type="date" name="tanggal" id="tanggal" class="jurnal-control"
                         value="{{ old('tanggal', \Carbon\Carbon::parse($jurnal->tanggal)->format('Y-m-d')) }}"
-                        required>
+                        {{ $isJurnalPenggantian ? 'readonly' : 'required' }}>
+                    @if($isJurnalPenggantian)
+                    <small class="field-help">Tanggal tidak bisa diubah pada jurnal penggantian.</small>
+                    @endif
                 </div>
 
                 <div class="jurnal-field">
-                    <label for="kelas_display">
-                        Kelas <span class="required">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="kelas_display"
-                        class="jurnal-control"
-                        value="{{ $jurnal->kelas->nama_kelas ?? 'Kelas #' . $jurnal->kelas_id }}"
-                        readonly>
-                    <small class="field-help">Kelas tidak bisa diubah saat edit jurnal.</small>
+                    <label for="kelas_display">Kelas <span class="required">*</span></label>
+                    <input type="text" id="kelas_display" class="jurnal-control"
+                        value="{{ $jurnal->kelas->nama_kelas ?? 'Kelas #' . $jurnal->kelas_id }}" readonly>
+                    <small class="field-help">Kelas tidak bisa diubah.</small>
                 </div>
 
                 <div class="jurnal-field">
-                    <label for="mapel_display">
-                        Mata Pelajaran <span class="required">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="mapel_display"
-                        class="jurnal-control"
-                        value="{{ $jurnal->jadwal->mataPelajaran->nama_mata_pelajaran ?? '-' }}"
-                        readonly>
+                    <label for="mapel_display">Mata Pelajaran <span class="required">*</span></label>
+                    <input type="text" id="mapel_display" class="jurnal-control"
+                        value="{{ $jurnal->jadwal->mataPelajaran->nama_mata_pelajaran ?? '-' }}" readonly>
                 </div>
 
                 <div class="jurnal-field">
-                    <label for="jadwal_display">
-                        Jam Pelajaran <span class="required">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="jadwal_display"
-                        class="jurnal-control"
-                        value="Jam ke-{{ $jurnal->jam_mulai_ke }}-{{ $jurnal->jam_selesai_ke }}"
-                        readonly>
-                    <small class="field-help">Jam pelajaran tidak bisa diubah saat edit jurnal.</small>
+                    <label for="jadwal_display">Jam Pelajaran <span class="required">*</span></label>
+                    <input type="text" id="jadwal_display" class="jurnal-control"
+                        value="Jam ke-{{ $jurnal->jam_mulai_ke }}-{{ $jurnal->jam_selesai_ke }}" readonly>
+                    <small class="field-help">Jam tidak bisa diubah.</small>
                 </div>
 
-                <div class="jurnal-field full">
-                    <label for="pokok_bahasan">
-                        Pokok Bahasan/Materi <span class="required">*</span>
-                    </label>
-                    <textarea
-                        name="pokok_bahasan"
-                        id="pokok_bahasan"
-                        class="jurnal-control"
-                        placeholder="Tuliskan pokok bahasan yang diajarkan hari ini"
-                        required>{{ old('pokok_bahasan', $jurnal->pokok_bahasan) }}</textarea>
-                </div>
-
-                <div class="jurnal-field">
-                    <label for="status_penyelesaian">
-                        Status Penyelesaian <span class="required">*</span>
-                    </label>
-                    <select
-                        name="status_penyelesaian"
-                        id="status_penyelesaian"
-                        class="jurnal-control"
-                        required>
+                {{-- 🔧 STATUS PENYELESAIAN --}}
+                @if($tampilkanMateriDll)
+                <div class="jurnal-field" id="fieldStatusPenyelesaian">
+                    <label for="status_penyelesaian">Status Penyelesaian <span class="required">*</span></label>
+                    <select name="status_penyelesaian" id="status_penyelesaian" class="jurnal-control" required>
                         <option value="selesai"
                             {{ old('status_penyelesaian', $jurnal->status_penyelesaian) === 'selesai' ? 'selected' : '' }}>
                             Tuntas
@@ -839,36 +930,29 @@
                         </option>
                     </select>
                 </div>
+                @endif
 
                 <div class="jurnal-field">
-                    <label for="semester_display">
-                        Semester Akademik <span class="required">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="semester_display"
-                        class="jurnal-control"
+                    <label for="semester_display">Semester Akademik <span class="required">*</span></label>
+                    <input type="text" id="semester_display" class="jurnal-control"
                         value="{{ $coverAktif ? $coverAktif->tahun_ajaran . ' Semester ' . $coverAktif->semester : 'Cover jurnal belum tersedia' }}"
                         readonly>
                 </div>
 
-                <div
-                    class="jurnal-field full"
-                    id="alasanContainer"
+                {{-- 🔧 ALASAN BELUM TUNTAS --}}
+                @if($tampilkanMateriDll)
+                <div class="jurnal-field full" id="alasanContainer"
                     style="{{ old('status_penyelesaian', $jurnal->status_penyelesaian) === 'belum_selesai' ? '' : 'display:none;' }}">
                     <label for="alasan_belum_selesai">Alasan Belum Tuntas</label>
-                    <textarea
-                        name="alasan_belum_selesai"
-                        id="alasan_belum_selesai"
-                        class="jurnal-control"
+                    <textarea name="alasan_belum_selesai" id="alasan_belum_selesai" class="jurnal-control"
                         placeholder="Tuliskan alasan materi belum selesai">{{ old('alasan_belum_selesai', $jurnal->alasan_belum_selesai) }}</textarea>
                 </div>
+                @endif
 
-                {{-- ABSENSI SISWA --}}
-                <div class="jurnal-field full">
-                    <label class="field-label">
-                        Absensi Siswa <span class="required">*</span>
-                    </label>
+                {{-- 🔧 ABSENSI --}}
+                @if($tampilkanMateriDll)
+                <div class="jurnal-field full" id="fieldAbsensi">
+                    <label class="field-label">Absensi Siswa <span class="required">*</span></label>
 
                     <div id="sesiInfo" class="sesi-info" style="display:block;">
                         <i class="bi bi-clock-history"></i>
@@ -881,89 +965,45 @@
                     </div>
 
                     <div id="manualAttendance">
+                        @foreach(['sakit' => 'Sakit', 'izin' => 'Izin', 'alpa' => 'Alpha'] as $statusKey => $label)
                         <div class="manual-attendance-row">
-                            <label class="manual-attendance-label" for="jumlah_sakit">
-                                Sakit :
-                            </label>
-                            <input
-                                type="number"
-                                id="jumlah_sakit"
-                                class="manual-count"
-                                min="0"
-                                max="100"
-                                value="{{ old('jumlah_sakit', $jurnal->attendances->where('status_kehadiran', 'sakit')->count()) }}">
-                            <div id="nama_sakit" class="manual-name-list">
+                            <label class="manual-attendance-label" for="jumlah_{{ $statusKey }}">{{ $label }} :</label>
+                            <input type="number" id="jumlah_{{ $statusKey }}" class="manual-count"
+                                min="0" max="100"
+                                value="{{ old('jumlah_' . $statusKey, $jurnal->attendances->where('status_kehadiran', $statusKey)->count()) }}">
+                            <div id="nama_{{ $statusKey }}" class="manual-name-list">
                                 <select class="manual-name-select">
                                     <option value="">-</option>
                                 </select>
                             </div>
                         </div>
-
-                        <div class="manual-attendance-row">
-                            <label class="manual-attendance-label" for="jumlah_izin">
-                                Izin :
-                            </label>
-                            <input
-                                type="number"
-                                id="jumlah_izin"
-                                class="manual-count"
-                                min="0"
-                                max="100"
-                                value="{{ old('jumlah_izin', $jurnal->attendances->where('status_kehadiran', 'izin')->count()) }}">
-                            <div id="nama_izin" class="manual-name-list">
-                                <select class="manual-name-select">
-                                    <option value="">-</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="manual-attendance-row">
-                            <label class="manual-attendance-label" for="jumlah_alpa">
-                                Alpha :
-                            </label>
-                            <input
-                                type="number"
-                                id="jumlah_alpa"
-                                class="manual-count"
-                                min="0"
-                                max="100"
-                                value="{{ old('jumlah_alpa', $jurnal->attendances->where('status_kehadiran', 'alpa')->count()) }}">
-                            <div id="nama_alpa" class="manual-name-list">
-                                <select class="manual-name-select">
-                                    <option value="">-</option>
-                                </select>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
+                @endif
 
-                <div class="jurnal-field full">
+                {{-- 🔧 CATATAN --}}
+                @if($tampilkanMateriDll)
+                <div class="jurnal-field full" id="fieldCatatan">
                     <label for="keterangan">Catatan Tambahan</label>
-                    <input
-                        type="text"
-                        name="keterangan"
-                        id="keterangan"
-                        class="jurnal-control"
+                    <input type="text" name="keterangan" id="keterangan" class="jurnal-control"
                         value="{{ old('keterangan', $jurnal->keterangan) }}"
                         placeholder="Catatan atau evaluasi pembelajaran (opsional)">
                 </div>
+                @endif
 
-                <div class="jurnal-field full">
+                {{-- 🔧 FOTO --}}
+                @if($tampilkanMateriDll)
+                <div class="jurnal-field full" id="fieldFoto">
                     <label for="foto_kegiatan">Foto Kegiatan</label>
-
                     <label for="foto_kegiatan" class="upload-box">
-                        <input
-                            type="file"
-                            name="foto_kegiatan"
-                            id="foto_kegiatan"
+                        <input type="file" name="foto_kegiatan" id="foto_kegiatan"
                             accept=".jpg,.jpeg,.png,image/jpeg,image/png">
-
                         <div class="upload-content" id="uploadContent">
                             <i class="bi bi-cloud-arrow-up"></i>
                             <strong>Klik untuk memilih foto</strong>
                             <span>JPG atau PNG - Batas Ukuran 3 MB</span>
                         </div>
-
                         <div class="selected-file" id="selectedFile" hidden>
                             <i class="bi bi-file-earmark-image"></i>
                             <strong id="fileName"></strong>
@@ -971,63 +1011,43 @@
                             <small>Klik area ini untuk mengganti foto</small>
                         </div>
                     </label>
-
                     <small id="fileError" class="file-error"></small>
 
                     @if($jurnal->foto_kegiatan)
-                        <img
-                            id="photoPreview"
-                            class="photo-preview"
-                            src="{{ Storage::url($jurnal->foto_kegiatan) }}"
-                            alt="Foto kegiatan">
-
-                        <div class="photo-current-info">
-                            <i class="bi bi-image-fill"></i>
-                            Foto saat ini. Pilih foto baru untuk mengganti.
-                        </div>
+                    <img id="photoPreview" class="photo-preview"
+                        src="{{ Storage::url($jurnal->foto_kegiatan) }}" alt="Foto kegiatan">
+                    <div class="photo-current-info">
+                        <i class="bi bi-image-fill"></i>
+                        Foto saat ini. Pilih foto baru untuk mengganti.
+                    </div>
                     @else
-                        <img
-                            id="photoPreview"
-                            class="photo-preview"
-                            style="display:none;"
-                            alt="Pratinjau foto kegiatan">
+                    <img id="photoPreview" class="photo-preview" style="display:none;" alt="Pratinjau">
                     @endif
                 </div>
+                @endif
             </div>
         </div>
 
         <div class="jurnal-actions">
-            <a href="{{ route('guru.jurnal-harian') }}"
-                class="jurnal-btn btn-cancel">
-                Batal
-            </a>
-
-            <button
-                type="submit"
-                class="jurnal-btn btn-save"
-                id="saveJournalButton">
-                Simpan Perubahan
-            </button>
+            <a href="{{ route('guru.jurnal-harian') }}" class="jurnal-btn btn-cancel">Batal</a>
+            <button type="submit" class="jurnal-btn btn-save" id="saveJournalButton">Simpan Perubahan</button>
         </div>
     </form>
 </div>
 
 @php
-    // Siapkan data absensi tersimpan dalam format: { murid_id: status }
-    $absensiTersimpan = $jurnal->attendances->mapWithKeys(function ($a) {
-        return [$a->murid_id => $a->status_kehadiran];
-    });
+$absensiTersimpan = $jurnal->attendances->mapWithKeys(function ($a) {
+return [$a->murid_id => $a->status_kehadiran];
+});
 
-    // Siapkan data murid: [{ id, nama_siswa }]
-    $muridsData = $murids->map(function ($m) {
-        return ['id' => $m->id, 'nama_siswa' => $m->nama_siswa];
-    });
+$muridsData = $murids->map(function ($m) {
+return ['id' => $m->id, 'nama_siswa' => $m->nama_siswa];
+});
 @endphp
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('formEditJurnal');
-
         const replacementFields = document.getElementById('replacementFields');
         const guruSelect = document.getElementById('guru_pendamping_id');
         const labelGuru = document.getElementById('labelGuruPengganti');
@@ -1043,7 +1063,6 @@
         const fileError = document.getElementById('fileError');
         const photoPreview = document.getElementById('photoPreview');
 
-        // Data absensi tersimpan & murid dari PHP (sudah disiapkan di @php)
         const absensiTersimpan = @json($absensiTersimpan);
         const muridsData = @json($muridsData);
 
@@ -1054,46 +1073,44 @@
             return selected ? selected.value : '';
         }
 
-        /* STATUS MENGAJAR */
+        const statusMengajarInputs = document.querySelectorAll('input[name="status_mengajar"]');
+
         function updateStatusMengajar() {
             const isPengganti = selectedValue('status_mengajar') === 'pengganti';
-
-            replacementFields.classList.toggle('active', isPengganti);
-            guruSelect.disabled = !isPengganti;
-            guruSelect.required = isPengganti;
-
-            if (!isPengganti) {
-                guruSelect.value = '';
+            if (replacementFields) {
+                replacementFields.classList.toggle('active', isPengganti);
             }
-
+            if (guruSelect && !guruSelect.readOnly) {
+                guruSelect.disabled = !isPengganti;
+                guruSelect.required = isPengganti;
+            }
             updateLabelGuru();
         }
 
         function updateLabelGuru() {
+            if (!labelGuru) return;
             const jenis = selectedValue('jenis_penggantian');
-
             labelGuru.textContent = jenis === 'saya_digantikan' ?
                 'Nama Guru Pengganti *' :
                 'Nama Guru Pengampu *';
         }
 
-        document.querySelectorAll('input[name="status_mengajar"]').forEach(input => {
-            input.addEventListener('change', updateStatusMengajar);
-        });
-
-        document.querySelectorAll('input[name="jenis_penggantian"]').forEach(input => {
-            input.addEventListener('change', updateLabelGuru);
-        });
-
-        /* STATUS PENYELESAIAN */
-        function updateAlasan() {
-            alasanContainer.style.display =
-                statusPenyelesaian.value === 'belum_selesai' ? '' : 'none';
+        if (statusMengajarInputs.length > 0) {
+            statusMengajarInputs.forEach(input => input.addEventListener('change', updateStatusMengajar));
+            document.querySelectorAll('input[name="jenis_penggantian"]').forEach(input => {
+                input.addEventListener('change', updateLabelGuru);
+            });
+            updateStatusMengajar();
+            updateLabelGuru();
         }
 
-        statusPenyelesaian.addEventListener('change', updateAlasan);
+        if (statusPenyelesaian && alasanContainer) {
+            statusPenyelesaian.addEventListener('change', function() {
+                alasanContainer.style.display = statusPenyelesaian.value === 'belum_selesai' ? '' : 'none';
+            });
+        }
 
-        /* ABSENSI MANUAL */
+        // Absensi
         const attendanceCategories = [{
                 status: 'sakit',
                 countId: 'jumlah_sakit',
@@ -1118,14 +1135,10 @@
                 alpa: [],
                 hadir: []
             };
-
             muridsData.forEach(murid => {
                 const status = absensiTersimpan[murid.id] || 'hadir';
-                if (perStatus[status]) {
-                    perStatus[status].push(murid);
-                }
+                if (perStatus[status]) perStatus[status].push(murid);
             });
-
             return perStatus;
         }
 
@@ -1135,24 +1148,19 @@
             attendanceCategories.forEach(category => {
                 const countInput = document.getElementById(category.countId);
                 const container = document.getElementById(category.containerId);
+                if (!countInput || !container) return;
 
-                const count = Math.max(
-                    0,
-                    Math.min(100, parseInt(countInput.value, 10) || 0)
-                );
-
+                const count = Math.max(0, Math.min(100, parseInt(countInput.value, 10) || 0));
                 container.innerHTML = '';
 
                 if (count === 0) {
                     const emptySelect = document.createElement('select');
                     emptySelect.className = 'manual-name-select';
                     emptySelect.disabled = true;
-
-                    const option = document.createElement('option');
-                    option.value = '';
-                    option.textContent = '-';
-
-                    emptySelect.appendChild(option);
+                    const opt = document.createElement('option');
+                    opt.value = '';
+                    opt.textContent = '-';
+                    emptySelect.appendChild(opt);
                     container.appendChild(emptySelect);
                     return;
                 }
@@ -1161,12 +1169,10 @@
                     const emptySelect = document.createElement('select');
                     emptySelect.className = 'manual-name-select';
                     emptySelect.disabled = true;
-
-                    const option = document.createElement('option');
-                    option.value = '';
-                    option.textContent = 'Belum ada murid di kelas ini';
-
-                    emptySelect.appendChild(option);
+                    const opt = document.createElement('option');
+                    opt.value = '';
+                    opt.textContent = 'Belum ada murid di kelas ini';
+                    emptySelect.appendChild(opt);
                     container.appendChild(emptySelect);
                     return;
                 }
@@ -1175,7 +1181,6 @@
 
                 for (let i = 0; i < count; i++) {
                     const select = document.createElement('select');
-
                     select.className = 'manual-name-select';
                     select.dataset.status = category.status;
                     select.required = true;
@@ -1183,20 +1188,16 @@
                     const placeholder = document.createElement('option');
                     placeholder.value = '';
                     placeholder.textContent = '-- Pilih nama siswa --';
-
                     select.appendChild(placeholder);
 
                     muridsData.forEach(murid => {
-                        const option = document.createElement('option');
-                        option.value = murid.id;
-                        option.textContent = murid.nama_siswa;
-                        select.appendChild(option);
+                        const opt = document.createElement('option');
+                        opt.value = murid.id;
+                        opt.textContent = murid.nama_siswa;
+                        select.appendChild(opt);
                     });
 
-                    if (muridCocok[i]) {
-                        select.value = muridCocok[i].id;
-                    }
-
+                    if (muridCocok[i]) select.value = muridCocok[i].id;
                     container.appendChild(select);
                 }
             });
@@ -1205,144 +1206,119 @@
         }
 
         function updateManualOptions() {
-            const selects = Array.from(
-                document.querySelectorAll('.manual-name-select[data-status]')
-            );
-
-            const selectedIds = selects
-                .map(select => select.value)
-                .filter(Boolean);
+            const selects = Array.from(document.querySelectorAll('.manual-name-select[data-status]'));
+            const selectedIds = selects.map(s => s.value).filter(Boolean);
 
             selects.forEach(select => {
                 Array.from(select.options).forEach(option => {
                     if (!option.value) return;
-
-                    option.disabled =
-                        selectedIds.includes(option.value) &&
-                        select.value !== option.value;
+                    option.disabled = selectedIds.includes(option.value) && select.value !== option.value;
                 });
             });
         }
 
         attendanceCategories.forEach(category => {
             const input = document.getElementById(category.countId);
+            if (input) {
+                input.addEventListener('input', () => renderManualAttendance());
+            }
+        });
 
-            input.addEventListener('input', function() {
-                renderManualAttendance();
+        const manualAtt = document.getElementById('manualAttendance');
+        if (manualAtt) {
+            manualAtt.addEventListener('change', function(event) {
+                if (event.target.classList.contains('manual-name-select')) {
+                    updateManualOptions();
+                }
             });
-        });
+        }
 
-        document.getElementById('manualAttendance').addEventListener('change', function(event) {
-            if (event.target.classList.contains('manual-name-select')) {
-                updateManualOptions();
-            }
-        });
+        // Upload foto
+        if (fotoInput) {
+            fotoInput.addEventListener('change', function() {
+                const file = this.files[0];
+                fileError.textContent = '';
 
-        /* UNGGAH FOTO */
-        fotoInput.addEventListener('change', function() {
-            const file = this.files[0];
+                if (!file) {
+                    uploadContent.hidden = false;
+                    selectedFile.hidden = true;
+                    return;
+                }
 
-            fileError.textContent = '';
+                if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                    fileError.textContent = 'Foto harus berformat JPG atau PNG.';
+                    this.value = '';
+                    uploadContent.hidden = false;
+                    selectedFile.hidden = true;
+                    return;
+                }
 
-            if (!file) {
-                uploadContent.hidden = false;
-                selectedFile.hidden = true;
-                return;
-            }
+                if (file.size > 3 * 1024 * 1024) {
+                    fileError.textContent = 'Ukuran foto maksimal 3 MB.';
+                    this.value = '';
+                    uploadContent.hidden = false;
+                    selectedFile.hidden = true;
+                    return;
+                }
 
-            // Validasi format gambar
-            if (!['image/jpeg', 'image/png'].includes(file.type)) {
-                fileError.textContent = 'Foto harus berformat JPG atau PNG.';
-                this.value = '';
-                uploadContent.hidden = false;
-                selectedFile.hidden = true;
-                return;
-            }
+                uploadContent.hidden = true;
+                selectedFile.hidden = false;
+                fileName.textContent = file.name;
+                fileSize.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
 
-            // Validasi ukuran maksimal 3 MB
-            if (file.size > 3 * 1024 * 1024) {
-                fileError.textContent = 'Ukuran foto maksimal 3 MB.';
-                this.value = '';
-                uploadContent.hidden = false;
-                selectedFile.hidden = true;
-                return;
-            }
+                if (photoUrl) URL.revokeObjectURL(photoUrl);
+                photoUrl = URL.createObjectURL(file);
+                photoPreview.src = photoUrl;
+                photoPreview.style.display = 'block';
+            });
+        }
 
-            // Tampilkan informasi file baru
-            uploadContent.hidden = true;
-            selectedFile.hidden = false;
-
-            fileName.textContent = file.name;
-            fileSize.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
-
-            // Ganti pratinjau dengan foto baru
-            if (photoUrl) {
-                URL.revokeObjectURL(photoUrl);
-            }
-
-            photoUrl = URL.createObjectURL(file);
-            photoPreview.src = photoUrl;
-            photoPreview.style.display = 'block';
-        });
-
-        /* VALIDASI DAN PEMBENTUKAN DATA ABSENSI */
+        // Submit
         form.addEventListener('submit', function(event) {
             form.querySelectorAll('.manual-generated-input').forEach(input => input.remove());
 
-            if (selectedValue('status_mengajar') === 'pengganti') {
-                if (!selectedValue('jenis_penggantian')) {
-                    event.preventDefault();
-                    alert('Pilih apakah Anda yang digantikan atau yang menggantikan.');
-                    return;
-                }
-
-                if (!guruSelect.value) {
-                    event.preventDefault();
-                    alert('Pilih nama guru yang berkaitan dengan sesi penggantian.');
-                    guruSelect.focus();
-                    return;
-                }
-            }
-
-            const selects = Array.from(
-                document.querySelectorAll('.manual-name-select[data-status]')
-            );
-
-            if (selects.some(select => !select.value)) {
+            const statusInput = document.querySelector('input[name="status_mengajar"]:checked');
+            if (statusInput && statusInput.value === 'pengganti' && guruSelect && !guruSelect.value) {
                 event.preventDefault();
-                alert('Pilih nama siswa untuk setiap jumlah sakit, izin, dan alpha.');
+                alert('Pilih nama guru yang berkaitan dengan sesi penggantian.');
+                guruSelect.focus();
                 return;
             }
 
-            const ids = selects.map(select => select.value);
+            // Validasi absensi hanya kalau field absensi ada
+            const fieldAbsensi = document.getElementById('fieldAbsensi');
+            if (fieldAbsensi) {
+                const selects = Array.from(document.querySelectorAll('.manual-name-select[data-status]'));
 
-            if (new Set(ids).size !== ids.length) {
-                event.preventDefault();
-                alert('Satu siswa tidak boleh dipilih lebih dari satu kali.');
-                return;
+                if (selects.some(s => !s.value)) {
+                    event.preventDefault();
+                    alert('Pilih nama siswa untuk setiap jumlah sakit, izin, dan alpha.');
+                    return;
+                }
+
+                const ids = selects.map(s => s.value);
+                if (new Set(ids).size !== ids.length) {
+                    event.preventDefault();
+                    alert('Satu siswa tidak boleh dipilih lebih dari satu kali.');
+                    return;
+                }
+
+                selects.forEach(select => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.className = 'manual-generated-input';
+                    input.name = `absensi[${select.value}]`;
+                    input.value = select.dataset.status;
+                    form.appendChild(input);
+                });
             }
-
-            selects.forEach(select => {
-                const input = document.createElement('input');
-
-                input.type = 'hidden';
-                input.className = 'manual-generated-input';
-                input.name = `absensi[${select.value}]`;
-                input.value = select.dataset.status;
-
-                form.appendChild(input);
-            });
         });
 
-        /* INISIALISASI */
-        updateStatusMengajar();
-        updateLabelGuru();
-        updateAlasan();
         renderManualAttendance();
     });
 </script>
 <script>
-    window.closeSuccessModal = function () {
+    window.closeSuccessModal = function() {
         window.location.href = "{{ route('guru.jurnal-harian') }}";
     };
 </script>

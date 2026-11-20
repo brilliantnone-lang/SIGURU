@@ -130,6 +130,7 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     Route::get('/jurnal-harian/{id}/revisi', [JurnalController::class, 'catatanRevisi'])->name('catatan-revisi');
     Route::post('/jurnal-harian/{id}/ajukan-ulang', [JurnalController::class, 'ajukanUlang'])->name('ajukan-ulang');
     Route::delete('/jurnal-harian/{id}', [JurnalController::class, 'destroy'])->name('jurnal.destroy');
+    Route::get('/jurnal-penggantian', [JurnalController::class, 'jurnalPenggantian'])->name('jurnal-penggantian');
 
     // AJAX get murid
     Route::get('/get-murid/{jadwal_id}', [JurnalController::class, 'getMurid'])->name('get-murid');

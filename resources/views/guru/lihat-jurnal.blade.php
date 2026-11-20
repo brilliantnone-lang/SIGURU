@@ -457,6 +457,31 @@
         border: 1px solid #ffeeba;
     }
 
+    /* 🔧 BADGE STATUS PENGGANTIAN */
+    .badge-penggantian {
+        margin-top: 12px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .badge-penggantian.menunggu {
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fde68a;
+    }
+
+    .badge-penggantian.selesai {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+    }
+
+    .badge-penggantian i {
+        margin-right: 6px;
+    }
+
     @media (max-width: 760px) {
         .jurnal-card {
             padding: 16px;
@@ -570,7 +595,30 @@
             </p>
 
             @php
-            $statusMengajarAwal = $jurnal->guru_pendamping_id ? 'pengganti' : 'pengampu';
+            // 🔧 DIPERBAIKI: pakai kolom jenis_pengajar, bukan guru_pendamping_id
+            $statusMengajarAwal = $jurnal->jenis_pengajar
+                ?? ($jurnal->guru_pengganti_id ? 'pengganti' : 'pengampu');
+
+            // Nama guru terkait yang tampil di select
+            $namaGuruTerkait = null;
+            if ($statusMengajarAwal === 'pengganti') {
+                if ($jurnal->jenis_penggantian === 'saya_digantikan') {
+                    // Jurnal milik Guru A, penggantinya Guru B
+                    $namaGuruTerkait = $jurnal->guruPengganti->user->name
+                        ?? $jurnal->guruPengganti->nama_guru
+                        ?? 'Guru Pengganti';
+                } elseif ($jurnal->jenis_penggantian === 'saya_menggantikan') {
+                    // Jurnal milik Guru A (digantikan), yang login Guru B
+                    $namaGuruTerkait = $jurnal->guruDigantikan->user->name
+                        ?? $jurnal->guruDigantikan->nama_guru
+                        ?? 'Guru Pengampu';
+                } else {
+                    // Fallback: data lama pakai guru_pendamping_id
+                    $namaGuruTerkait = $jurnal->guruPendamping->user->name
+                        ?? $jurnal->guruPendamping->nama_guru
+                        ?? 'Guru Terkait';
+                }
+            }
             @endphp
 
             <div class="role-options">
@@ -596,16 +644,38 @@
             </div>
 
             <div class="replacement-fields {{ $statusMengajarAwal === 'pengganti' ? 'active' : '' }}">
+                {{-- 🔧 DIPERBAIKI: label menyesuaikan jenis penggantian --}}
                 <label class="replacement-label">
-                    Nama Guru Pengampu
+                    @if($jurnal->jenis_penggantian === 'saya_digantikan')
+                        Nama Guru Pengganti
+                    @elseif($jurnal->jenis_penggantian === 'saya_menggantikan')
+                        Nama Guru Pengampu (yang digantikan)
+                    @else
+                        Nama Guru Terkait
+                    @endif
                 </label>
 
                 <select class="jurnal-control" disabled>
                     <option value="">
-                        {{ $jurnal->guruPendamping->user->name ?? $jurnal->guruPendamping->nama_guru ?? 'Tidak ada guru pendamping' }}
+                        {{ $namaGuruTerkait ?? '-' }}
                     </option>
                 </select>
             </div>
+
+            {{-- 🔧 DIPERBAIKI: badge status penggantian --}}
+            @if($jurnal->status_penggantian && $jurnal->status_penggantian !== 'tidak_ada')
+                <div class="badge-penggantian {{ $jurnal->status_penggantian === 'menunggu_diisi' ? 'menunggu' : 'selesai' }}">
+                    @if($jurnal->status_penggantian === 'menunggu_diisi')
+                        <i class="bi bi-hourglass-split"></i>
+                        <strong>Menunggu diisi</strong> oleh
+                        {{ $jurnal->guruPengganti->user->name ?? 'guru pengganti' }}.
+                    @else
+                        <i class="bi bi-check-circle-fill"></i>
+                        <strong>Sudah diisi</strong> oleh
+                        {{ $jurnal->guruPengganti->user->name ?? 'guru pengganti' }}.
+                    @endif
+                </div>
+            @endif
         </section>
 
         {{-- DATA JURNAL --}}

@@ -432,6 +432,23 @@
         background: #d1e7dd;
     }
 
+    /* INFO PANEL PENGGANTI */
+    .info-digantikan {
+        display: none;
+        margin-bottom: 20px;
+        padding: 12px 16px;
+        background: #fef3c7;
+        border: 1px solid #fde68a;
+        border-radius: 10px;
+        color: #92400e;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .info-digantikan i {
+        margin-right: 6px;
+    }
+
     /* POPUP SUKSES TAMBAH JURNAL */
     .success-modal-overlay {
         position: fixed;
@@ -727,6 +744,14 @@
                 </div>
             </section>
 
+            {{-- INFO PANEL SAAT "SAYA YANG DIGANTIKAN" --}}
+            <div class="info-digantikan" id="infoDigantikan">
+                <i class="bi bi-info-circle-fill"></i>
+                <strong>Anda memilih "Saya yang Digantikan".</strong><br>
+                Cukup isi tanggal, kelas, mata pelajaran, jam, dan pilih nama guru pengganti.
+                Materi, absensi, catatan, dan foto akan diisi oleh guru pengganti.
+            </div>
+
             {{-- DATA JURNAL --}}
             <div class="jurnal-grid">
 
@@ -793,7 +818,8 @@
                     </select>
                 </div>
 
-                <div class="jurnal-field full">
+                {{-- 🔧 FIELD POKOK BAHASAN (disembunyikan saat "Saya yang Digantikan") --}}
+                <div class="jurnal-field full" id="fieldPokokBahasan">
                     <label for="pokok_bahasan">
                         Pokok Bahasan/Materi <span class="required">*</span>
                     </label>
@@ -805,7 +831,8 @@
                         required>{{ old('pokok_bahasan') }}</textarea>
                 </div>
 
-                <div class="jurnal-field">
+                {{-- 🔧 FIELD STATUS PENYELESAIAN (disembunyikan saat "Saya yang Digantikan") --}}
+                <div class="jurnal-field" id="fieldStatusPenyelesaian">
                     <label for="status_penyelesaian">
                         Status Penyelesaian <span class="required">*</span>
                     </label>
@@ -849,8 +876,8 @@
                         placeholder="Tuliskan alasan materi belum selesai">{{ old('alasan_belum_selesai') }}</textarea>
                 </div>
 
-                {{-- ABSENSI SISWA (INPUT MANUAL LANGSUNG) --}}
-                <div class="jurnal-field full">
+                {{-- 🔧 FIELD ABSENSI (disembunyikan saat "Saya yang Digantikan") --}}
+                <div class="jurnal-field full" id="fieldAbsensi">
                     <label class="field-label">
                         Absensi Siswa <span class="required">*</span>
                     </label>
@@ -919,7 +946,8 @@
                     </div>
                 </div>
 
-                <div class="jurnal-field full">
+                {{-- 🔧 FIELD CATATAN (disembunyikan saat "Saya yang Digantikan") --}}
+                <div class="jurnal-field full" id="fieldCatatan">
                     <label for="keterangan">Catatan Tambahan</label>
                     <input
                         type="text"
@@ -930,7 +958,8 @@
                         placeholder="Catatan atau evaluasi pembelajaran (opsional)">
                 </div>
 
-                <div class="jurnal-field full">
+                {{-- 🔧 FIELD FOTO (disembunyikan saat "Saya yang Digantikan") --}}
+                <div class="jurnal-field full" id="fieldFoto">
                     <label for="foto_kegiatan">Foto Kegiatan</label>
 
                     <label for="foto_kegiatan" class="upload-box">
@@ -992,6 +1021,7 @@
         const replacementFields = document.getElementById('replacementFields');
         const guruSelect = document.getElementById('guru_pendamping_id');
         const labelGuru = document.getElementById('labelGuruPengganti');
+        const infoDigantikan = document.getElementById('infoDigantikan');
 
         const sesiInfo = document.getElementById('sesiInfo');
         const sesiLabel = document.getElementById('sesiLabel');
@@ -1013,7 +1043,6 @@
             hadir: []
         };
         let requestController = null;
-        let photoUrl = null;
 
         function selectedValue(name) {
             const selected = document.querySelector(`input[name="${name}"]:checked`);
@@ -1033,6 +1062,7 @@
             }
 
             updateLabelGuru();
+            toggleFieldPengganti();
         }
 
         function updateLabelGuru() {
@@ -1041,6 +1071,48 @@
             labelGuru.textContent = jenis === 'saya_digantikan' ?
                 'Nama Guru Pengganti *' :
                 'Nama Guru Pengampu *';
+
+            toggleFieldPengganti();
+        }
+
+        // 🔧 Fungsi baru: sembunyikan field saat "Saya yang Digantikan"
+        function toggleFieldPengganti() {
+            const isPengganti = selectedValue('status_mengajar') === 'pengganti';
+            const isDigantikan = isPengganti && selectedValue('jenis_penggantian') === 'saya_digantikan';
+
+            // Tampilkan info panel
+            if (infoDigantikan) {
+                infoDigantikan.style.display = isDigantikan ? 'block' : 'none';
+            }
+
+            // Daftar field yang disembunyikan
+            const fieldIds = [
+                'fieldPokokBahasan',
+                'fieldStatusPenyelesaian',
+                'alasanContainer',
+                'fieldAbsensi',
+                'fieldCatatan',
+                'fieldFoto',
+            ];
+
+            fieldIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+
+                if (isDigantikan) {
+                    el.style.display = 'none';
+                    el.querySelectorAll('[required]').forEach(inp => {
+                        inp.dataset.wasRequired = '1';
+                        inp.removeAttribute('required');
+                    });
+                } else {
+                    el.style.display = '';
+                    el.querySelectorAll('[data-was-required="1"]').forEach(inp => {
+                        inp.setAttribute('required', 'required');
+                        delete inp.dataset.wasRequired;
+                    });
+                }
+            });
         }
 
         document.querySelectorAll('input[name="status_mengajar"]').forEach(input => {
@@ -1128,7 +1200,6 @@
                 hadir: []
             };
 
-            // Reset flag "userEdited" saat ganti jadwal
             ['jumlah_sakit', 'jumlah_izin', 'jumlah_alpa'].forEach(id => {
                 delete document.getElementById(id).dataset.userEdited;
             });
@@ -1170,14 +1241,12 @@
 
                 const data = await response.json();
 
-                // Support dua format: array atau object { murids: [...] }
                 if (Array.isArray(data)) {
                     daftarMurid = data;
                     sesiInfo.style.display = 'none';
                 } else if (data && Array.isArray(data.murids)) {
                     daftarMurid = data.murids;
 
-                    // Tampilkan info sesi dari response
                     if (data.sesi && data.sesi.label) {
                         sesiLabel.textContent = data.sesi.label;
                         let detail = `${data.kelas || '-'} · ${data.mapel || '-'}`;
@@ -1201,7 +1270,6 @@
                     throw new Error('Format data siswa tidak sesuai.');
                 }
 
-                // 🔑 Kelompokkan murid berdasarkan status_terakhir
                 muridPerStatus = {
                     sakit: [],
                     izin: [],
@@ -1215,9 +1283,7 @@
                     }
                 });
 
-                // 🔑 Auto-set jumlah input dari patokan (kalau guru belum ubah manual)
                 setJumlahDariPatokan();
-
                 renderManualAttendance();
             } catch (error) {
                 if (error.name === 'AbortError') return;
@@ -1306,7 +1372,6 @@
                     return;
                 }
 
-                // 🔑 Murid yang cocok dengan status_terakhir → auto-select
                 const muridCocok = muridPerStatus[category.status] || [];
 
                 for (let i = 0; i < count; i++) {
@@ -1329,7 +1394,6 @@
                         select.appendChild(option);
                     });
 
-                    // 🔑 Auto-select dari patokan kalau ada
                     if (muridCocok[i]) {
                         select.value = muridCocok[i].id;
                     }
@@ -1365,7 +1429,6 @@
             const input = document.getElementById(category.countId);
 
             input.addEventListener('input', function() {
-                // 🔑 Tandai guru sudah ubah manual → auto-set tidak menimpa lagi
                 input.dataset.userEdited = 'true';
                 renderManualAttendance();
             });
@@ -1391,7 +1454,6 @@
                 return;
             }
 
-            // Validasi format gambar
             if (!['image/jpeg', 'image/png'].includes(file.type)) {
                 fileError.textContent = 'Foto harus berformat JPG atau PNG.';
                 this.value = '';
@@ -1400,7 +1462,6 @@
                 return;
             }
 
-            // Validasi ukuran maksimal 3 MB
             if (file.size > 3 * 1024 * 1024) {
                 fileError.textContent = 'Ukuran foto maksimal 3 MB.';
                 this.value = '';
@@ -1409,14 +1470,12 @@
                 return;
             }
 
-            // Tampilkan informasi file
             uploadContent.hidden = true;
             selectedFile.hidden = false;
 
             fileName.textContent = file.name;
             fileSize.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
 
-            // Tampilkan pratinjau gambar
             photoPreview.src = URL.createObjectURL(file);
             photoPreview.style.display = 'block';
         });
@@ -1432,7 +1491,10 @@
                 return;
             }
 
-            if (selectedValue('status_mengajar') === 'pengganti') {
+            const isPengganti = selectedValue('status_mengajar') === 'pengganti';
+            const isDigantikan = isPengganti && selectedValue('jenis_penggantian') === 'saya_digantikan';
+
+            if (isPengganti) {
                 if (!selectedValue('jenis_penggantian')) {
                     event.preventDefault();
                     alert('Pilih apakah Anda yang digantikan atau yang menggantikan.');
@@ -1445,6 +1507,11 @@
                     guruSelect.focus();
                     return;
                 }
+            }
+
+            // 🔧 SKIP validasi absensi kalau mode "Saya yang Digantikan"
+            if (isDigantikan) {
+                return;
             }
 
             const selects = Array.from(
@@ -1481,6 +1548,7 @@
         updateStatusMengajar();
         updateLabelGuru();
         updateAlasan();
+        toggleFieldPengganti();
 
         @if($jadwalDipilih ?? null)
         kelasSelect.value = '{{ $jadwalDipilih->kelas_id }}';

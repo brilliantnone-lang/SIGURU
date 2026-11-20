@@ -31,10 +31,11 @@ class Journal extends Model
         'guru_pengganti_id',
         'guru_digantikan_id',
         'metode_absensi',
+        'status_penggantian',
     ];
 
     protected $casts = [
-        'tanggal' => 'date',
+        'tanggal'      => 'date',
         'validated_at' => 'datetime',
     ];
 
@@ -46,6 +47,16 @@ class Journal extends Model
     public function guruPendamping()
     {
         return $this->belongsTo(Guru::class, 'guru_pendamping_id');
+    }
+
+    public function guruPengganti()
+    {
+        return $this->belongsTo(Guru::class, 'guru_pengganti_id');
+    }
+
+    public function guruDigantikan()
+    {
+        return $this->belongsTo(Guru::class, 'guru_digantikan_id');
     }
 
     public function kelas()
@@ -78,20 +89,38 @@ class Journal extends Model
         return $this->belongsTo(CoverJurnal::class);
     }
 
-    public function guruPengganti()
+    // ============================================================
+    // HELPER
+    // ============================================================
+
+    public function isMenungguDiisiPengganti(): bool
     {
-        return $this->belongsTo(
-            \App\Models\Guru::class,
-            'guru_pengganti_id'
-        );
+        return $this->status_penggantian === 'menunggu_diisi';
     }
 
-    public function guruDigantikan()
+    public function isDiisiPengganti(): bool
     {
-        return $this->belongsTo(
-            \App\Models\Guru::class,
-            'guru_digantikan_id'
-        );
+        return $this->status_penggantian === 'selesai_diisi';
     }
 
+    public function guruYangBerhakMengisi(): ?int
+    {
+        if ($this->isMenungguDiisiPengganti()) {
+            return $this->guru_pengganti_id;
+        }
+        return $this->guru_id;
+    }
+
+    public function scopeUntukGuru($query, int $guruId)
+    {
+        return $query->where(function ($q) use ($guruId) {
+            $q->where('guru_id', $guruId)
+                ->orWhere('guru_pengganti_id', $guruId);
+        });
+    }
+
+    public function isBelumDirevisi(): bool
+    {
+        return $this->status_penggantian === 'belum_direvisi';
+    }
 }
