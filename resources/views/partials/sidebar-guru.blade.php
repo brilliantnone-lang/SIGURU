@@ -6,7 +6,7 @@
             Dashboard
         </a>
 
-        <a class="nav-item {{ request()->routeIs('guru.jurnal-harian', 'guru.edit-jurnal', 'guru.tambah-jurnal', 'guru.lihat-jurnal', 'guru.catatan-revisi') ? 'active' : '' }}"
+        <a class="nav-item {{ request()->routeIs('guru.jurnal-harian', 'guru.edit-jurnal', 'guru.tambah-jurnal', 'guru.lihat-jurnal', 'guru.catatan-revisi', 'guru.jurnal-penggantian') ? 'active' : '' }}"
             href="{{ route('guru.jurnal-harian') }}">
             Jurnal Mengajar
         </a>
