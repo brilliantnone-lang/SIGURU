@@ -70,7 +70,7 @@ class GuruController extends Controller
         ]);
 
         return redirect()
-            ->route('admin.guru.create')
+            ->route('admin.guru.index')
             ->with('success', 'Data guru berhasil ditambahkan.');
     }
 
